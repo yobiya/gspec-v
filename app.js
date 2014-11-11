@@ -4,7 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var multer = require('multer');
 
+var constants = require('./models/constants.js');
 var routes = require('./routes/index');
 
 var app = express();
@@ -20,6 +22,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// アップロードされたファイルの保存先を設定
+app.use(multer({ dest: constants.FILE_UPLOAD_DIRECTORY }));
 
 app.use('/', routes);
 
