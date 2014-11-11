@@ -1,5 +1,33 @@
 extends layout
 
+block stylesheet
+  link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css", rel="stylesheet")
+  link(rel='stylesheet', href='/stylesheets/index.css')
+
+block scripts
+  script(src='https://code.jquery.com/jquery-2.1.1.min.js')
+  script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js")
+  script(src='javascripts/find.js')
+  script(src='javascripts/commit.js')
+  script(type='text/javascript').
+    $(function() {
+      var find = gspecv.setupFind($('#file_list_table'));
+      gspecv.setupCommit($('#commit_box'), function() {
+        // コミットを行ったら、ファイル一覧の表示を更新する
+        find();
+      });
+    });
+
 block content
   h1= title
   p Welcome to #{title}
+
+  div.container
+    table.table#file_list_table(width='100%')
+
+  div#commit_box
+    div#commit_file_names
+    input#commit_comment(type='text')
+    div
+      input#commit_button_cancel(type='button' value='cancel' disabled)
+      input#commit_button_commit(type='button' value='commit' disabled)

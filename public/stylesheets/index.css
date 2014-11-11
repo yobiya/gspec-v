@@ -1,0 +1,17 @@
+.hint_text {
+  color: lightgray;
+}
+
+#commit_box {
+  border: solid;
+  width: 100%;
+  height: 200px;
+}
+
+#commit_comment {
+  border: solid;
+  width: 100%;
+  height: 100px;
+  margin-left: 6px;
+  margin-right: 6px;
+}
