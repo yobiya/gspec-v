@@ -3,6 +3,7 @@
  */
 module.exports = function(mongoose) {
   var fs = require('fs');
+  var path = require('path');
   var constants = require('./constants');
   var util = require('util');
   var schemas = {
@@ -27,13 +28,10 @@ module.exports = function(mongoose) {
       getLatestFileVersion(uploadFile.originalname, function(lastVersion, lastDocumentId) {
         // ディレクトリが無ければ作成する
         var directoryPath = makeCommitDirectory(0); ///< @todo 適切なコミットディレクトリ名を計算する
+        var newVersion = lastVersion + 1;
 
         // 保存するファイル名を決定する
-        /// @todo ディレクトリ内にドットファイルなどが混じった場合、インデックスがずれてしまうので
-        ///       適切な方法で、ファイルのインデックスを取得する
-        var files = fs.readdirSync(directoryPath);
-        var fileIndex = files.length;
-        var commitFilePath = directoryPath + '/' + fileIndex + '.file';
+        var commitFilePath = path.join(directoryPath, createSaveFileName(uploadFile.originalname, newVersion));
 
         // アップロードされたファイルをコミット用ディレクトリに移動させる
         var error = fs.renameSync(uploadFile.path, commitFilePath);
@@ -46,7 +44,7 @@ module.exports = function(mongoose) {
           name: uploadFile.originalname,
           path: commitFilePath,
           comment: comment,
-          version: lastVersion + 1,
+          version: newVersion,
           commit_time: new Date(),  ///< UTCで保存
         };
 
@@ -162,6 +160,21 @@ module.exports = function(mongoose) {
     }
 
     return commitDirectoryPath;
+  }
+
+  /**
+   * @brief 保存するファイル名を生成する
+   *
+   * @param fileName ファイル名
+   * @param version バージョン番号
+   *
+   * @return 保存するファイル名
+   */
+  function createSaveFileName(fileName, version) {
+    var extName = path.extname(fileName);
+    var baseName = path.basename(fileName, extName);
+
+    return baseName + '_' + version + extName;
   }
 
   /**
