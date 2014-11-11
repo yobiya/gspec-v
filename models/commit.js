@@ -102,7 +102,8 @@ module.exports = function(mongoose) {
    * @param responseCallback 結果を返すコールバック
    */
   function download(fileName, version, resultCallback) {
-    resultCallback('spec_files/commit/0/1.file');
+    var filePath = path.join(constants.FILE_COMMIT_TOP_DIRECTORY, '0', createSaveFileName(fileName, version));
+    resultCallback(filePath);
   }
 
   /**

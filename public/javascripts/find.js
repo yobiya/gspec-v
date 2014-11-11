@@ -25,7 +25,7 @@ gspecv.setupFind = function($fileListTable) {
       data.forEach(function(fileInfo) {
         var $tableRow = $('<tr></tr>');
 
-        var downloadLink = $('<a href=download/' + escape(fileInfo.name) + '></a>').text(fileInfo.name);
+        var downloadLink = $('<a href=download/' + escape(fileInfo.name) + '/' + fileInfo.version + '></a>').text(fileInfo.name);
         $tableRow.append($('<td></td>').append(downloadLink));
         $tableRow.append($('<td></td>').text(fileInfo.version));
         $tableRow.append($('<td></td>').text(fileInfo.comment));

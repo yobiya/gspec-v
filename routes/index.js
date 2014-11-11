@@ -46,7 +46,7 @@ router.post('/commit', function(request, response) {
 /**
  * @brief ファイルをダウンロードする
  */
-router.get('/download/:file_name', function(request, response) {
+router.get('/download/:file_name/:version', function(request, response) {
   var fileName = request.params.file_name;
   var version = request.param('version');
   commit.download(fileName, version, function(downloadPath) {
