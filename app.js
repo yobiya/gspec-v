@@ -4,10 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 var multer = require('multer');
 
 var constants = require('./models/constants.js');
-var routes = require('./routes/index');
+var index = require('./routes/index');
+var login = require('./routes/login');
 
 var app = express();
 
@@ -22,11 +24,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({secret: 'secret_value'})); ///< @todo 環境変数から取得するように変更する
 
 // アップロードされたファイルの保存先を設定
 app.use(multer({ dest: constants.FILE_UPLOAD_DIRECTORY }));
 
-app.use('/', routes);
+app.use('/', index);
+app.use('/login', login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

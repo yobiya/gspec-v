@@ -16,8 +16,15 @@ var router = express.Router();
 var commit = require('../models/commit')(mongoose);
 
 // Main page
-router.get('/', function(req, res) {
-  res.render('index', { title: 'GSpecV' });
+router.get('/', function(request, response) {
+  console.log(request.session);
+
+  if(!request.session.user) {
+    // セッションが無ければログイン画面へリダイレクト
+    response.redirect('login');
+  }
+
+  response.render('index', { title: 'GSpec-V' });
 });
 
 /**

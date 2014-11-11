@@ -1,0 +1,16 @@
+extends layout
+
+block stylesheet
+  link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css", rel="stylesheet")
+
+block scripts
+  script(src='https://code.jquery.com/jquery-2.1.1.min.js')
+  script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js")
+
+block content
+  div.conainer
+    form.form-signin
+      h2.form-signin-heading Login to #{title}
+        input.form-control(type="email" placeholder="Email address" required autofocus)
+        input.form-control(type="password" placeholder="Password" required)
+        button.btn.btn-lg.btn-primary.btn-block(type="submit") Sign in
