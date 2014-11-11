@@ -84,8 +84,9 @@ module.exports = function(mongoose) {
         var result = [];
         docs.forEach(function(doc) {
           var fileInfo = {
-            file_name: doc.name,
+            name: doc.name,
             version: doc.version,
+            comment: doc.comment,
           };
           result.push(fileInfo);
         });
