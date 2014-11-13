@@ -1,4 +1,5 @@
 var util = require('util');
+var cookie = require('cookie');
 var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
@@ -16,14 +17,7 @@ var router = express.Router();
 var commit = require('../models/commit')(mongoose);
 
 // Main page
-router.get('/', function(request, response) {
-  console.log(request.session);
-
-  if(!request.session.user) {
-    // セッションが無ければログイン画面へリダイレクト
-    response.redirect('login');
-  }
-
+router.get('/main_page', loginCheck, function(request, response) {
   response.render('index', { title: 'GSpec-V' });
 });
 
@@ -57,8 +51,6 @@ router.get('/download/:file_name/:version', function(request, response) {
   var fileName = request.params.file_name;
   var version = request.param('version');
   commit.download(fileName, version, function(downloadPath) {
-    console.log(util.inspect(downloadPath));
-    console.log(fileName);
     response.download(downloadPath, fileName);
   });
 });
@@ -72,5 +64,17 @@ router.get('/post_info_list', function(request, response) {
                   ];
   response.send(postInfos);
 });
+
+/**
+ * @brief ログインされているかチェックする
+ */
+function loginCheck(request, response, next) {
+  if(request.session.user) {
+    next();
+  } else {
+    // セッションが無ければログイン画面へリダイレクト
+    response.redirect('login');
+  }
+}
 
 module.exports = router;

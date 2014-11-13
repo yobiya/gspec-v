@@ -1,16 +1,17 @@
-var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var bodyParser = require('body-parser');
 var multer = require('multer');
 
 var constants = require('./models/constants.js');
 var index = require('./routes/index');
 var login = require('./routes/login');
 
+var express = require('express');
 var app = express();
 
 // view engine setup
@@ -24,7 +25,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({secret: 'secret_value'})); ///< @todo 環境変数から取得するように変更する
+app.use(session({
+  secret: 'secret_value', ///< @todo 環境変数から読み込む
+  store: new MongoStore({
+    db: 'gspecv',
+    host: 'localhost',
+    clear_interval: 60 * 60
+  }),
+  cookie: {
+    httpOnly: false,
+    maxAge: new Date(Date.now() + 60 * 60 * 1000)
+  }
+}));
 
 // アップロードされたファイルの保存先を設定
 app.use(multer({ dest: constants.FILE_UPLOAD_DIRECTORY }));
