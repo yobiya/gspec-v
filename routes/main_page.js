@@ -40,7 +40,7 @@ router.post('/commit', function(request, response) {
     // ファイル情報が配列で無ければ、配列に変換する
     files = [request.files.file];
   }
-  commit.commit(files, comment);
+  commit.commit(files, comment, request.session.user);
   response.send({ response_code: 0 });
 });
 

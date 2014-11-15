@@ -20,6 +20,7 @@ gspecv.setupFind = function($fileListTable) {
       $tableRow.append($('<td></td>').text('File name'));
       $tableRow.append($('<td></td>').text('Version'));
       $tableRow.append($('<td></td>').text('Comment'));
+      $tableRow.append($('<td></td>').text('User name'));
       $fileListTable.append($tableRow);
 
       data.forEach(function(fileInfo) {
@@ -29,6 +30,7 @@ gspecv.setupFind = function($fileListTable) {
         $tableRow.append($('<td></td>').append(downloadLink));
         $tableRow.append($('<td></td>').text(fileInfo.version));
         $tableRow.append($('<td></td>').text(fileInfo.comment));
+        $tableRow.append($('<td></td>').text(fileInfo.user_name));
 
         $fileListTable.append($tableRow);
       });

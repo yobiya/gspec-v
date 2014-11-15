@@ -7,7 +7,7 @@ module.exports = function(mongoose) {
   var constants = require('./constants');
   var util = require('util');
   var schemas = {
-    commitInfo: mongoose.Schema({name: String, path: String, comment: String, version: Number, commit_time: Date}),
+    commitInfo: mongoose.Schema({name: String, path: String, comment: String, version: Number, commit_time: Date, user_name: String}),
     latestCommitId: mongoose.Schema({ commit_doc_id: mongoose.Schema.Types.ObjectId }),
   };
 
@@ -21,8 +21,9 @@ module.exports = function(mongoose) {
    *
    * @param uploadFiles アップロードされたファイルの情報配列
    * @param comment コミットコメント
+   * @param userName コミットを行ったユーザー名
    */
-  function commit(uploadFiles, comment) {
+  function commit(uploadFiles, comment, userName) {
     uploadFiles.forEach(function(uploadFile) {
       // コミットされている同名のファイルの最新バージョン番号を取得する
       getLatestFileVersion(uploadFile.originalname, function(lastVersion, lastDocumentId) {
@@ -45,6 +46,7 @@ module.exports = function(mongoose) {
           path: commitFilePath,
           comment: comment,
           version: newVersion,
+          user_name: userName,
           commit_time: new Date(),  ///< UTCで保存
         };
 
@@ -85,6 +87,7 @@ module.exports = function(mongoose) {
             name: doc.name,
             version: doc.version,
             comment: doc.comment,
+            user_name: doc.user_name,
           };
           result.push(fileInfo);
         });
