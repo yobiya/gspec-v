@@ -3,8 +3,10 @@
 }
 
 #commit_box {
+  position: absolute;
+  bottom: 0px;
   border: solid;
-  width: 100%;
+  width: 90%;
 }
 
 #commit_box .row {
