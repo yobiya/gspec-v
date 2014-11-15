@@ -19,8 +19,18 @@ block scripts
     });
 
 block content
-  h1= title
-  p Welcome to #{title}
+  nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+    div.container
+      div.navbar-header
+        div.navbar-brand #{title}
+      div.navbar-collapse.collapse#navbar
+        ul.nav.navbar-nav.navbar-right
+          li.dropdown
+            a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-expanded="false") Dropdown
+              span.caret
+            ul.dropdown-menu(role="menu")
+              li
+                a(href="#") Logout
 
   div.container
     table.table.table-striped#file_list_table(width='100%')
