@@ -18,7 +18,7 @@ var commit = require('../models/commit')(mongoose);
 
 // Main page
 router.get('/main_page', loginCheck, function(request, response) {
-  response.render('main_page', { title: 'GSpec-V' });
+  response.render('main_page', { title: 'GSpec-V', user_name: request.session.user });
 });
 
 /**
