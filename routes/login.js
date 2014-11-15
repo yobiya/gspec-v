@@ -21,6 +21,12 @@ router.get('/', function(request, response) {
   response.render('login', { title: 'GSpec-V' });
 });
 
+router.get('/logout', function(request, response) {
+  delete request.session.user;
+
+  response.redirect(302, '/login');
+});
+
 router.post('/login_auth', function(request, response) {
   auth.login(
     request.body.user_name,
