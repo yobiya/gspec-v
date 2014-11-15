@@ -32,8 +32,8 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
 
   var commitFiles = createFileArray();
   $fileNames = $commitBox.find('#file_names');
-  $cancelButton = $commitBox.find('#commit_button_cancel');
-  $execButton = $commitBox.find('#commit_button_commit');
+  $cancelButton = $commitBox.find('#cancel_button');
+  $execButton = $commitBox.find('#commit_button');
   $commentTextArea = $commitBox.find('#comment_text');
 
   // ページ全体にファイルをドロップされてもブラウザが処理を行わないように無視する

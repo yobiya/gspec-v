@@ -7,6 +7,10 @@
   width: 100%;
 }
 
+#commit_box .row {
+  margin-right: 0px;
+}
+
 #file_names {
   height: 160px;
 }

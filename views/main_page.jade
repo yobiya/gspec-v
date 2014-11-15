@@ -38,6 +38,7 @@ block content
   div#commit_box
     div#file_names
     textarea.form-control#comment_text
-    div
-      input#commit_button_cancel(type='button' value='cancel' disabled)
-      input#commit_button_commit(type='button' value='commit' disabled)
+    div.row
+      button.btn.pull-right.btn-primary#commit_button(disabled) commit
+      button.btn.pull-right#cancel_button(disabled) cancel
+
