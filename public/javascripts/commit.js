@@ -31,10 +31,10 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
   }
 
   var commitFiles = createFileArray();
-  $commitFileNames = $commitBox.find('#commit_file_names');
-  $commitCancelButton = $commitBox.find('#commit_button_cancel');
-  $commitExecButton = $commitBox.find('#commit_button_commit');
-  $commitCommentTextArea = $commitBox.find('#comment');
+  $fileNames = $commitBox.find('#file_names');
+  $cancelButton = $commitBox.find('#commit_button_cancel');
+  $execButton = $commitBox.find('#commit_button_commit');
+  $commentTextArea = $commitBox.find('#comment_text');
 
   // ページ全体にファイルをドロップされてもブラウザが処理を行わないように無視する
   $('html').on('drop', function(e) {
@@ -61,25 +61,25 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
     }
 
     // 表示を更新
-    $commitFileNames.empty();
+    $fileNames.empty();
     commitFiles.forEach(function(file) {
-      $commitFileNames.append('<p>' + file.name + '</p>');
+      $fileNames.append('<p>' + file.name + '</p>');
     });
-    $commitCancelButton.removeAttr('disabled');
-    $commitExecButton.removeAttr('disabled');
+    $cancelButton.removeAttr('disabled');
+    $execButton.removeAttr('disabled');
   });
 
-  $commitCancelButton.on('click', clearCommit); // コミットのキャンセル
-  $commitExecButton.on('click', doCommit);      // コミットの実行
+  $cancelButton.on('click', clearCommit); // コミットのキャンセル
+  $execButton.on('click', doCommit);      // コミットの実行
 
   /**
    * @brief コミット情報をクリアする
    */
   function clearCommit() {
     commitFiles = createFileArray();
-    $commitFileNames.empty();
-    $commitFileNames.append($('<p></p>').text('Drop file here').addClass('hint_text'));
-    $commitCommentTextArea.val('');
+    $fileNames.empty();
+    $fileNames.append($('<p></p>').text('Drop file here').addClass('hint_text'));
+    $commentTextArea.val('');
   }
 
   /**
@@ -90,7 +90,7 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
     commitFiles.forEach(function(file) {
       formData.append('file', file);
     });
-    formData.append('comment', $commitCommentTextArea.val());
+    formData.append('comment', $commentTextArea.val());
 
     // ファイルをアップロード
     $.ajax('commit', {
