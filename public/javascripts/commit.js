@@ -34,7 +34,7 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
   $commitFileNames = $commitBox.find('#commit_file_names');
   $commitCancelButton = $commitBox.find('#commit_button_cancel');
   $commitExecButton = $commitBox.find('#commit_button_commit');
-  $commitCommentText = $commitBox.find('#commit_comment');
+  $commitCommentTextArea = $commitBox.find('#comment');
 
   // ページ全体にファイルをドロップされてもブラウザが処理を行わないように無視する
   $('html').on('drop', function(e) {
@@ -79,7 +79,7 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
     commitFiles = createFileArray();
     $commitFileNames.empty();
     $commitFileNames.append($('<p></p>').text('Drop file here').addClass('hint_text'));
-    $commitCommentText.val('');
+    $commitCommentTextArea.val('');
   }
 
   /**
@@ -90,7 +90,7 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
     commitFiles.forEach(function(file) {
       formData.append('file', file);
     });
-    formData.append('comment', $commitCommentText.val());
+    formData.append('comment', $commitCommentTextArea.val());
 
     // ファイルをアップロード
     $.ajax('commit', {
