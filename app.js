@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 
 var constants = require('./models/constants.js');
-var index = require('./routes/index');
+var main_page = require('./routes/main_page');
 var login = require('./routes/login');
 
 var express = require('express');
@@ -41,7 +41,7 @@ app.use(session({
 // アップロードされたファイルの保存先を設定
 app.use(multer({ dest: constants.FILE_UPLOAD_DIRECTORY }));
 
-app.use('/', index);
+app.use('/', main_page);
 app.use('/login', login);
 
 // catch 404 and forward to error handler
