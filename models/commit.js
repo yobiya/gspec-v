@@ -67,16 +67,26 @@ module.exports = function(mongoose) {
   /**
    * @brief コミット情報を検索
    *
+   * @param fileNames ファイル名の配列
    * @param resultCallback 結果を渡すコールバック
    */
-  function find(resultCallback) {
+  function find(fileNames, resultCallback) {
     var query = mongoModels.latestCommitId.find({}, function(error, docs) {
       var commitDocIds = [];
       docs.forEach(function(doc) {
         commitDocIds.push(doc.commit_doc_id);
       });
 
-      mongoModels.commitInfo.find({_id: { $in: commitDocIds } }, function(error, docs) {
+      var findInfo = { _id: { $in: commitDocIds } };
+
+      if(fileNames) {
+        findInfo.name = { $in: fileNames };
+      }
+
+      console.log(fileNames);
+      console.log(findInfo);
+
+      mongoModels.commitInfo.find(findInfo, function(error, docs) {
         if(error) {
           throw error;
         }

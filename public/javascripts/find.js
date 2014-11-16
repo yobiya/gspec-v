@@ -7,14 +7,15 @@ var gspecv = gspecv || {};
  * @brief 検索処理のセットアップ
  *
  * @param $fileListTable ファイル一覧を表示するテーブルのセレクタ
+ * @param $findDialog 検索用ダイアログのセレクタ
  *
  * return 検索関数
  */
-gspecv.setupFind = function($fileListTable) {
-  function find() {
+gspecv.setupFind = function($fileListTable, $findDialog) {
+  function find(option) {
     $fileListTable.empty();
 
-    $.post('find', {}, function(data) {
+    $.post('find', option, function(data) {
 
       var $tableRow = $('<tr></tr>');
       $tableRow.append($('<td></td>').text('File name'));
@@ -40,6 +41,16 @@ gspecv.setupFind = function($fileListTable) {
       alert(errorMessage);
     });
   }
+
+  // 検索の実行
+  $findDialog.find('#find_button').on('click', function() {
+    var fileNames = $findDialog.find('#file_names').val();
+    var fileNameArray = (fileNames === '') ? ([]) : (fileNames.split(','));
+
+    find({
+      file_names: fileNameArray
+    });
+  });
 
   // セットアップ時に、最新のファイルを検索する
   find();

@@ -11,7 +11,7 @@ block scripts
   script(src='javascripts/commit.js')
   script(type='text/javascript').
     $(function() {
-      var find = gspecv.setupFind($('#file_list_table'));
+      var find = gspecv.setupFind($('#file_list_table'), $('#find_dialog'));
       gspecv.setupCommit($('#commit_box'), function() {
         // コミットを行ったら、ファイル一覧の表示を更新する
         find();
@@ -33,7 +33,7 @@ block content
                 a(href="/login/logout") Logout
 
   div.container
-    button.btn.btn-primary.btn-lg(data-toggle="modal" data-target="#find_modal") 検索
+    button.btn.btn-primary.btn-lg(data-toggle="modal" data-target="#find_dialog") 検索
     table.table.table-striped#file_list_table(width='100%')
 
   div#commit_box
@@ -43,14 +43,16 @@ block content
       button.btn.pull-right.btn-primary#commit_button(disabled) commit
       button.btn.pull-right#cancel_button(disabled) cancel
 
-  div.modal.fade#find_modal(tabindex="-1" role="dialog" aria-hidden="true")
+  div.modal.fade#find_dialog(tabindex="-1" role="dialog" aria-hidden="true")
     div.modal-dialog
       div.modal-content
         div.modal-header
           h4.modal-title ファイルを検索
-          div
-            div.modal-body ...
+          div.modal-body
+            div.form-group
+              label.control-label ファイル名
+              input.form-control#file_names(type="text")
           div.modal-footer
-            button.btn.btn-default(data-dismiss="modal") Close
-            button.btn.btn-primary OK
+            button.btn.btn-default(data-dismiss="modal") キャンセル
+            button.btn.btn-primary#find_button(data-dismiss="modal") 検索
 

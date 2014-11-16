@@ -25,7 +25,12 @@ router.get('/main_page', loginCheck, function(request, response) {
  * @brief ファイルを検索して、結果を返す
  */
 router.post('/find', function(request, response) {
-  commit.find(function(result) {
+  console.log(request.body);
+  var fileNames = request.body['file_names[]'];
+  if(fileNames && !Array.isArray(fileNames)) {
+    fileNames = [fileNames];
+  }
+  commit.find(fileNames , function(result) {
     response.send(result);
   });
 });
