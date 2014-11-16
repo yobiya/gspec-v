@@ -16,10 +16,12 @@ block scripts
       var findSelecterIdInfos = {
         tagEditDialog: '#tag_edit_dialog',
       };
+
       gspecv.setupTag({
-        createTagDialog: '#create_tag_dialog',
-        createTagButton: '#create_tag_dialog #create_button',
-        tagNameInput: '#create_tag_dialog #tag_name'
+        tagCreateDialog: '#tag_create_dialog',
+        tagCreateButton: '#tag_create_dialog #create_button',
+        tagCreateNameInput: '#tag_create_dialog #tag_name',
+        tagEditCurrentTagList: '#tag_edit_dialog #current_tag_list'
       });
       var find = gspecv.setupFind($('#file_list_table'), $('#find_dialog'), findSelecterIdInfos);
       gspecv.setupCommit($('#commit_box'), function() {
@@ -77,16 +79,19 @@ block content
           h4.modal-title
             span.glyphicon.glyphicon-search(aria-hidden="true")
               タグを編集
-          div.modal-body.row
-            div.col-md-6
-            div.col-md-6
-              button.btn.btn-primary(data-toggle='modal' data-target='#create_tag_dialog')
-                span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
+          table
+            tr
+              td#file_tag_list
+                h4#current_tag_list
+              td#other_tag_list
+                button.btn.btn-primary(data-toggle='modal' data-target='#tag_create_dialog')
+                  span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
+                h4#current_tag_list
           div.modal-footer
             button.btn.btn-default(data-dismiss='modal') キャンセル
             button.btn.btn-primary#ok_button(data-dismiss='modal') 決定
 
-  div.modal.fade#create_tag_dialog(tabindex='-1' role='dialog' aria-hidden='true')
+  div.modal.fade#tag_create_dialog(tabindex='-1' role='dialog' aria-hidden='true')
     div.modal-dialog
       div.modal-content
         div.modal-header

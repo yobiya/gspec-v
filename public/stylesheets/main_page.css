@@ -28,3 +28,13 @@
   margin-left: 6px;
   margin-right: 6px;
 }
+
+#file_tag_list {
+  border: 1px solid #aaaaaa;
+  width: 280px;
+}
+
+#other_tag_list {
+  border: 1px solid #aaaaaa;
+  width: 280px;
+}

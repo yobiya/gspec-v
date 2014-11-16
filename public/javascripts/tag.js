@@ -11,14 +11,30 @@ var gspecv = gspecv || {};
 gspecv.setupTag = function(selecterIdInfos) {
   var tagArray = [];
 
-  var $createTagButton = $(selecterIdInfos.createTagButton);
+  var $tagCreateButton = $(selecterIdInfos.tagCreateButton);
+  var $tagEditCurrentTagList = $(selecterIdInfos.tagEditCurrentTagList);
+  console.log($tagEditCurrentTagList);
+  $tagEditCurrentTagList.append(createTagLabel('aaa'));
 
-  $createTagButton.on('click', function() {
+  $tagCreateButton.on('click', function() {
     // 新しいタグをリストに追加する
-    var newTagName = $(selecterIdInfos.tagNameInput).val();
+    var newTagName = $(selecterIdInfos.tagCreateNameInput).val();
     if(newTagName !== '') {
       tagArray.push(newTagName);
+
+      $tagEditCurrentTagList.append(createTagLabel(newTagName));
     }
   });
+
+  /**
+   * @brief タグのラベルを生成
+   *
+   * @param tagName タグ名
+   *
+   * @return タグのラベル
+   */
+  function createTagLabel(tagName) {
+    return $('<span></span>').addClass('label label-default').html(tagName);
+  }
 };
 
