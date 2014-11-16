@@ -9,13 +9,18 @@ block scripts
   script(src='https://code.jquery.com/jquery-2.1.1.min.js')
   script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js')
   script(src='javascripts/find.js')
+  script(src='javascripts/tag.js')
   script(src='javascripts/commit.js')
   script(type='text/javascript').
     $(function() {
       var findSelecterIdInfos = {
         tagEditDialog: '#tag_edit_dialog',
-        newTagButton: '#new_tab_button'
       };
+      gspecv.setupTag({
+        createTagDialog: '#create_tag_dialog',
+        createTagButton: '#create_tag_dialog #create_button',
+        tagNameInput: '#create_tag_dialog #tag_name'
+      });
       var find = gspecv.setupFind($('#file_list_table'), $('#find_dialog'), findSelecterIdInfos);
       gspecv.setupCommit($('#commit_box'), function() {
         // コミットを行ったら、ファイル一覧の表示を更新する
@@ -75,9 +80,23 @@ block content
           div.modal-body.row
             div.col-md-6
             div.col-md-6
-              button
-                span.glyphicon.glyphicon-plus-sign#new_tab_button(aria-hidden="true") 新しいタグを作成
+              button.btn.btn-primary(data-toggle='modal' data-target='#create_tag_dialog')
+                span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
           div.modal-footer
             button.btn.btn-default(data-dismiss='modal') キャンセル
             button.btn.btn-primary#ok_button(data-dismiss='modal') 決定
 
+  div.modal.fade#create_tag_dialog(tabindex='-1' role='dialog' aria-hidden='true')
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          h4.modal-title
+            span.glyphicon.glyphicon-search(aria-hidden="true")
+              新しいタグを作成
+          div.modal-body.row
+            div.form-group
+              label.control-label タグ名
+              input.form-control#tag_name(type='text')
+          div.modal-footer
+            button.btn.btn-default(data-dismiss='modal') キャンセル
+            button.btn.btn-primary#create_button(data-dismiss='modal') 作成
