@@ -61,16 +61,6 @@ router.get('/download/:file_name/:version', function(request, response) {
 });
 
 /**
- * @brief 各POSTメソッドの情報を出力する
- */
-router.get('/post_info_list', function(request, response) {
-  var postInfos = [
-                    { name: 'find', param: [] }
-                  ];
-  response.send(postInfos);
-});
-
-/**
  * @brief ログインされているかチェックする
  */
 function loginCheck(request, response, next) {
