@@ -1,12 +1,13 @@
 extends layout
 
 block stylesheet
-  link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css", rel="stylesheet")
+  link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css')
+  link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css')
   link(rel='stylesheet', href='/stylesheets/main_page.css')
 
 block scripts
   script(src='https://code.jquery.com/jquery-2.1.1.min.js')
-  script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js")
+  script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js')
   script(src='javascripts/find.js')
   script(src='javascripts/commit.js')
   script(type='text/javascript').
@@ -19,21 +20,23 @@ block scripts
     });
 
 block content
-  nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+  nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
     div.container
       div.navbar-header
         div.navbar-brand #{title}
       div.navbar-collapse.collapse#navbar
         ul.nav.navbar-nav.navbar-right
           li.dropdown
-            a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-expanded="false") #{user_name}
+            a.dropdown-toggle(href='#' data-toggle='dropdown' role='button' aria-expanded='false') #{user_name}
               span.caret
-            ul.dropdown-menu(role="menu")
+            ul.dropdown-menu(role='menu')
               li
-                a(href="/login/logout") Logout
+                a(href='/login/logout') Logout
 
   div.container
-    button.btn.btn-primary.btn-lg(data-toggle="modal" data-target="#find_dialog") 検索
+    button.btn.btn-primary(data-toggle='modal' data-target='#find_dialog')
+      span.glyphicon.glyphicon-search(aria-hidden="true")
+        検索
     table.table.table-striped#file_list_table(width='100%')
 
   div#commit_box
@@ -43,16 +46,18 @@ block content
       button.btn.pull-right.btn-primary#commit_button(disabled) commit
       button.btn.pull-right#cancel_button(disabled) cancel
 
-  div.modal.fade#find_dialog(tabindex="-1" role="dialog" aria-hidden="true")
+  div.modal.fade#find_dialog(tabindex='-1' role='dialog' aria-hidden='true')
     div.modal-dialog
       div.modal-content
         div.modal-header
-          h4.modal-title ファイルを検索
+          h4.modal-title
+            span.glyphicon.glyphicon-search(aria-hidden="true")
+              ファイルを検索
           div.modal-body
             div.form-group
               label.control-label ファイル名
-              input.form-control#file_names(type="text")
+              input.form-control#file_names(type='text')
           div.modal-footer
-            button.btn.btn-default(data-dismiss="modal") キャンセル
-            button.btn.btn-primary#find_button(data-dismiss="modal") 検索
+            button.btn.btn-default(data-dismiss='modal') キャンセル
+            button.btn.btn-primary#find_button(data-dismiss='modal') 検索
 

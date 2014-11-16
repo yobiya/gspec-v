@@ -87,9 +87,6 @@ module.exports = function(mongoose) {
         findInfo.name = { $in: likeNames };
       }
 
-      console.log(fileNames);
-      console.log(findInfo);
-
       mongoModels.commitInfo.find(findInfo, function(error, docs) {
         if(error) {
           throw error;
