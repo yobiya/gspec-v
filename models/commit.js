@@ -80,6 +80,7 @@ module.exports = function(mongoose) {
       var findInfo = { _id: { $in: commitDocIds } };
 
       if(fileNames) {
+        // 曖昧検索に対応
         var likeNames = [];
         fileNames.forEach(function(name) {
           likeNames.push(new RegExp(name.trim(), 'i'));
@@ -96,6 +97,7 @@ module.exports = function(mongoose) {
         docs.forEach(function(doc) {
           var fileInfo = {
             name: doc.name,
+            tags: doc.tags || [],
             version: doc.version,
             comment: doc.comment,
             user_name: doc.user_name,

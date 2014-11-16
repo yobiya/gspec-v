@@ -18,17 +18,24 @@ gspecv.setupFind = function($fileListTable, $findDialog) {
     $.post('find', option, function(data) {
 
       var $tableRow = $('<tr></tr>');
-      $tableRow.append($('<td></td>').text('File name'));
-      $tableRow.append($('<td></td>').text('Version'));
-      $tableRow.append($('<td></td>').text('Comment'));
-      $tableRow.append($('<td></td>').text('User name'));
+      $tableRow.append($('<td></td>').text('ファイル名'));
+      $tableRow.append($('<td></td>').text('タグ'));
+      $tableRow.append($('<td></td>').text('バージョン'));
+      $tableRow.append($('<td></td>').text('コメント'));
+      $tableRow.append($('<td></td>').text('ユーザー名'));
       $fileListTable.append($tableRow);
 
       data.forEach(function(fileInfo) {
         var $tableRow = $('<tr></tr>');
 
         var downloadLink = $('<a href=download/' + escape(fileInfo.name) + '/' + fileInfo.version + '></a>').text(fileInfo.name);
+        var tags = '';
+        fileInfo.tags.forEach(function(tag) {
+          tags += tag + ' ';
+        });
+
         $tableRow.append($('<td></td>').append(downloadLink));
+        $tableRow.append($('<td></td>').text(tags));
         $tableRow.append($('<td></td>').text(fileInfo.version));
         $tableRow.append($('<td></td>').text(fileInfo.comment));
         $tableRow.append($('<td></td>').text(fileInfo.user_name));
