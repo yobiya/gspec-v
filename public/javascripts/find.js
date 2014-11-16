@@ -8,10 +8,11 @@ var gspecv = gspecv || {};
  *
  * @param $fileListTable ファイル一覧を表示するテーブルのセレクタ
  * @param $findDialog 検索用ダイアログのセレクタ
+ * @param selecterIdInfos セレクタ用IDの情報
  *
  * return 検索関数
  */
-gspecv.setupFind = function($fileListTable, $findDialog) {
+gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
   function find(option) {
     $fileListTable.empty();
 
@@ -29,13 +30,9 @@ gspecv.setupFind = function($fileListTable, $findDialog) {
         var $tableRow = $('<tr></tr>');
 
         var downloadLink = $('<a href=download/' + escape(fileInfo.name) + '/' + fileInfo.version + '></a>').text(fileInfo.name);
-        var tags = '';
-        fileInfo.tags.forEach(function(tag) {
-          tags += tag + ' ';
-        });
 
         $tableRow.append($('<td></td>').append(downloadLink));
-        $tableRow.append($('<td></td>').text(tags));
+        $tableRow.append($('<td></td>').append(createTagCell(fileInfo.tags)));
         $tableRow.append($('<td></td>').text(fileInfo.version));
         $tableRow.append($('<td></td>').text(fileInfo.comment));
         $tableRow.append($('<td></td>').text(fileInfo.user_name));
@@ -47,6 +44,27 @@ gspecv.setupFind = function($fileListTable, $findDialog) {
     .error(function(error, errorMessage) {
       alert(errorMessage);
     });
+  }
+
+  /**
+   * @brief タグのセルを生成
+   *
+   * @param tagNames タグ名の配列
+   */
+  function createTagCell(tagNames) {
+    $cell = $('<div></div>');
+    $editButton = $('<button></button>').addClass('glyphicon glyphicon-pencil')
+                                        .attr('data-toggle', 'modal')
+                                        .attr('data-target', selecterIdInfos.tagEditDialog);
+
+    $cell.append($editButton);
+/*    var tagNames = '';
+    fileInfo.tags.forEach(function(tagName) {
+      tagNames += tagName + ' ';
+    });
+    $tags.val(tagNames);
+*/
+    return $cell;
   }
 
   // 検索の実行

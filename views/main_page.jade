@@ -12,7 +12,11 @@ block scripts
   script(src='javascripts/commit.js')
   script(type='text/javascript').
     $(function() {
-      var find = gspecv.setupFind($('#file_list_table'), $('#find_dialog'));
+      var findSelecterIdInfos = {
+        tagEditDialog: '#tag_edit_dialog',
+        newTagButton: '#new_tab_button'
+      };
+      var find = gspecv.setupFind($('#file_list_table'), $('#find_dialog'), findSelecterIdInfos);
       gspecv.setupCommit($('#commit_box'), function() {
         // コミットを行ったら、ファイル一覧の表示を更新する
         find();
@@ -60,4 +64,20 @@ block content
           div.modal-footer
             button.btn.btn-default(data-dismiss='modal') キャンセル
             button.btn.btn-primary#find_button(data-dismiss='modal') 検索
+
+  div.modal.fade#tag_edit_dialog(tabindex='-1' role='dialog' aria-hidden='true')
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          h4.modal-title
+            span.glyphicon.glyphicon-search(aria-hidden="true")
+              タグを編集
+          div.modal-body.row
+            div.col-md-6
+            div.col-md-6
+              button
+                span.glyphicon.glyphicon-plus-sign#new_tab_button(aria-hidden="true") 新しいタグを作成
+          div.modal-footer
+            button.btn.btn-default(data-dismiss='modal') キャンセル
+            button.btn.btn-primary#ok_button(data-dismiss='modal') 決定
 
