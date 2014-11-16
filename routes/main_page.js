@@ -30,7 +30,7 @@ router.post('/find', function(request, response) {
   if(fileNames && !Array.isArray(fileNames)) {
     fileNames = [fileNames];
   }
-  commit.find(fileNames , function(result) {
+  commit.find(fileNames, function(result) {
     response.send(result);
   });
 });

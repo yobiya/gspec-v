@@ -80,7 +80,11 @@ module.exports = function(mongoose) {
       var findInfo = { _id: { $in: commitDocIds } };
 
       if(fileNames) {
-        findInfo.name = { $in: fileNames };
+        var likeNames = [];
+        fileNames.forEach(function(name) {
+          likeNames.push(new RegExp(name.trim(), 'i'));
+        });
+        findInfo.name = { $in: likeNames };
       }
 
       console.log(fileNames);
