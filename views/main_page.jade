@@ -33,6 +33,7 @@ block content
                 a(href="/login/logout") Logout
 
   div.container
+    button.btn.btn-primary.btn-lg(data-toggle="modal" data-target="#find_modal") 検索
     table.table.table-striped#file_list_table(width='100%')
 
   div#commit_box
@@ -41,4 +42,15 @@ block content
     div.row
       button.btn.pull-right.btn-primary#commit_button(disabled) commit
       button.btn.pull-right#cancel_button(disabled) cancel
+
+  div.modal.fade#find_modal(tabindex="-1" role="dialog" aria-hidden="true")
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          h4.modal-title ファイルを検索
+          div
+            div.modal-body ...
+          div.modal-footer
+            button.btn.btn-default(data-dismiss="modal") Close
+            button.btn.btn-primary OK
 
