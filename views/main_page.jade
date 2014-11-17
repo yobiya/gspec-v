@@ -7,6 +7,7 @@ block stylesheet
 
 block scripts
   script(src='https://code.jquery.com/jquery-2.1.1.min.js')
+  script(src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js')
   script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js')
   script(src='javascripts/find.js')
   script(src='javascripts/tag.js')
@@ -21,7 +22,8 @@ block scripts
         tagCreateDialog: '#tag_create_dialog',
         tagCreateButton: '#tag_create_dialog #create_button',
         tagCreateNameInput: '#tag_create_dialog #tag_name',
-        tagEditCurrentTagList: '#tag_edit_dialog #current_tag_list'
+        fileTagList: '#tag_edit_dialog #file_tag_list',
+        stockTagList: '#tag_edit_dialog #stock_tag_list'
       });
       var find = gspecv.setupFind($('#file_list_table'), $('#find_dialog'), findSelecterIdInfos);
       gspecv.setupCommit($('#commit_box'), function() {
@@ -81,12 +83,14 @@ block content
               タグを編集
           table
             tr
-              td#file_tag_list
-                h4#current_tag_list
-              td#other_tag_list
-                button.btn.btn-primary(data-toggle='modal' data-target='#tag_create_dialog')
-                  span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
-                h4#current_tag_list
+              td
+                ファイルのタグ
+                h3#file_tag_list
+              td
+                使用可能なタグ
+                h3#stock_tag_list
+                  button.btn.btn-primary#create_tag_button(data-toggle='modal' data-target='#tag_create_dialog')
+                    span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
           div.modal-footer
             button.btn.btn-default(data-dismiss='modal') キャンセル
             button.btn.btn-primary#ok_button(data-dismiss='modal') 決定

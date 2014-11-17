@@ -9,20 +9,36 @@ var gspecv = gspecv || {};
  * @param selecterIdInfos セレクタ用IDの情報
  */
 gspecv.setupTag = function(selecterIdInfos) {
-  var tagArray = [];
+  var fileTagNameArray = [];
+  var stockTagNameArray = [];
 
   var $tagCreateButton = $(selecterIdInfos.tagCreateButton);
-  var $tagEditCurrentTagList = $(selecterIdInfos.tagEditCurrentTagList);
-  console.log($tagEditCurrentTagList);
-  $tagEditCurrentTagList.append(createTagLabel('aaa'));
+  var $fileTagList = $(selecterIdInfos.fileTagList);
+  $fileTagList.droppable({
+    drop: function(event, ui) {
+      var $dropedSelecter = $(ui.draggable[0]);
+      $dropedSelecter.remove();
+      $fileTagList.append($dropedSelecter);
+      $dropedSelecter.draggable({ revert: true });
+    }
+  });
+  fileTagNameArray.forEach(function(tagName) {
+    $fileTagList.append(createTagLabel(tagName));
+  });
+
+  var $stockTagList = $(selecterIdInfos.stockTagList);
+  stockTagNameArray.forEach(function(tagName) {
+    $stockTagList.append(createTagLabel(tagName));
+  });
 
   $tagCreateButton.on('click', function() {
     // 新しいタグをリストに追加する
     var newTagName = $(selecterIdInfos.tagCreateNameInput).val();
+    console.log(newTagName);
     if(newTagName !== '') {
-      tagArray.push(newTagName);
+      stockTagNameArray.push(newTagName);
 
-      $tagEditCurrentTagList.append(createTagLabel(newTagName));
+      $stockTagList.append(createTagLabel(newTagName));
     }
   });
 
@@ -34,7 +50,10 @@ gspecv.setupTag = function(selecterIdInfos) {
    * @return タグのラベル
    */
   function createTagLabel(tagName) {
-    return $('<span></span>').addClass('label label-default').html(tagName);
+    return $('<span></span>')
+            .addClass('label label-default')
+            .draggable({ revert: true })
+            .text(tagName);
   }
 };
 

@@ -32,9 +32,17 @@
 #file_tag_list {
   border: 1px solid #aaaaaa;
   width: 280px;
+  height: 200px;
 }
 
-#other_tag_list {
+#stock_tag_list {
+  position: relative;
   border: 1px solid #aaaaaa;
   width: 280px;
+  height: 200px;
+}
+
+#create_tag_button {
+  position: absolute;
+  bottom: 0px;
 }
