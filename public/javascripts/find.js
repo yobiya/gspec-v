@@ -32,7 +32,7 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
         var downloadLink = $('<a href=download/' + escape(fileInfo.name) + '/' + fileInfo.version + '></a>').text(fileInfo.name);
 
         $tableRow.append($('<td></td>').append(downloadLink));
-        $tableRow.append($('<td></td>').append(createTagCell(fileInfo.tags)));
+        $tableRow.append($('<td></td>').append(createTagCell(fileInfo.name, fileInfo.tags)));
         $tableRow.append($('<td></td>').text(fileInfo.version));
         $tableRow.append($('<td></td>').text(fileInfo.comment));
         $tableRow.append($('<td></td>').text(fileInfo.user_name));
@@ -49,13 +49,26 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
   /**
    * @brief タグのセルを生成
    *
+   * @param fileName ファイル名
    * @param tagNames タグ名の配列
    */
-  function createTagCell(tagNames) {
+  function createTagCell(fileName, tagNames) {
     $cell = $('<div></div>');
-    $editButton = $('<button></button>').addClass('glyphicon glyphicon-pencil')
-                                        .attr('data-toggle', 'modal')
-                                        .attr('data-target', selecterIdInfos.tagEditDialog);
+    $editButton = $('<button></button>')
+                    .addClass('glyphicon glyphicon-pencil')
+                    .attr('data-toggle', 'modal')
+                    .on('click', requestEditTagInfo);
+
+    function requestEditTagInfo() {
+      $.post('/tag_edit', { file_name: fileName })
+        .done(function(data) {
+          $(selecterIdInfos.tagEditDialog)
+            .modal('show');
+        })
+        .fail(function(error, errorMessage) {
+          alert(errorMessage);
+        });
+    }
 
     $cell.append($editButton);
 /*    var tagNames = '';

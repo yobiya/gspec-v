@@ -13,22 +13,26 @@ gspecv.setupTag = function(selecterIdInfos) {
   var stockTagNameArray = [];
 
   var $tagCreateButton = $(selecterIdInfos.tagCreateButton);
-  var $fileTagList = $(selecterIdInfos.fileTagList);
-  $fileTagList.droppable({
-    drop: function(event, ui) {
-      var $dropedSelecter = $(ui.draggable[0]);
-      $dropedSelecter.remove();
-      $fileTagList.append($dropedSelecter);
-      $dropedSelecter.draggable({ revert: true });
-    }
-  });
-  fileTagNameArray.forEach(function(tagName) {
-    $fileTagList.append(createTagLabel(tagName));
-  });
-
   var $stockTagList = $(selecterIdInfos.stockTagList);
-  stockTagNameArray.forEach(function(tagName) {
-    $stockTagList.append(createTagLabel(tagName));
+
+  $(selecterIdInfos.tagEditDialog).on('shown', function() {
+    // タグ情報を構築
+    var $fileTagList = $(selecterIdInfos.fileTagList);
+    $fileTagList.droppable({
+      drop: function(event, ui) {
+        var $dropedSelecter = $(ui.draggable[0]);
+        $dropedSelecter.remove();
+        $fileTagList.append($dropedSelecter);
+        $dropedSelecter.draggable({ revert: true });
+      }
+    });
+    fileTagNameArray.forEach(function(tagName) {
+      $fileTagList.append(createTagLabel(tagName));
+    });
+
+    stockTagNameArray.forEach(function(tagName) {
+      $stockTagList.append(createTagLabel(tagName));
+    });
   });
 
   $tagCreateButton.on('click', function() {

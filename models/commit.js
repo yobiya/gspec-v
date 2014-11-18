@@ -111,6 +111,21 @@ module.exports = function(mongoose) {
   }
 
   /**
+   * @brief タグ編集用情報を取得する
+   *
+   * @param fileName 対象のファイル名
+   * @param responseCallback 結果を渡すコールバック
+   */
+  function getTagEditInfo(fileName, responseCallback) {
+    var info = {
+      file_tags: [],
+      stock_tags: []
+    };
+
+    responseCallback(info);
+  }
+
+  /**
    * @brief コミットされているファイルをダウンロード
    *
    * @param fileName ファイル名
@@ -224,6 +239,7 @@ module.exports = function(mongoose) {
   return {
     commit: commit,
     find: find,
+    getTagEditInfo: getTagEditInfo,
     download: download,
   };
 };

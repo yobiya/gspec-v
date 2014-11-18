@@ -21,11 +21,8 @@ router.get('/main_page', loginCheck, function(request, response) {
   response.render('main_page', { title: 'GSpec-V', user_name: request.session.user });
 });
 
-/**
- * @brief ファイルを検索して、結果を返す
- */
+/// @brief ファイルを検索して、結果を返す
 router.post('/find', function(request, response) {
-  console.log(request.body);
   var fileNames = request.body['file_names[]'];
   if(fileNames && !Array.isArray(fileNames)) {
     fileNames = [fileNames];
@@ -35,9 +32,14 @@ router.post('/find', function(request, response) {
   });
 });
 
-/**
- * @brief ファイルをコミットする
- */
+/// @brief タグの編集情報を返す
+router.post('/tag_edit', function(request, response) {
+  commit.getTagEditInfo(request.body.file_name, function(result) {
+    response.send(result);
+  });
+});
+
+/// @brief ファイルをコミットする
 router.post('/commit', function(request, response) {
   var files = request.files.file;
   var comment = request.body.comment;
@@ -49,9 +51,7 @@ router.post('/commit', function(request, response) {
   response.send({ response_code: 0 });
 });
 
-/**
- * @brief ファイルをダウンロードする
- */
+/// @brief ファイルをダウンロードする
 router.get('/download/:file_name/:version', function(request, response) {
   var fileName = request.params.file_name;
   var version = request.param('version');
@@ -60,9 +60,7 @@ router.get('/download/:file_name/:version', function(request, response) {
   });
 });
 
-/**
- * @brief ログインされているかチェックする
- */
+/// @brief ログインされているかチェックする
 function loginCheck(request, response, next) {
   if(request.session.user) {
     next();
