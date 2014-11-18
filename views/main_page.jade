@@ -14,15 +14,17 @@ block scripts
   script(src='javascripts/commit.js')
   script(type='text/javascript').
     $(function() {
+      $tagEditDialog = $('#tag_edit_dialog');
       var findSelecterIdInfos = {
-        tagEditDialog: '#tag_edit_dialog',
+        $tagEditDialog: $tagEditDialog,
       };
 
       gspecv.setupTag({
         tagCreateDialog: '#tag_create_dialog',
         tagCreateButton: '#tag_create_dialog #create_button',
         tagCreateNameInput: '#tag_create_dialog #tag_name',
-        tagEditDialog: '#tag_edit_dialog',
+        $tagEditDialog: $tagEditDialog,
+        $applyTagButton: $tagEditDialog.find('#apply_button'),
         fileTagList: '#tag_edit_dialog #file_tag_list',
         stockTagList: '#tag_edit_dialog #stock_tag_list'
       });
@@ -94,7 +96,7 @@ block content
                     span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
           div.modal-footer
             button.btn.btn-default(data-dismiss='modal') キャンセル
-            button.btn.btn-primary#ok_button(data-dismiss='modal') 決定
+            button.btn.btn-primary#apply_button 決定
 
   div.modal.fade#tag_create_dialog(tabindex='-1' role='dialog' aria-hidden='true')
     div.modal-dialog

@@ -7,7 +7,7 @@ module.exports = function(mongoose) {
   var constants = require('./constants');
   var util = require('util');
   var schemas = {
-    commitInfo: mongoose.Schema({name: String, path: String, comment: String, version: Number, commit_time: Date, user_name: String}),
+    commitInfo: mongoose.Schema({name: String, path: String, comment: String, tag_names: [String], version: Number, commit_time: Date, user_name: String}),
     latestCommitId: mongoose.Schema({ commit_doc_id: mongoose.Schema.Types.ObjectId }),
   };
 
@@ -114,15 +114,44 @@ module.exports = function(mongoose) {
    * @brief タグ編集用情報を取得する
    *
    * @param fileName 対象のファイル名
-   * @param responseCallback 結果を渡すコールバック
+   * @param resultCallback 結果を渡すコールバック
    */
-  function getTagEditInfo(fileName, responseCallback) {
+  function getTagEditInfo(fileName, resultCallback) {
     var info = {
       file_tags: [],
       stock_tags: []
     };
 
-    responseCallback(info);
+    resultCallback(info);
+  }
+
+  /**
+   * @brief タグの編集結果を適用する
+   *
+   * @param fileName 対象のファイル名
+   * @param tagNames 適用するタグ名の配列
+   * @param resultCallback 結果を渡すコールバック
+   */
+  function applyTagEditInfo(fileName, tagNames, resultCallback) {
+    getLatestFileVersion(fileName, function(lastVersion, lastDocumentId) {
+      if(lastVersion === 0) {
+        resultCallback({ errorMessage: '対象のファイルは見つかりませんでした' });
+        return;
+      }
+
+      console.log(lastDocumentId );
+      console.log(tagNames);
+      mongoModels.commitInfo
+        .findOneAndUpdate({ _id: lastDocumentId },
+                          { tag_names: tagNames },
+                          function(error, docs) {
+                            if(error) {
+                              throw error;
+                            }
+
+                            resultCallback({});
+                          });
+    });
   }
 
   /**
@@ -130,7 +159,7 @@ module.exports = function(mongoose) {
    *
    * @param fileName ファイル名
    * @param version バージョン番号
-   * @param responseCallback 結果を返すコールバック
+   * @param resultCallback 結果を返すコールバック
    */
   function download(fileName, version, resultCallback) {
     var filePath = path.join(constants.FILE_COMMIT_TOP_DIRECTORY, '0', createSaveFileName(fileName, version));
@@ -240,6 +269,7 @@ module.exports = function(mongoose) {
     commit: commit,
     find: find,
     getTagEditInfo: getTagEditInfo,
+    applyTagEditInfo: applyTagEditInfo,
     download: download,
   };
 };

@@ -60,9 +60,10 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
                     .on('click', requestEditTagInfo);
 
     function requestEditTagInfo() {
-      $.post('/tag_edit', { file_name: fileName })
+      $.post('/edit_tag_info', { file_name: fileName })
         .done(function(data) {
-          $(selecterIdInfos.tagEditDialog)
+          selecterIdInfos.$tagEditDialog
+            .setup(fileName, data)
             .modal('show');
         })
         .fail(function(error, errorMessage) {

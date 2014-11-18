@@ -9,13 +9,21 @@ var gspecv = gspecv || {};
  * @param selecterIdInfos セレクタ用IDの情報
  */
 gspecv.setupTag = function(selecterIdInfos) {
+  var editFileName;
   var fileTagNameArray = [];
   var stockTagNameArray = [];
 
   var $tagCreateButton = $(selecterIdInfos.tagCreateButton);
   var $stockTagList = $(selecterIdInfos.stockTagList);
 
-  $(selecterIdInfos.tagEditDialog).on('shown', function() {
+  // ダイアログのセットアップメソッドを設定
+  selecterIdInfos.$tagEditDialog.setup = function(fileName, data) {
+    editFileName = fileName;
+
+    return selecterIdInfos.$tagEditDialog;
+  };
+
+  selecterIdInfos.$tagEditDialog.on('shown', function() {
     // タグ情報を構築
     var $fileTagList = $(selecterIdInfos.fileTagList);
     $fileTagList.droppable({
@@ -38,12 +46,27 @@ gspecv.setupTag = function(selecterIdInfos) {
   $tagCreateButton.on('click', function() {
     // 新しいタグをリストに追加する
     var newTagName = $(selecterIdInfos.tagCreateNameInput).val();
-    console.log(newTagName);
     if(newTagName !== '') {
       stockTagNameArray.push(newTagName);
 
       $stockTagList.append(createTagLabel(newTagName));
     }
+  });
+
+  // 編集したタグを適用する
+  selecterIdInfos.$applyTagButton.on('click', function() {
+    var info = {
+      file_name: editFileName,
+      tagNames: []
+    };
+    $.post('/apply_tag', info)
+      .done(function(data) {
+      })
+      .fail(function(error, errorMessage) {
+        alsert(errorMessage);
+      });
+
+    selecterIdInfos.$tagEditDialog.modal('hide');
   });
 
   /**

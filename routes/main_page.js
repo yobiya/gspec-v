@@ -33,8 +33,16 @@ router.post('/find', function(request, response) {
 });
 
 /// @brief タグの編集情報を返す
-router.post('/tag_edit', function(request, response) {
+router.post('/edit_tag_info', function(request, response) {
   commit.getTagEditInfo(request.body.file_name, function(result) {
+    response.send(result);
+  });
+});
+
+/// @brief タグの編集結果を適用する
+router.post('/apply_tag', function(request, response) {
+  var params = postParams(request);
+  commit.applyTagEditInfo(params.file_name, params.tag_names, function(result) {
     response.send(result);
   });
 });
@@ -68,6 +76,15 @@ function loginCheck(request, response, next) {
     // セッションが無ければログイン画面へリダイレクト
     response.redirect('login');
   }
+}
+
+/// @brief リクエストの方式によってパラメーターの取得方法が変わるので、適切な変換を行う
+function postParams(request) {
+  if(Object.keys(request.query).length === 0) {
+    return request.body;
+  }
+
+  return request.query;
 }
 
 module.exports = router;
