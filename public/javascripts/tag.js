@@ -20,10 +20,6 @@ gspecv.setupTag = function(selecterIdInfos) {
   selecterIdInfos.$tagEditDialog.setup = function(fileName, data) {
     editFileName = fileName;
 
-    return selecterIdInfos.$tagEditDialog;
-  };
-
-  selecterIdInfos.$tagEditDialog.on('shown', function() {
     // タグ情報を構築
     var $fileTagList = $(selecterIdInfos.fileTagList);
     $fileTagList.droppable({
@@ -41,7 +37,9 @@ gspecv.setupTag = function(selecterIdInfos) {
     stockTagNameArray.forEach(function(tagName) {
       $stockTagList.append(createTagLabel(tagName));
     });
-  });
+
+    return selecterIdInfos.$tagEditDialog;
+  };
 
   $tagCreateButton.on('click', function() {
     // 新しいタグをリストに追加する
