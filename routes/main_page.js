@@ -42,6 +42,7 @@ router.post('/edit_tag_info', function(request, response) {
 /// @brief タグの編集結果を適用する
 router.post('/apply_tag', function(request, response) {
   var params = postParams(request);
+  params.tag_names = params.tag_names || [];
   commit.applyTagEditInfo(params.file_name, params.tag_names, function(result) {
     response.send(result);
   });
