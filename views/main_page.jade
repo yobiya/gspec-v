@@ -16,7 +16,7 @@ block scripts
     $(function() {
       $tagEditDialog = $('#tag_edit_dialog');
       var commitInfoSelecters = {
-        $commitInfoTable: $('#commit_info_table'),
+        $commitInfoTable: $('#find_info .commit_info_table'),
         $findDialog: $('#find_dialog'),
         $historyDialog: $('#history_dialog'),
         $tagEditDialog: $tagEditDialog
@@ -52,11 +52,11 @@ block content
               li
                 a(href='/login/logout') Logout
 
-  div.container
+  div.container#find_info
     button.btn.btn-primary(data-toggle='modal' data-target='#find_dialog')
       span.glyphicon.glyphicon-search(aria-hidden="true")
         検索
-    table.table.table-striped#commit_info_table(width='100%')
+    table.table.table-striped.commit_info_table
 
   div#commit_box
     div#file_names
@@ -87,7 +87,7 @@ block content
           h4.modal-title
             span.glyphicon.glyphicon-search(aria-hidden="true")
               コミット履歴
-          div
+          table.table.table-striped.commit_info_table
           div.modal-footer
             button.btn.btn-default(data-dismiss='modal') クローズ
 

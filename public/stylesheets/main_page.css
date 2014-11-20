@@ -13,6 +13,10 @@
   margin-right: 0px;
 }
 
+.commit_info_table {
+  width: 100%;
+}
+
 #file_names {
   height: 160px;
 }

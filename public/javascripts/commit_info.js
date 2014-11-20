@@ -72,7 +72,13 @@ gspecv.setupCommitInfo = function(selecters) {
     var $history = $('<a>').addClass('glyphicon glyphicon-time')
                             .text(' 履歴')
                             .on('click', function() {
-                              selecters.$historyDialog.modal('show');
+                              $.post('/history', { file_name: fileInfo.name })
+                                .done(function(historyInfoArray) {
+                                  selecters.$historyDialog.setup(historyInfoArray).modal('show');
+                                })
+                                .fail(function(error, errorMessage) {
+                                  alert(errorMessage);
+                                });
                             });
     var $tagEdit = $('<a>').addClass('glyphicon glyphicon-tags').text(' タグ編集');
 
@@ -128,6 +134,32 @@ gspecv.setupCommitInfo = function(selecters) {
       file_names: fileNameArray
     });
   });
+
+  // 履歴ダイアログにセットアップメソッドを追加
+  selecters.$historyDialog.setup = function(historyInfoArray) {
+    var dialog = selecters.$historyDialog;
+    var $table = dialog.find('.commit_info_table').append($tableRow);
+    $table.empty();
+
+    var $tableRow = $('<tr>');
+    appendTableRowCell($tableRow, 'ファイル名', 'バージョン', 'コメント', 'ユーザー名');
+    $table.append($tableRow);
+
+    historyInfoArray.forEach(function(historyInfo) {
+      var $tableRow = $('<tr>');
+
+      appendTableRowCell($tableRow,
+                        $('<a href=download/' + escape(historyInfo.name) + '/' + historyInfo.version + '></a>').text(historyInfo.name),
+                        historyInfo.version,
+                        historyInfo.comment,
+                        historyInfo.user_name);
+
+      $table.append($tableRow);
+    });
+ 
+
+    return dialog;
+  };
 
   // セットアップ時に、最新のファイルを検索する
   find();
