@@ -19,23 +19,18 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
     $.post('find', option, function(data) {
 
       var $tableRow = $('<tr></tr>');
-      $tableRow.append($('<td></td>').text('ファイル名'));
-      $tableRow.append($('<td></td>').text('タグ'));
-      $tableRow.append($('<td></td>').text('バージョン'));
-      $tableRow.append($('<td></td>').text('コメント'));
-      $tableRow.append($('<td></td>').text('ユーザー名'));
+      appendTableRowCell($tableRow, 'ファイル名', 'タグ', 'バージョン', 'コメント', 'ユーザー名');
       $fileListTable.append($tableRow);
 
       data.forEach(function(fileInfo) {
         var $tableRow = $('<tr></tr>');
 
-        var downloadLink = $('<a href=download/' + escape(fileInfo.name) + '/' + fileInfo.version + '></a>').text(fileInfo.name);
-
-        $tableRow.append($('<td></td>').append(downloadLink));
-        $tableRow.append($('<td></td>').append(createTagCell(fileInfo.name, fileInfo.tags)));
-        $tableRow.append($('<td></td>').text(fileInfo.version));
-        $tableRow.append($('<td></td>').text(fileInfo.comment));
-        $tableRow.append($('<td></td>').text(fileInfo.user_name));
+        appendTableRowCell($tableRow,
+                          $('<a href=download/' + escape(fileInfo.name) + '/' + fileInfo.version + '></a>').text(fileInfo.name),
+                          createTagCell(fileInfo.name, fileInfo.tags),
+                          fileInfo.version,
+                          fileInfo.comment,
+                          fileInfo.user_name);
 
         $fileListTable.append($tableRow);
       });
@@ -44,6 +39,26 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
     .error(function(error, errorMessage) {
       alert(errorMessage);
     });
+  }
+
+  /**
+   * @brief テーブルの行に複数のセルを追加する
+   *
+   * @param $tableRow テーブルの行
+   * @param arguments 可変長引数で、追加するセルを受け取る
+   */
+  function appendTableRowCell($tableRow) {
+    for(var i = 1; i < arguments.length; i++) {
+      var cellContent = arguments[i];
+
+      if(typeof cellContent === 'string') {
+        // 文字列なら、テキストとして設定
+        $tableRow.append($('<td></td>').text(cellContent));
+      } else {
+        // 文字列以外なら、要素として追加
+        $tableRow.append($('<td></td>').append(cellContent));
+      }
+    }
   }
 
   /**
