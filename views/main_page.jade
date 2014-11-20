@@ -24,12 +24,12 @@ block scripts
 
       gspecv.setupTag({
         tagCreateDialog: '#tag_create_dialog',
-        tagCreateButton: '#tag_create_dialog #create_button',
+        $tagCreateButton: $('#tag_create_dialog #create_button'),
         tagCreateNameInput: '#tag_create_dialog #tag_name',
         $tagEditDialog: $tagEditDialog,
         $applyTagButton: $tagEditDialog.find('#apply_button'),
-        fileTagList: '#tag_edit_dialog #file_tag_list',
-        stockTagList: '#tag_edit_dialog #stock_tag_list'
+        $fileTagList: $('#tag_edit_dialog #file_tag_list'),
+        $stockTagList: ('#tag_edit_dialog #stock_tag_list')
       });
       var find = gspecv.setupCommitInfo(commitInfoSelecters);
       gspecv.setupCommit($('#commit_box'), function() {
@@ -103,11 +103,11 @@ block content
               td
                 ファイルのタグ
                 h3#file_tag_list
+                  button.btn.btn-primary#create_tag_button(data-toggle='modal' data-target='#tag_create_dialog')
+                    span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
               td
                 使用可能なタグ
                 h3#stock_tag_list
-                  button.btn.btn-primary#create_tag_button(data-toggle='modal' data-target='#tag_create_dialog')
-                    span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
           div.modal-footer
             button.btn.btn-default(data-dismiss='modal') キャンセル
             button.btn.btn-primary#apply_button 決定

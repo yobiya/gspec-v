@@ -6,53 +6,49 @@ var gspecv = gspecv || {};
 /**
  * @brief タグ関連処理のセットアップ
  *
- * @param selecterIdInfos セレクタ用IDの情報
+ * @param selecters セレクタをまとめたオブジェクト
  */
-gspecv.setupTag = function(selecterIdInfos) {
+gspecv.setupTag = function(selecters) {
   var editFileName;
   var fileTagNameArray = [];
   var stockTagNameArray = [];
 
-  var $tagCreateButton = $(selecterIdInfos.tagCreateButton);
-  var $stockTagList = $(selecterIdInfos.stockTagList);
-
   // ダイアログのセットアップメソッドを設定
-  selecterIdInfos.$tagEditDialog.setup = function(fileName, data) {
+  selecters.$tagEditDialog.setup = function(fileName, data) {
     editFileName = fileName;
 
     // タグ情報を構築
-    var $fileTagList = $(selecterIdInfos.fileTagList);
-    $fileTagList.droppable({
+    selecters.$fileTagList.droppable({
       drop: function(event, ui) {
         var $dropedSelecter = $(ui.draggable[0]);
         $dropedSelecter.remove();
-        $fileTagList.append($dropedSelecter);
+        selecters.$fileTagList.append($dropedSelecter);
         $dropedSelecter.draggable({ revert: true });
       }
     });
     fileTagNameArray.forEach(function(tagName) {
-      $fileTagList.append(createTagLabel(tagName));
+      selecters.$fileTagList.append(createTagLabel(tagName));
     });
 
     stockTagNameArray.forEach(function(tagName) {
-      $stockTagList.append(createTagLabel(tagName));
+      selecters.$stockTagList.append(createTagLabel(tagName));
     });
 
-    return selecterIdInfos.$tagEditDialog;
+    return selecters.$tagEditDialog;
   };
 
-  $tagCreateButton.on('click', function() {
+  selecters.$tagCreateButton.on('click', function() {
     // 新しいタグをリストに追加する
-    var newTagName = $(selecterIdInfos.tagCreateNameInput).val();
+    var newTagName = $(selecters.tagCreateNameInput).val();
     if(newTagName !== '') {
-      stockTagNameArray.push(newTagName);
+      fileTagNameArray.push(newTagName);
 
-      $stockTagList.append(createTagLabel(newTagName));
+      selecters.$fileTagList.append(createTagLabel(newTagName));
     }
   });
 
   // 編集したタグを適用する
-  selecterIdInfos.$applyTagButton.on('click', function() {
+  selecters.$applyTagButton.on('click', function() {
     var info = {
       file_name: editFileName,
       tagNames: []
@@ -64,7 +60,7 @@ gspecv.setupTag = function(selecterIdInfos) {
         alsert(errorMessage);
       });
 
-    selecterIdInfos.$tagEditDialog.modal('hide');
+    selecters.$tagEditDialog.modal('hide');
   });
 
   /**

@@ -34,6 +34,7 @@
 }
 
 #file_tag_list {
+  position: relative;
   border: 1px solid #aaaaaa;
   width: 280px;
   height: 200px;
