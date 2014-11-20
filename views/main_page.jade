@@ -15,7 +15,9 @@ block scripts
   script(type='text/javascript').
     $(function() {
       $tagEditDialog = $('#tag_edit_dialog');
-      var findSelecterIdInfos = {
+      var commitInfoSelecters = {
+        $commitInfoTable: $('#commit_info_table'),
+        $findDialog: $('#find_dialog'),
         $historyDialog: $('#history_dialog'),
         $tagEditDialog: $tagEditDialog
       };
@@ -29,7 +31,7 @@ block scripts
         fileTagList: '#tag_edit_dialog #file_tag_list',
         stockTagList: '#tag_edit_dialog #stock_tag_list'
       });
-      var find = gspecv.setupFind($('#file_list_table'), $('#find_dialog'), findSelecterIdInfos);
+      var find = gspecv.setupCommitInfo(commitInfoSelecters);
       gspecv.setupCommit($('#commit_box'), function() {
         // コミットを行ったら、ファイル一覧の表示を更新する
         find();
@@ -54,7 +56,7 @@ block content
     button.btn.btn-primary(data-toggle='modal' data-target='#find_dialog')
       span.glyphicon.glyphicon-search(aria-hidden="true")
         検索
-    table.table.table-striped#file_list_table(width='100%')
+    table.table.table-striped#commit_info_table(width='100%')
 
   div#commit_box
     div#file_names

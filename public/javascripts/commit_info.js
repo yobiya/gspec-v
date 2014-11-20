@@ -6,21 +6,19 @@ var gspecv = gspecv || {};
 /**
  * @brief 検索処理のセットアップ
  *
- * @param $fileListTable ファイル一覧を表示するテーブルのセレクタ
- * @param $findDialog 検索用ダイアログのセレクタ
- * @param selecterIdInfos セレクタ用IDの情報
+ * @param selecters セレクタをまとめたオブジェクト
  *
  * return 検索関数
  */
-gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
+gspecv.setupCommitInfo = function(selecters) {
   function find(option) {
-    $fileListTable.empty();
+    selecters.$commitInfoTable.empty();
 
     $.post('find', option, function(data) {
 
       var $tableRow = $('<tr>');
       appendTableRowCell($tableRow, '', 'ファイル名', 'タグ', 'バージョン', 'コメント', 'ユーザー名');
-      $fileListTable.append($tableRow);
+      selecters.$commitInfoTable.append($tableRow);
 
       data.forEach(function(fileInfo) {
         var $tableRow = $('<tr>');
@@ -33,7 +31,7 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
                           fileInfo.comment,
                           fileInfo.user_name);
 
-        $fileListTable.append($tableRow);
+        selecters.$commitInfoTable.append($tableRow);
       });
     },
     'json')
@@ -74,7 +72,7 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
     var $history = $('<a>').addClass('glyphicon glyphicon-time')
                             .text(' 履歴')
                             .on('click', function() {
-                              selecterIdInfos.$historyDialog.modal('show');
+                              selecters.$historyDialog.modal('show');
                             });
     var $tagEdit = $('<a>').addClass('glyphicon glyphicon-tags').text(' タグ編集');
 
@@ -102,7 +100,7 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
     function requestEditTagInfo() {
       $.post('/edit_tag_info', { file_name: fileName })
         .done(function(data) {
-          selecterIdInfos.$tagEditDialog
+          selecters.$tagEditDialog
             .setup(fileName, data)
             .modal('show');
         })
@@ -122,8 +120,8 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
   }
 
   // 検索の実行
-  $findDialog.find('#find_button').on('click', function() {
-    var fileNames = $findDialog.find('#file_names').val();
+  selecters.$findDialog.find('#find_button').on('click', function() {
+    var fileNames = selecters.$findDialog.find('#file_names').val();
     var fileNameArray = (fileNames === '') ? ([]) : (fileNames.split(','));
 
     find({
