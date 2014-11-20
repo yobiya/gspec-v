@@ -18,14 +18,15 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
 
     $.post('find', option, function(data) {
 
-      var $tableRow = $('<tr></tr>');
-      appendTableRowCell($tableRow, 'ファイル名', 'タグ', 'バージョン', 'コメント', 'ユーザー名');
+      var $tableRow = $('<tr>');
+      appendTableRowCell($tableRow, '', 'ファイル名', 'タグ', 'バージョン', 'コメント', 'ユーザー名');
       $fileListTable.append($tableRow);
 
       data.forEach(function(fileInfo) {
-        var $tableRow = $('<tr></tr>');
+        var $tableRow = $('<tr>');
 
         appendTableRowCell($tableRow,
+                          createDropdownMenu(),
                           $('<a href=download/' + escape(fileInfo.name) + '/' + fileInfo.version + '></a>').text(fileInfo.name),
                           createTagCell(fileInfo.name, fileInfo.tags),
                           fileInfo.version,
@@ -53,12 +54,31 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
 
       if(typeof cellContent === 'string') {
         // 文字列なら、テキストとして設定
-        $tableRow.append($('<td></td>').text(cellContent));
+        $tableRow.append($('<td>').text(cellContent));
       } else {
         // 文字列以外なら、要素として追加
-        $tableRow.append($('<td></td>').append(cellContent));
+        $tableRow.append($('<td>').append(cellContent));
       }
     }
+  }
+
+  /**
+   * @brief ドロップダウンメニューを生成する
+   */
+  function createDropdownMenu() {
+    var $button = $('<a>').addClass('dropdown-toggle glyphicon glyphicon-th-list').attr('data-toggle', 'dropdown');
+    $button.append($('<b>').addClass('caret'));
+
+    var $history = $('<li>').append($('<a>').addClass('glyphicon glyphicon-time').text(' 履歴'));
+    var $tagEdit = $('<li>').append($('<a>').addClass('glyphicon glyphicon-tags').text(' タグ編集'));
+
+    var $menuContents = $('<li>').addClass('dropdown-menu')
+                                .append($history)
+                                .append($tagEdit);
+
+    var $menu = $('<div>').append($button).append($menuContents);
+
+    return $('<div>').addClass('dropdown').append($menu);
   }
 
   /**
@@ -68,8 +88,8 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
    * @param tagNames タグ名の配列
    */
   function createTagCell(fileName, tagNames) {
-    $cell = $('<div></div>');
-    $editButton = $('<button></button>')
+    $cell = $('<div>');
+    $editButton = $('<button>')
                     .addClass('glyphicon glyphicon-pencil')
                     .attr('data-toggle', 'modal')
                     .on('click', requestEditTagInfo);
