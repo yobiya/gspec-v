@@ -61,10 +61,15 @@ router.post('/commit', function(request, response) {
 });
 
 /// @brief ファイルをダウンロードする
-router.get('/download/:file_name/:version', function(request, response) {
-  var fileName = request.params.file_name;
-  var version = request.param('version');
-  commit.download(fileName, version, function(downloadPath) {
+router.get('/download/:document_id', function(request, response) {
+  commit.download(request.params.document_id, function(downloadPath, fileName) {
+    response.download(downloadPath, fileName);
+  });
+});
+
+/// @brief バージョン番号の付いたファイルをダウンロードする
+router.get('/download_with_version/:document_id', function(request, response) {
+  commit.downloadWithVersion(request.params.document_id, function(downloadPath, fileName) {
     response.download(downloadPath, fileName);
   });
 });

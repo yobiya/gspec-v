@@ -14,18 +14,18 @@ gspecv.setupCommitInfo = function(selecters) {
   function find(option) {
     selecters.$commitInfoTable.empty();
 
-    $.post('find', option, function(data) {
+    $.post('find', option, function(fileInfos) {
 
       var $tableRow = $('<tr>');
       appendTableRowCell($tableRow, '', 'ファイル名', 'タグ', 'バージョン', 'コメント', 'ユーザー名');
       selecters.$commitInfoTable.append($tableRow);
 
-      data.forEach(function(fileInfo) {
+      fileInfos.forEach(function(fileInfo) {
         var $tableRow = $('<tr>');
 
         appendTableRowCell($tableRow,
                           createDropdownMenu(fileInfo),
-                          $('<a href=download/' + escape(fileInfo.name) + '/' + fileInfo.version + '></a>').text(fileInfo.name),
+                          $('<a href=download/' + fileInfo._id + '></a>').text(fileInfo.name),
                           createTagCell(fileInfo.name, fileInfo.tags),
                           fileInfo.version,
                           fileInfo.comment,
@@ -149,7 +149,7 @@ gspecv.setupCommitInfo = function(selecters) {
       var $tableRow = $('<tr>');
 
       appendTableRowCell($tableRow,
-                        $('<a href=download/' + escape(historyInfo.name) + '/' + historyInfo.version + '></a>').text(historyInfo.name),
+                        $('<a href=download_with_version/' + historyInfo._id + '></a>').text(historyInfo.name),
                         historyInfo.version,
                         historyInfo.comment,
                         historyInfo.user_name);

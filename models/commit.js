@@ -96,6 +96,7 @@ module.exports = function(mongoose) {
         var result = [];
         docs.forEach(function(doc) {
           var fileInfo = {
+            _id: doc._id,
             name: doc.name,
             tags: doc.tags || [],
             version: doc.version,
@@ -157,13 +158,26 @@ module.exports = function(mongoose) {
   /**
    * @brief コミットされているファイルをダウンロード
    *
-   * @param fileName ファイル名
-   * @param version バージョン番号
+   * @param documentId DBのドキュメントID
    * @param resultCallback 結果を返すコールバック
    */
-  function download(fileName, version, resultCallback) {
-    var filePath = path.join(constants.FILE_COMMIT_TOP_DIRECTORY, '0', createSaveFileName(fileName, version));
-    resultCallback(filePath);
+  function download(documentId, resultCallback) {
+    mongoModels.commitInfo.findOne({ _id: documentId }, function(error, doc) {
+      resultCallback(doc.path, doc.name);
+    });
+  }
+
+  /**
+   * @brief バージョン番号の付いたファイルをダウンロード
+   *
+   * @param documentId DBのドキュメントID
+   * @param resultCallback 結果を返すコールバック
+   */
+  function downloadWithVersion(documentId, resultCallback) {
+    mongoModels.commitInfo.findOne({ _id: documentId }, function(error, doc) {
+      var fileNameWithVersion = createSaveFileName(doc.name, doc.version);
+      resultCallback(doc.path, fileNameWithVersion);
+    });
   }
 
   /**
@@ -178,6 +192,7 @@ module.exports = function(mongoose) {
 
       docs.forEach(function(doc) {
         result.push({
+          _id: doc._id,
           name: doc.name,
           version: doc.version,
           comment: doc.comment,
@@ -257,7 +272,7 @@ module.exports = function(mongoose) {
     var extName = path.extname(fileName);
     var baseName = path.basename(fileName, extName);
 
-    return baseName + '_' + version + extName;
+    return baseName + '_v' + version + extName;
   }
 
   /**
@@ -293,6 +308,7 @@ module.exports = function(mongoose) {
     getTagEditInfo: getTagEditInfo,
     applyTagEditInfo: applyTagEditInfo,
     download: download,
+    downloadWithVersion: downloadWithVersion,
     history: history
   };
 };
