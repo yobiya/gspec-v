@@ -42,8 +42,10 @@ router.post('/edit_tag_info', function(request, response) {
 /// @brief タグの編集結果を適用する
 router.post('/apply_tag', function(request, response) {
   var params = postParams(request);
-  params.tag_names = params.tag_names || [];
-  commit.applyTagEditInfo(params.file_name, params.tag_names, function(result) {
+  var fileName = params.file_name;
+  var tagNames = toArray(params['tag_names[]']);
+
+  commit.applyTagEditInfo(fileName, tagNames, function(result) {
     response.send(result);
   });
 });
@@ -60,7 +62,7 @@ router.post('/commit', function(request, response) {
   response.send({ response_code: 0 });
 });
 
-/// @brief ファイルをダウンロードする
+/// @brief 最新のファイルをダウンロードする
 router.get('/download/:document_id', function(request, response) {
   commit.download(request.params.document_id, function(downloadPath, fileName) {
     response.download(downloadPath, fileName);
@@ -100,6 +102,22 @@ function postParams(request) {
   }
 
   return request.query;
+}
+
+/**
+ * @brief 値を配列に変換する
+ *
+ * @param data 変換元のデータ
+ *
+ * @return 配列
+ */
+function toArray(data) {
+  var result = data || [];
+  if(!Array.isArray(data)) {
+    result = [data];
+  }
+
+  return result;
 }
 
 module.exports = router;

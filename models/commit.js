@@ -140,8 +140,6 @@ module.exports = function(mongoose) {
         return;
       }
 
-      console.log(lastDocumentId );
-      console.log(tagNames);
       mongoModels.commitInfo
         .findOneAndUpdate({ _id: lastDocumentId },
                           { tag_names: tagNames },

@@ -51,8 +51,9 @@ gspecv.setupTag = function(selecters) {
   selecters.$applyTagButton.on('click', function() {
     var info = {
       file_name: editFileName,
-      tagNames: []
+      tag_names: fileTagNameArray
     };
+
     $.post('/apply_tag', info)
       .done(function(data) {
       })
