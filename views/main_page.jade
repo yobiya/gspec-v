@@ -16,7 +16,8 @@ block scripts
     $(function() {
       $tagEditDialog = $('#tag_edit_dialog');
       var findSelecterIdInfos = {
-        $tagEditDialog: $tagEditDialog,
+        $historyDialog: $('#history_dialog'),
+        $tagEditDialog: $tagEditDialog
       };
 
       gspecv.setupTag({
@@ -76,6 +77,17 @@ block content
           div.modal-footer
             button.btn.btn-default(data-dismiss='modal') キャンセル
             button.btn.btn-primary#find_button(data-dismiss='modal') 検索
+
+  div.modal.fade#history_dialog(tabindex='-1' role='dialog' aria-hidden='true')
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          h4.modal-title
+            span.glyphicon.glyphicon-search(aria-hidden="true")
+              コミット履歴
+          div
+          div.modal-footer
+            button.btn.btn-default(data-dismiss='modal') クローズ
 
   div.modal.fade#tag_edit_dialog(tabindex='-1' role='dialog' aria-hidden='true')
     div.modal-dialog

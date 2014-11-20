@@ -26,7 +26,7 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
         var $tableRow = $('<tr>');
 
         appendTableRowCell($tableRow,
-                          createDropdownMenu(),
+                          createDropdownMenu(fileInfo),
                           $('<a href=download/' + escape(fileInfo.name) + '/' + fileInfo.version + '></a>').text(fileInfo.name),
                           createTagCell(fileInfo.name, fileInfo.tags),
                           fileInfo.version,
@@ -64,20 +64,25 @@ gspecv.setupFind = function($fileListTable, $findDialog, selecterIdInfos) {
 
   /**
    * @brief ドロップダウンメニューを生成する
+   *
+   * @param fileInfo ファイル情報
    */
-  function createDropdownMenu() {
+  function createDropdownMenu(fileInfo) {
     var $button = $('<a>').addClass('dropdown-toggle glyphicon glyphicon-th-list').attr('data-toggle', 'dropdown');
     $button.append($('<b>').addClass('caret'));
 
-    var $history = $('<li>').append($('<a>').addClass('glyphicon glyphicon-time').text(' 履歴'));
-    var $tagEdit = $('<li>').append($('<a>').addClass('glyphicon glyphicon-tags').text(' タグ編集'));
+    var $history = $('<a>').addClass('glyphicon glyphicon-time')
+                            .text(' 履歴')
+                            .on('click', function() {
+                              selecterIdInfos.$historyDialog.modal('show');
+                            });
+    var $tagEdit = $('<a>').addClass('glyphicon glyphicon-tags').text(' タグ編集');
 
     var $menuContents = $('<li>').addClass('dropdown-menu')
-                                .append($history)
-                                .append($tagEdit);
+                                .append($('<li>').append($history))
+                                .append($('<li>').append($tagEdit));
 
     var $menu = $('<div>').append($button).append($menuContents);
-
     return $('<div>').addClass('dropdown').append($menu);
   }
 
