@@ -80,7 +80,19 @@ gspecv.setupCommitInfo = function(selecters) {
                                   alert(errorMessage);
                                 });
                             });
-    var $tagEdit = $('<a>').addClass('glyphicon glyphicon-tags').text(' タグ編集');
+    var $tagEdit = $('<a>').addClass('glyphicon glyphicon-tags')
+                            .text(' タグ編集')
+                            .on('click', function() {
+                              $.post('/edit_tag_info', { file_name: fileInfo.name })
+                                .done(function(data) {
+                                  selecters.$tagEditDialog
+                                    .setup(fileInfo.name, data)
+                                    .modal('show');
+                                })
+                                .fail(function(error, errorMessage) {
+                                  alert(errorMessage);
+                                });
+                            });
 
     var $menuContents = $('<li>').addClass('dropdown-menu')
                                 .append($('<li>').append($history))
@@ -98,24 +110,6 @@ gspecv.setupCommitInfo = function(selecters) {
    */
   function createTagCell(fileName, tagNames) {
     $cell = $('<div>');
-    $editButton = $('<button>')
-                    .addClass('glyphicon glyphicon-pencil')
-                    .attr('data-toggle', 'modal')
-                    .on('click', requestEditTagInfo);
-
-    function requestEditTagInfo() {
-      $.post('/edit_tag_info', { file_name: fileName })
-        .done(function(data) {
-          selecters.$tagEditDialog
-            .setup(fileName, data)
-            .modal('show');
-        })
-        .fail(function(error, errorMessage) {
-          alert(errorMessage);
-        });
-    }
-
-    $cell.append($editButton);
 /*    var tagNames = '';
     fileInfo.tags.forEach(function(tagName) {
       tagNames += tagName + ' ';
