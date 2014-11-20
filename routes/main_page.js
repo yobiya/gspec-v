@@ -69,6 +69,15 @@ router.get('/download/:file_name/:version', function(request, response) {
   });
 });
 
+/// @brief ファイルの履歴を取得する
+router.post('/history', function(request, response) {
+  var fileName = postParams(request).file_name;
+
+  commit.history(fileName, function(historyInfos) {
+    response.send(historyInfos);
+  });
+});
+
 /// @brief ログインされているかチェックする
 function loginCheck(request, response, next) {
   if(request.session.user) {

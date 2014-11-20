@@ -167,6 +167,28 @@ module.exports = function(mongoose) {
   }
 
   /**
+   * @brief ファイルの履歴を取得する
+   *
+   * @param fileName ファイル名
+   * @param resultCallback 結果を返すコールバック
+   */
+  function history(fileName, resultCallback) {
+    mongoModels.commitInfo.find({ name: fileName }, function(error, docs) {
+      var result = [];
+
+      docs.forEach(function(doc) {
+        result.push({
+          name: doc.name,
+          version: doc.version,
+          comment: doc.comment,
+          user_neme: doc.user_name
+        });
+      });
+      resultCallback(result);
+    });
+  }
+
+  /**
    * @brief コミットされているファイルの最新のバージョン番号を取得する
    *
    * @param fileName ファイル名
@@ -271,5 +293,6 @@ module.exports = function(mongoose) {
     getTagEditInfo: getTagEditInfo,
     applyTagEditInfo: applyTagEditInfo,
     download: download,
+    history: history
   };
 };
