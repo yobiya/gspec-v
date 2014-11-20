@@ -2,13 +2,14 @@
  * @brief タグ関連処理
  */
 var gspecv = gspecv || {};
+gspecv.tag = {};
 
 /**
  * @brief タグ関連処理のセットアップ
  *
  * @param selecters セレクタをまとめたオブジェクト
  */
-gspecv.setupTag = function(selecters) {
+gspecv.tag.setup = function(selecters) {
   var editFileName;
   var fileTagNameArray = [];
   var stockTagNameArray = [];
@@ -27,11 +28,11 @@ gspecv.setupTag = function(selecters) {
       }
     });
     fileTagNameArray.forEach(function(tagName) {
-      selecters.$fileTagList.append(createTagLabel(tagName));
+      selecters.$fileTagList.append(gspecv.tag.createTagLabel(tagName));
     });
 
     stockTagNameArray.forEach(function(tagName) {
-      selecters.$stockTagList.append(createTagLabel(tagName));
+      selecters.$stockTagList.append(gspecv.tag.createTagLabel(tagName));
     });
 
     return selecters.$tagEditDialog;
@@ -43,7 +44,7 @@ gspecv.setupTag = function(selecters) {
     if(newTagName !== '') {
       fileTagNameArray.push(newTagName);
 
-      selecters.$fileTagList.append(createTagLabel(newTagName));
+      selecters.$fileTagList.append(gspecv.tag.createTagLabel(newTagName));
     }
   });
 
@@ -63,19 +64,18 @@ gspecv.setupTag = function(selecters) {
 
     selecters.$tagEditDialog.modal('hide');
   });
-
-  /**
-   * @brief タグのラベルを生成
-   *
-   * @param tagName タグ名
-   *
-   * @return タグのラベル
-   */
-  function createTagLabel(tagName) {
-    return $('<span></span>')
-            .addClass('label label-default')
-            .draggable({ revert: true })
-            .text(tagName);
-  }
 };
 
+/**
+ * @brief タグのラベルを生成
+ *
+ * @param tagName タグ名
+ *
+ * @return タグのラベル
+ */
+gspecv.tag.createTagLabel = function createTagLabel(tagName) {
+  return $('<span>')
+          .addClass('label label-default')
+          .draggable({ revert: true })
+          .text(tagName);
+};

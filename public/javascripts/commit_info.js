@@ -15,7 +15,6 @@ gspecv.setupCommitInfo = function(selecters) {
     selecters.$commitInfoTable.empty();
 
     $.post('find', option, function(fileInfos) {
-
       var $tableRow = $('<tr>');
       appendTableRowCell($tableRow, '', 'ファイル名', 'タグ', 'バージョン', 'コメント', 'ユーザー名');
       selecters.$commitInfoTable.append($tableRow);
@@ -26,7 +25,7 @@ gspecv.setupCommitInfo = function(selecters) {
         appendTableRowCell($tableRow,
                           createDropdownMenu(fileInfo),
                           $('<a href=download/' + fileInfo._id + '></a>').text(fileInfo.name),
-                          createTagCell(fileInfo.name, fileInfo.tags),
+                          createTagCell(fileInfo.tag_names),
                           fileInfo.version,
                           fileInfo.comment,
                           fileInfo.user_name);
@@ -105,17 +104,15 @@ gspecv.setupCommitInfo = function(selecters) {
   /**
    * @brief タグのセルを生成
    *
-   * @param fileName ファイル名
    * @param tagNames タグ名の配列
    */
-  function createTagCell(fileName, tagNames) {
+  function createTagCell(tagNames) {
     $cell = $('<div>');
-/*    var tagNames = '';
-    fileInfo.tags.forEach(function(tagName) {
-      tagNames += tagName + ' ';
+
+    tagNames.forEach(function(name) {
+      $cell.append(gspecv.tag.createTagLabel(name));
     });
-    $tags.val(tagNames);
-*/
+
     return $cell;
   }
 

@@ -98,7 +98,7 @@ module.exports = function(mongoose) {
           var fileInfo = {
             _id: doc._id,
             name: doc.name,
-            tags: doc.tags || [],
+            tag_names: doc.tag_names || [],
             version: doc.version,
             comment: doc.comment,
             user_name: doc.user_name,
