@@ -1,20 +1,11 @@
 /**
  * @brief コミット
  */
-module.exports = function(mongoose) {
+module.exports = function(mongoModels) {
   var fs = require('fs');
   var path = require('path');
   var constants = require('./constants');
   var util = require('util');
-  var schemas = {
-    commitInfo: mongoose.Schema({name: String, path: String, comment: String, tag_names: [String], version: Number, commit_time: Date, user_name: String}),
-    latestCommitId: mongoose.Schema({ commit_doc_id: mongoose.Schema.Types.ObjectId }),
-  };
-
-  var mongoModels = {
-    commitInfo: mongoose.model('commit_infos', schemas.commitInfo),
-    latestCommitId: mongoose.model('latest_commit_info_ids', schemas.latestCommitId),
-  };
 
   /**
    * @brief ファイルをコミット
