@@ -18,6 +18,7 @@ var mongoModels;
 })();
 
 var commit = require('../models/commit')(mongoModels);
+var tag = require('../models/tag')(mongoModels);
 
 // Main page
 router.get('/main_page', loginCheck, function(request, response) {
@@ -37,7 +38,7 @@ router.post('/find', function(request, response) {
 
 /// @brief タグの編集情報を返す
 router.post('/edit_tag_info', function(request, response) {
-  commit.getTagEditInfo(request.body.file_name, function(result) {
+  tag.getTagEditInfo(request.body.file_name, function(result) {
     response.send(result);
   });
 });
@@ -48,7 +49,7 @@ router.post('/apply_tag', function(request, response) {
   var fileName = params.file_name;
   var tagNames = toArray(params['tag_names[]']);
 
-  commit.applyTagEditInfo(fileName, tagNames, function(result) {
+  tag.applyTagEditInfo(fileName, tagNames, function(result) {
     response.send(result);
   });
 });

@@ -31,6 +31,7 @@ module.exports = function(mongoose) {
 
       if(!userData) {
         // ユーザー情報は見つからなかった
+        console.log('User info not found : ' + userData);
         failCallback();
         return;
       }
