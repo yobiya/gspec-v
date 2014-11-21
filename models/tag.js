@@ -9,12 +9,23 @@ module.exports = function(mongoModels) {
    * @param resultCallback 結果を渡すコールバック
    */
   function getTagEditInfo(fileName, resultCallback) {
-    var info = {
-      file_tags: [],
-      stock_tags: []
-    };
+    mongoModels.util.findLatestFileVersion(fileName, function(lastVersion, lastDocumentId) {
+      if(lastVersion === 0) {
+        resultCallback({ errorMessage: '対象のファイルは見つかりませんでした' });
+        return;
+      }
 
-    resultCallback(info);
+      mongoModels
+        .commitInfo
+        .findOne({ _id: lastDocumentId }, function(error, doc) {
+          var info = {
+            file_tags: doc.tag_names,
+            stock_tags: []
+          };
+
+          resultCallback(info);
+        });
+    });
   }
 
   /**
@@ -31,7 +42,8 @@ module.exports = function(mongoModels) {
         return;
       }
 
-      mongoModels.commitInfo
+      mongoModels
+        .commitInfo
         .findOneAndUpdate({ _id: lastDocumentId },
                           { tag_names: tagNames },
                           function(error, docs) {

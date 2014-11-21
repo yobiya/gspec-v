@@ -17,6 +17,7 @@ gspecv.tag.setup = function(selecters) {
   // ダイアログのセットアップメソッドを設定
   selecters.$tagEditDialog.setup = function(fileName, data) {
     editFileName = fileName;
+    fileTagNameArray = data.file_tags;
 
     // タグ情報を構築
     selecters.$fileTagList.droppable({
