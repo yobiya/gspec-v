@@ -2,7 +2,6 @@
  * @brief コミット
  */
 module.exports = function(mongoModels) {
-
   /**
    * @brief タグ編集用情報を取得する
    *
@@ -26,7 +25,7 @@ module.exports = function(mongoModels) {
    * @param resultCallback 結果を渡すコールバック
    */
   function applyTagEditInfo(fileName, tagNames, resultCallback) {
-    getLatestFileVersion(fileName, function(lastVersion, lastDocumentId) {
+    mongoModels.util.findLatestFileVersion(fileName, function(lastVersion, lastDocumentId) {
       if(lastVersion === 0) {
         resultCallback({ errorMessage: '対象のファイルは見つかりませんでした' });
         return;

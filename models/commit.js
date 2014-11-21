@@ -17,7 +17,7 @@ module.exports = function(mongoModels) {
   function commit(uploadFiles, comment, userName) {
     uploadFiles.forEach(function(uploadFile) {
       // コミットされている同名のファイルの最新バージョン番号を取得する
-      getLatestFileVersion(uploadFile.originalname, function(lastVersion, lastDocumentId) {
+      mongoModels.util.findLatestFileVersion(uploadFile.originalname, function(lastVersion, lastDocumentId) {
         // ディレクトリが無ければ作成する
         var directoryPath = makeCommitDirectory(0); ///< @todo 適切なコミットディレクトリ名を計算する
         var newVersion = lastVersion + 1;
@@ -148,33 +148,6 @@ module.exports = function(mongoModels) {
       });
       resultCallback(result);
     });
-  }
-
-  /**
-   * @brief コミットされているファイルの最新のバージョン番号を取得する
-   *
-   * @param fileName ファイル名
-   * @param successCallback 成功時に呼び出されるコールバック
-   */
-  function getLatestFileVersion(fileName, successCallback) {
-    mongoModels.commitInfo
-      .find({ name: fileName })
-      .select('version')
-      .sort({ version: -1})
-      .limit(1)
-      .exec(function(error, docs) {
-        if(error) {
-          throw error;
-        }
-
-        if(docs.length > 0) {
-          // コミットされているファイルは見つかった
-          successCallback(docs[0].version, docs[0]._id);
-        } else {
-          // コミットされているファイルは見つからなかった
-          successCallback(0);
-        }
-      });
   }
 
   /**
