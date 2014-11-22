@@ -2,6 +2,7 @@
  * @brief 検索関連処理
  */
 var gspecv = gspecv || {};
+gspecv.commitInfo = {};
 
 /**
  * @brief 検索処理のセットアップ
@@ -10,15 +11,11 @@ var gspecv = gspecv || {};
  *
  * return 検索関数
  */
-gspecv.setupCommitInfo = function(selecters) {
+gspecv.commitInfo.setup = function(selecters) {
   function find(option) {
     selecters.$commitInfoTable.empty();
 
     $.post('find', option, function(fileInfos) {
-      var $tableRow = $('<tr>');
-      appendTableRowCell($tableRow, '', 'ファイル名', 'タグ', 'バージョン', 'コメント', 'ユーザー名');
-      selecters.$commitInfoTable.append($tableRow);
-
       fileInfos.forEach(function(fileInfo) {
         var $tableRow = $('<tr>');
 
@@ -128,13 +125,7 @@ gspecv.setupCommitInfo = function(selecters) {
 
   // 履歴ダイアログにセットアップメソッドを追加
   selecters.$historyDialog.setup = function(historyInfoArray) {
-    var dialog = selecters.$historyDialog;
-    var $table = dialog.find('.commit_info_table').append($tableRow);
-    $table.empty();
-
-    var $tableRow = $('<tr>');
-    appendTableRowCell($tableRow, 'ファイル名', 'バージョン', 'コメント', 'ユーザー名');
-    $table.append($tableRow);
+    selecters.$historyInfoTable.empty();
 
     historyInfoArray.forEach(function(historyInfo) {
       var $tableRow = $('<tr>');
@@ -145,11 +136,11 @@ gspecv.setupCommitInfo = function(selecters) {
                         historyInfo.comment,
                         historyInfo.user_name);
 
-      $table.append($tableRow);
+      selecters.$historyInfoTable.append($tableRow);
     });
  
 
-    return dialog;
+    return selecters.$historyDialog;
   };
 
   // セットアップ時に、最新のファイルを検索する

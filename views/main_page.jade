@@ -17,12 +17,13 @@ block scripts
     $(function() {
       $tagEditDialog = $('#tag_edit_dialog');
       var commitInfoSelecters = {
-        $commitInfoTable: $('#find_info .commit_info_table'),
+        $commitInfoTable: $('#find_info tbody'),
         $findDialog: $('#find_dialog'),
         $historyDialog: $('#history_dialog'),
+        $historyInfoTable: $('#history_dialog tbody'),
         $tagEditDialog: $tagEditDialog
       };
-      var find = gspecv.setupCommitInfo(commitInfoSelecters);
+      var find = gspecv.commitInfo.setup(commitInfoSelecters);
 
       gspecv.tag.setup({
         tagCreateDialog: '#tag_create_dialog',
@@ -59,7 +60,16 @@ block content
     button.btn.btn-primary(data-toggle='modal' data-target='#find_dialog')
       span.glyphicon.glyphicon-search(aria-hidden="true")
         検索
-    table.table.table-striped.commit_info_table
+    table.table.table-striped
+      thead
+        tr
+          td
+          td ファイル名
+          td タグ
+          td バージョン
+          td コメント
+          td ユーザー名
+      tbody
 
   div#commit_box
     div#file_names
