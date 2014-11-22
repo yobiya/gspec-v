@@ -88,6 +88,7 @@ module.exports = function(mongoModels) {
 
   return {
     getTagEditInfo: getTagEditInfo,
-    applyTagEditInfo: applyTagEditInfo
+    applyTagEditInfo: applyTagEditInfo,
+    findAllLatestTagNames: findAllLatestTagNames
   };
 };

@@ -63,6 +63,10 @@ module.exports = function(mongoModels) {
    */
   function find(fileNames, resultCallback) {
     mongoModels.latestCommitId.find({}, function(error, docs) {
+      if(error) {
+        throw error;
+      }
+
       var commitDocIds = [];
       docs.forEach(function(doc) {
         commitDocIds.push(doc.commit_doc_id);

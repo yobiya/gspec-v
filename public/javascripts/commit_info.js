@@ -1,11 +1,11 @@
 /**
- * @brief 検索関連処理
+ * @brief コミット情報処理
  */
 var gspecv = gspecv || {};
 gspecv.commitInfo = {};
 
 /**
- * @brief 検索処理のセットアップ
+ * @brief コミット情報処理のセットアップ
  *
  * @param selecters セレクタをまとめたオブジェクト
  *
