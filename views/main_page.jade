@@ -21,6 +21,7 @@ block scripts
         $historyDialog: $('#history_dialog'),
         $tagEditDialog: $tagEditDialog
       };
+      var find = gspecv.setupCommitInfo(commitInfoSelecters);
 
       gspecv.tag.setup({
         tagCreateDialog: '#tag_create_dialog',
@@ -30,8 +31,9 @@ block scripts
         $applyTagButton: $tagEditDialog.find('#apply_button'),
         $fileTagList: $('#tag_edit_dialog #file_tag_list'),
         $stockTagList: $('#tag_edit_dialog #stock_tag_list')
-      });
-      var find = gspecv.setupCommitInfo(commitInfoSelecters);
+      },
+      find);
+
       gspecv.setupCommit($('#commit_box'), function() {
         // コミットを行ったら、ファイル一覧の表示を更新する
         find();
