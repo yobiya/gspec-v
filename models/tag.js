@@ -18,12 +18,14 @@ module.exports = function(mongoModels) {
       mongoModels
         .commitInfo
         .findOne({ _id: lastDocumentId }, function(error, doc) {
-          var info = {
-            file_tags: doc.tag_names,
-            stock_tags: []
-          };
+          findAllLatestTagNames(function(tagNames) {
+            var info = {
+              file_tags: doc.tag_names,
+              stock_tags: tagNames
+            };
 
-          resultCallback(info);
+            resultCallback(info);
+          });
         });
     });
   }
@@ -54,6 +56,15 @@ module.exports = function(mongoModels) {
                             resultCallback({});
                           });
     });
+  }
+
+  /**
+   * @brief 最新のコミット情報のタグを全て取得する
+   *
+   * @param resultCallback 結果を渡すコールバック
+   */
+  function findAllLatestTagNames(resultCallback) {
+    resultCallback([]);
   }
 
   return {
