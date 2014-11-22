@@ -10,11 +10,21 @@ block scripts
   script(src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js')
   script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js')
   script(src='//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js')
+  script(src='javascripts/find.js')
   script(src='javascripts/commit_info.js')
   script(src='javascripts/tag.js')
   script(src='javascripts/commit.js')
   script(type='text/javascript').
     $(function() {
+      gspecv.find.setup({
+        $findButton: $('#find_button'),
+        $findDialog: $('#find_dialog'),
+        $inclusionAllTagList: $('#inclusion_all_tag_list'),
+        $inclusionAnyTagList: $('#inclusion_any_tag_list'),
+        $exclusionTagList: $('#exclusion_tag_list'),
+        $livingTagList: $('.living_tag_list')
+      });
+
       $tagEditDialog = $('#tag_edit_dialog');
       var commitInfoSelecters = {
         $commitInfoTable: $('#find_info tbody'),
@@ -57,7 +67,7 @@ block content
                 a(href='/login/logout') Logout
 
   div.container#find_info
-    button.btn.btn-primary(data-toggle='modal' data-target='#find_dialog')
+    button.btn.btn-primary#find_button(data-toggle='modal')
       span.glyphicon.glyphicon-search(aria-hidden="true")
         検索
     table.table.table-striped

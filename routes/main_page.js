@@ -81,6 +81,13 @@ router.get('/download_with_version/:document_id', function(request, response) {
   });
 });
 
+/// @brief 最新のタグ名一覧を取得する
+router.post('/latest_tag_names', function(request, response) {
+  tag.findAllLatestTagNames(function(tagNames) {
+    response.send(tagNames);
+  });
+});
+
 /// @brief ファイルの履歴を取得する
 router.post('/history', function(request, response) {
   var fileName = postParams(request).file_name;

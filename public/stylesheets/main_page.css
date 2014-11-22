@@ -38,13 +38,23 @@
   position: relative;
   border: 1px solid #aaaaaa;
   width: 280px;
-  height: 200px;
 }
 
 .right_tag_list {
   position: relative;
   border: 1px solid #aaaaaa;
   width: 280px;
+}
+
+.find_tag_list {
+  height: 60px;
+}
+
+.living_tag_list {
+  height: 220px;
+}
+
+.tag_edit_list {
   height: 200px;
 }
 
