@@ -35,13 +35,23 @@ gspecv.tag.setup = function(selecters, updateView) {
     fileTagNameArray = data.file_tags;
     stockTagNameArray = data.stock_tags;
 
-    // タグ情報を構築
+    // タグリストを構築
     selecters.$fileTagList.droppable({
       drop: function(event, ui) {
         var $dropedSelecter = $(ui.draggable[0]);
         var droppedTagName = $dropedSelecter.text();
         fileTagNameArray.push(droppedTagName);
         stockTagNameArray = _.remove(stockTagNameArray, function(name) { return name !== droppedTagName; });
+
+        updateTagList();
+      }
+    });
+    selecters.$stockTagList.droppable({
+      drop: function(event, ui) {
+        var $dropedSelecter = $(ui.draggable[0]);
+        var droppedTagName = $dropedSelecter.text();
+        stockTagNameArray.push(droppedTagName);
+        fileTagNameArray = _.remove(fileTagNameArray, function(name) { return name !== droppedTagName; });
 
         updateTagList();
       }
