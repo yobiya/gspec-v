@@ -15,25 +15,11 @@ gspecv.tag.setup = function(selecters, updateView) {
   var fileTagNameArray = [];
   var stockTagNameArray = [];
 
-  // ダイアログのセットアップメソッドを設定
-  selecters.$tagEditDialog.setup = function(fileName, data) {
-    editFileName = fileName;
-    fileTagNameArray = data.file_tags;
-    stockTagNameArray = data.stock_tags;
-
+  function updateTagList() {
     // 既存のタグ情報を削除
     selecters.$fileTagList.find('.tag').remove();
     selecters.$stockTagList.find('.tag').remove();
 
-    // タグ情報を構築
-    selecters.$fileTagList.droppable({
-      drop: function(event, ui) {
-        var $dropedSelecter = $(ui.draggable[0]);
-        $dropedSelecter.remove();
-        selecters.$fileTagList.append($dropedSelecter);
-        $dropedSelecter.draggable({ revert: true });
-      }
-    });
     fileTagNameArray.forEach(function(tagName) {
       selecters.$fileTagList.append(gspecv.tag.createTagLabel(tagName));
     });
@@ -41,6 +27,27 @@ gspecv.tag.setup = function(selecters, updateView) {
     stockTagNameArray.forEach(function(tagName) {
       selecters.$stockTagList.append(gspecv.tag.createTagLabel(tagName));
     });
+  }
+
+  // ダイアログのセットアップメソッドを設定
+  selecters.$tagEditDialog.setup = function(fileName, data) {
+    editFileName = fileName;
+    fileTagNameArray = data.file_tags;
+    stockTagNameArray = data.stock_tags;
+
+    // タグ情報を構築
+    selecters.$fileTagList.droppable({
+      drop: function(event, ui) {
+        var $dropedSelecter = $(ui.draggable[0]);
+        var droppedTagName = $dropedSelecter.text();
+        fileTagNameArray.push(droppedTagName);
+        stockTagNameArray = _.remove(stockTagNameArray, function(name) { return name !== droppedTagName; });
+
+        updateTagList();
+      }
+    });
+
+    updateTagList();
 
     return selecters.$tagEditDialog;
   };
@@ -64,6 +71,9 @@ gspecv.tag.setup = function(selecters, updateView) {
 
     $.post('/apply_tag', info)
       .done(function(data) {
+        if(data.errorMessage) {
+          alsert(data.errorMessage);
+        }
       })
       .fail(function(error, errorMessage) {
         alsert(errorMessage);
