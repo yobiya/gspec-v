@@ -7,9 +7,13 @@ div.modal.fade#find_dialog(tabindex='-1' role='dialog' aria-hidden='true')
           span.glyphicon.glyphicon-search(aria-hidden="true")
             ファイルを検索
         div.modal-body
-          div.form-group
+          div.form-inline
             label.control-label ファイル名
-            input.form-control#file_names(type='text')
+            input.form-control#file_names(type='text' placeholder='複数のファイル名を検索するには、カンマで名前を区切る')
+          br
+
+          include ./tag_group_list.jade
+
         div.modal-footer
           button.btn.btn-default(data-dismiss='modal') キャンセル
           button.btn.btn-primary#find_button(data-dismiss='modal') 検索
