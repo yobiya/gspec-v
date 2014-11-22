@@ -10,12 +10,12 @@ div.modal.fade#tag_edit_dialog(tabindex='-1' role='dialog' aria-hidden='true')
           tr
             td
               ファイルのタグ
-              h3#file_tag_list
+              h3.left_tag_list
                 button.btn.btn-primary#create_tag_button(data-toggle='modal' data-target='#tag_create_dialog')
                   span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
             td
               使用可能なタグ
-              h3#stock_tag_list
+              h3.right_tag_list
         div.modal-footer
           button.btn.btn-default(data-dismiss='modal') キャンセル
           button.btn.btn-primary#apply_button 決定
