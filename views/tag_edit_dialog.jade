@@ -1,0 +1,37 @@
+//- タグ編集ダイアログ
+div.modal.fade#tag_edit_dialog(tabindex='-1' role='dialog' aria-hidden='true')
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h4.modal-title
+          span.glyphicon.glyphicon-search(aria-hidden="true")
+            タグを編集
+        table
+          tr
+            td
+              ファイルのタグ
+              h3#file_tag_list
+                button.btn.btn-primary#create_tag_button(data-toggle='modal' data-target='#tag_create_dialog')
+                  span.glyphicon.glyphicon-plus-sign(aria-hidden="true") 新しいタグを作成
+            td
+              使用可能なタグ
+              h3#stock_tag_list
+        div.modal-footer
+          button.btn.btn-default(data-dismiss='modal') キャンセル
+          button.btn.btn-primary#apply_button 決定
+
+div.modal.fade#tag_create_dialog(tabindex='-1' role='dialog' aria-hidden='true')
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h4.modal-title
+          span.glyphicon.glyphicon-search(aria-hidden="true")
+            新しいタグを作成
+        div.modal-body.row
+          div.form-group
+            label.control-label タグ名
+            input.form-control#tag_name(type='text')
+        div.modal-footer
+          button.btn.btn-default(data-dismiss='modal') キャンセル
+          button.btn.btn-primary#create_button(data-dismiss='modal') 作成
+
