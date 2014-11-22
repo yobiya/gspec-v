@@ -62,7 +62,7 @@ module.exports = function(mongoModels) {
    * @param resultCallback 結果を渡すコールバック
    */
   function find(fileNames, resultCallback) {
-    var query = mongoModels.latestCommitId.find({}, function(error, docs) {
+    mongoModels.latestCommitId.find({}, function(error, docs) {
       var commitDocIds = [];
       docs.forEach(function(doc) {
         commitDocIds.push(doc.commit_doc_id);

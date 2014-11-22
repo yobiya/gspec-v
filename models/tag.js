@@ -2,6 +2,8 @@
  * @brief コミット
  */
 module.exports = function(mongoModels) {
+  var _ = require('lodash');
+
   /**
    * @brief タグ編集用情報を取得する
    *
@@ -21,7 +23,7 @@ module.exports = function(mongoModels) {
           findAllLatestTagNames(function(tagNames) {
             var info = {
               file_tags: doc.tag_names,
-              stock_tags: tagNames
+              stock_tags: _.difference(tagNames, doc.tag_names)
             };
 
             resultCallback(info);
@@ -64,7 +66,24 @@ module.exports = function(mongoModels) {
    * @param resultCallback 結果を渡すコールバック
    */
   function findAllLatestTagNames(resultCallback) {
-    resultCallback([]);
+    mongoModels.latestCommitId.find({}, function(error, docs) {
+      var commitDocIds = _.pluck(docs, function(doc) { return doc.commit_doc_id; });
+      var findInfo = { _id: { $in: commitDocIds } };
+
+      mongoModels.commitInfo.find(findInfo, function(error, docs) {
+        if(error) {
+          throw error;
+        }
+
+        var tagNames = _(docs)
+                        .pluck('tag_names')
+                        .flatten()
+                        .uniq()
+                        .value();
+
+        resultCallback(tagNames);
+      });
+    });
   }
 
   return {

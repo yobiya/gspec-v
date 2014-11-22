@@ -19,6 +19,7 @@ gspecv.tag.setup = function(selecters, updateView) {
   selecters.$tagEditDialog.setup = function(fileName, data) {
     editFileName = fileName;
     fileTagNameArray = data.file_tags;
+    stockTagNameArray = data.stock_tags;
 
     // 既存のタグ情報を削除
     selecters.$fileTagList.find('.tag').remove();
