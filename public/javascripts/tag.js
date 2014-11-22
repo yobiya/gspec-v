@@ -20,6 +20,10 @@ gspecv.tag.setup = function(selecters, updateView) {
     editFileName = fileName;
     fileTagNameArray = data.file_tags;
 
+    // 既存のタグ情報を削除
+    selecters.$fileTagList.find('.tag').remove();
+    selecters.$stockTagList.find('.tag').remove();
+
     // タグ情報を構築
     selecters.$fileTagList.droppable({
       drop: function(event, ui) {
@@ -80,7 +84,7 @@ gspecv.tag.setup = function(selecters, updateView) {
  */
 gspecv.tag.createTagLabel = function createTagLabel(tagName) {
   return $('<span>')
-          .addClass('label label-default')
+          .addClass('label label-default tag')
           .draggable({ revert: true })
           .text(tagName);
 };
