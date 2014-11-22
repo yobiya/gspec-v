@@ -11,8 +11,16 @@ div.modal.fade#find_dialog(tabindex='-1' role='dialog' aria-hidden='true')
             label.control-label ファイル名
             input.form-control#file_names(type='text' placeholder='複数のファイル名を検索するには、カンマで名前を区切る')
           br
-
-          include ./tag_group_list.jade
+          div.form-group
+            label.control-label タグ
+            table
+              tr
+                td
+                  検索するタグ
+                  h3.left_tag_list
+                td
+                  使用可能なタグ
+                  h3.right_tag_list
 
         div.modal-footer
           button.btn.btn-default(data-dismiss='modal') キャンセル
