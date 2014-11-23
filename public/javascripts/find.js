@@ -17,6 +17,10 @@ gspecv.find.setup = function(selecters) {
     selecters.$livingTagList
   ];
 
+  selecters.$findDialog.setup = function(findInfo) {
+
+  };
+/*
   selecters.$findButton.on('click', function() {
     tagListArray.forEach(function(tagList) {
       tagList.tagNames = [];
@@ -32,7 +36,7 @@ gspecv.find.setup = function(selecters) {
       .fail(function(error, errorMessage) {
         alert(errorMessage);
       });
-  });
+  });*/
 
   // 各タグの表示領域に、ドロップ設定を追加
   tagListArray.forEach(function(tagList) {

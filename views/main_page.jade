@@ -16,14 +16,14 @@ block scripts
   script(src='javascripts/commit.js')
   script(type='text/javascript').
     $(function() {
+      var $findDialog = $('#find_dialog');
       var $tagEditDialog = $('#tag_edit_dialog');
       var $inclusionAllTagList = $('#inclusion_all_tag_list');
       var $inclusionAnyTagList = $('#inclusion_any_tag_list');
       var $exclusionTagList = $('#exclusion_tag_list');
 
       gspecv.find.setup({
-        $findButton: $('#find_button'),
-        $findDialog: $('#find_dialog'),
+        $findDialog: $findDialog,
         $inclusionAllTagList: $inclusionAllTagList,
         $inclusionAnyTagList: $inclusionAnyTagList,
         $exclusionTagList: $exclusionTagList,
@@ -31,10 +31,11 @@ block scripts
       });
 
       var find = gspecv.commitInfo.setup({
+        findButtonClass: '.find_button',
         $commitInfoBase: $('#commit_info_base'),
         $commitInfoTabPanel: $('#commit_info_tabs .nav-tabs'),
         $commitInfoTabContent: $('#commit_info_tabs .tab-content'),
-        $findDialog: $('#find_dialog'),
+        $findDialog: $findDialog,
         $historyDialog: $('#history_dialog'),
         $historyInfoTable: $('#history_dialog tbody'),
         $tagEditDialog: $tagEditDialog,
@@ -79,7 +80,7 @@ block content
     div.tab-content
 
   div.container#commit_info_base
-    button.btn.btn-primary#find_button(data-toggle='modal')
+    button.btn.btn-primary.find_button(data-toggle='modal')
       span.glyphicon.glyphicon-search(aria-hidden="true")
         検索
     table.table.table-striped

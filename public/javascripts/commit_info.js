@@ -12,8 +12,8 @@ gspecv.commitInfo = {};
  * return 検索関数
  */
 gspecv.commitInfo.setup = function(selecters) {
-  function find(option) {
-    selecters.$commitInfoTable.empty();
+  function find($tableBody, option) {
+    $tableBody.empty();
 
     $.post('find', option, function(fileInfos) {
       fileInfos.forEach(function(fileInfo) {
@@ -27,7 +27,7 @@ gspecv.commitInfo.setup = function(selecters) {
                           fileInfo.comment,
                           fileInfo.user_name);
 
-        selecters.$commitInfoTable.append($tableRow);
+        $tableBody.append($tableRow);
       });
     },
     'json')
@@ -157,15 +157,38 @@ gspecv.commitInfo.setup = function(selecters) {
     var $tabName = $('<a>').attr('role', "tab").attr('data-toggle', "tab").text(tabName);
     return $('<li>').attr('role', 'presentation').append($tabName);
   }
+
+  /**
+   * @brief タブの要素を生成する
+   *
+   * @return タブの要素のjQueryオブジェクト
+   */
+  function createTabContent() {
+    var $content = selecters.$commitInfoBase.clone().show();
+    var $findButton = $($content.find(selecters.findButtonClass)[0]);
+
+    $findButton.on('click', function() {
+      // 最新のコミットで使用されているタグ名一覧を取得する
+      $.post('/latest_tag_names', {})
+        .done(function(tagNames) {
+          selecters.$findDialog.modal('show');
+        })
+        .fail(function(error, errorMessage) {
+          alert(errorMessage);
+        });
+    });
+
+    return $content;
+  }
   
   /// 最初のタブを追加
   var $tab = createTab('tab1').addClass('active');
   selecters.$commitInfoTabPanel.append($tab);
-  var $content = selecters.$commitInfoBase.clone().show();
+  var $content = createTabContent();
   selecters.$commitInfoTabContent.append($content);
 
   // セットアップ時に、最新のファイルを検索する
-  find();
+  find($content.find('tbody'));
 
   return find;
 };
