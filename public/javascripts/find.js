@@ -17,8 +17,17 @@ gspecv.find.setup = function(selecters) {
     selecters.$livingTagList
   ];
 
-  selecters.$findDialog.setup = function(findInfo) {
+  selecters.$findDialog.setup = function($targetTBody, findInfo) {
+    this.$targetTBody = $targetTBody;
 
+    selecters.$inclusionAllTagList.tagNames = findInfo.inclusionAllTagNames;
+    selecters.$inclusionAnyTagList.tagNames = findInfo.inclusionAnyTagNames;
+    selecters.$exclusionTagList.tagNames = findInfo.exclusionTagNames;
+    selecters.$livingTagList.tagNames = findInfo.livingTagNames;
+
+    updateTagList();
+
+    return this;
   };
 /*
   selecters.$findButton.on('click', function() {

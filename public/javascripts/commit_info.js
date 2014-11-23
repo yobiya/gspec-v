@@ -118,7 +118,7 @@ gspecv.commitInfo.setup = function(selecters) {
     var fileNames = selecters.$findDialog.find('#file_names').val();
     var fileNameArray = (fileNames === '') ? ([]) : (fileNames.split(','));
 
-    find({
+    find(selecters.$findDialog.$targetTBody, {
       file_names: fileNameArray,
       inclusion_all_tag_names: selecters.$inclusionAllTagList.tagNames,
       inclusion_any_tag_names: selecters.$inclusionAnyTagList.tagNames,
@@ -171,7 +171,16 @@ gspecv.commitInfo.setup = function(selecters) {
       // 最新のコミットで使用されているタグ名一覧を取得する
       $.post('/latest_tag_names', {})
         .done(function(tagNames) {
-          selecters.$findDialog.modal('show');
+
+          var findInfo = {
+            inclusionAllTagNames: [],
+            inclusionAnyTagNames: [],
+            exclusionTagNames: [],
+            livingTagNames: tagNames
+          };
+          selecters.$findDialog.setup($content.find('tbody'), findInfo).modal('show');
+
+          localStorage.findInfos[0] = JSON.stringify(findInfo);
         })
         .fail(function(error, errorMessage) {
           alert(errorMessage);
@@ -180,6 +189,9 @@ gspecv.commitInfo.setup = function(selecters) {
 
     return $content;
   }
+
+  // ローカルストレージを設定
+  localStorage.findInfos = localStorage.findInfos || [];
   
   /// 最初のタブを追加
   var $tab = createTab('tab1').addClass('active');
