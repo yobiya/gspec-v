@@ -16,24 +16,30 @@ block scripts
   script(src='javascripts/commit.js')
   script(type='text/javascript').
     $(function() {
+      var $tagEditDialog = $('#tag_edit_dialog');
+      var $inclusionAllTagList = $('#inclusion_all_tag_list');
+      var $inclusionAnyTagList = $('#inclusion_any_tag_list');
+      var $exclusionTagList = $('#exclusion_tag_list');
+
       gspecv.find.setup({
         $findButton: $('#find_button'),
         $findDialog: $('#find_dialog'),
-        $inclusionAllTagList: $('#inclusion_all_tag_list'),
-        $inclusionAnyTagList: $('#inclusion_any_tag_list'),
-        $exclusionTagList: $('#exclusion_tag_list'),
+        $inclusionAllTagList: $inclusionAllTagList,
+        $inclusionAnyTagList: $inclusionAnyTagList,
+        $exclusionTagList: $exclusionTagList,
         $livingTagList: $('.living_tag_list')
       });
 
-      $tagEditDialog = $('#tag_edit_dialog');
-      var commitInfoSelecters = {
+      var find = gspecv.commitInfo.setup({
         $commitInfoTable: $('#find_info tbody'),
         $findDialog: $('#find_dialog'),
         $historyDialog: $('#history_dialog'),
         $historyInfoTable: $('#history_dialog tbody'),
-        $tagEditDialog: $tagEditDialog
-      };
-      var find = gspecv.commitInfo.setup(commitInfoSelecters);
+        $tagEditDialog: $tagEditDialog,
+        $inclusionAllTagList: $inclusionAllTagList,
+        $inclusionAnyTagList: $inclusionAnyTagList,
+        $exclusionTagList: $exclusionTagList
+      });
 
       gspecv.tag.setup({
         tagCreateDialog: '#tag_create_dialog',

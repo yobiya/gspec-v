@@ -72,7 +72,6 @@ module.exports = function(mongoModels) {
       var findInfo = { _id: { $in: commitDocIds } };
 
       // 曖昧検索に対応
-      console.log(findProvision);
       if(findProvision.fileNames.length > 0) {
         var likeNames = _.map(findProvision.fileNames, function(name) {
           return new RegExp(name.trim(), 'i');
@@ -80,7 +79,23 @@ module.exports = function(mongoModels) {
         findInfo.name = { $in: likeNames };
       }
 
-      console.log(findInfo);
+      // 必ず含むタグを設定
+      if(findProvision.inclusionAllTagNames.length > 0) {
+        findInfo.tag_names = findInfo.tag_names || {};
+        findInfo.tag_names.$all = findProvision.inclusionAllTagNames;
+      }
+
+      // いずれかを含むタグを設定
+      if(findProvision.inclusionAnyTagNames.length > 0) {
+        findInfo.tag_names = findInfo.tag_names || {};
+        findInfo.tag_names.$in = findProvision.inclusionAnyTagNames;
+      }
+
+      // 除外するタグを設定
+      if(findProvision.exclusionTagNames.length > 0) {
+        findInfo.tag_names = findInfo.tag_names || {};
+        findInfo.tag_names.$nin = findProvision.exclusionTagNames;
+      }
 
       mongoModels.commitInfo.find(findInfo, function(error, docs) {
         if(error) {

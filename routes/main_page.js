@@ -31,9 +31,9 @@ router.post('/find', function(request, response) {
   params.tags = params.tags || {};
   var findProvision = {
     fileNames: toArray(params['file_names[]']),
-    inclusionAllTagNames: toArray(params.tags['inclusion_all[]']),
-    inclusionAnyTagNames: toArray(params.tags['inclusion_any[]']),
-    exclusionTagNames: toArray(params.tags['exclusion[]'])
+    inclusionAllTagNames: toArray(params['inclusion_all_tag_names[]']),
+    inclusionAnyTagNames: toArray(params['inclusion_any_tag_names[]']),
+    exclusionTagNames: toArray(params['exclusion_tag_names[]'])
   };
 
   commit.find(findProvision, function(result) {

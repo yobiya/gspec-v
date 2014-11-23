@@ -120,11 +120,9 @@ gspecv.commitInfo.setup = function(selecters) {
 
     find({
       file_names: fileNameArray,
-      tags: {
-        inclusion_all: [],
-        inclusion_any: [],
-        exclusion: []
-      }
+      inclusion_all_tag_names: selecters.$inclusionAllTagList.tagNames,
+      inclusion_any_tag_names: selecters.$inclusionAnyTagList.tagNames,
+      exclusion_tag_names: selecters.$exclusionTagList.tagNames
     });
   });
 
