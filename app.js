@@ -27,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: 'secret_value', ///< @todo 環境変数から読み込む
+  resave: false,
   store: new MongoStore({
     db: 'gspecv',
     host: 'localhost',

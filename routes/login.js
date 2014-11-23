@@ -34,7 +34,9 @@ router.post('/login_auth', function(request, response) {
     function(sessionValue) {
       // ログイン成功
       request.session.user = sessionValue;
-      response.redirect(302, '../main_page');
+      request.session.save(function() {
+        response.redirect(302, '../main_page');
+      });
     },
     function() {
       // ログイン失敗
