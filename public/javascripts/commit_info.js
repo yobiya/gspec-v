@@ -174,11 +174,18 @@ gspecv.commitInfo.setup = function(selecters) {
     $.post('/latest_tag_names', {})
       .done(function(tagNames) {
 
+        var livingTagNames = _(tagNames)
+                              .difference($activeTab.findInfo.inclusion_all_tag_names)
+                              .difference($activeTab.findInfo.inclusion_any_tag_names)
+                              .difference($activeTab.findInfo.exclusion_tag_names)
+                              .value();
+
         var findInfo = {
-          inclusionAllTagNames: [],
-          inclusionAnyTagNames: [],
-          exclusionTagNames: [],
-          livingTagNames: tagNames
+          fileNames: $activeTab.findInfo.file_names || [],
+          inclusionAllTagNames: $activeTab.findInfo.inclusion_all_tag_names || [],
+          inclusionAnyTagNames: $activeTab.findInfo.inclusion_any_tag_names || [],
+          exclusionTagNames: $activeTab.findInfo.exclusion_tag_names || [],
+          livingTagNames: livingTagNames
         };
         selecters.$findDialog.setup(findInfo).modal('show');
 
