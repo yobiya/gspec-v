@@ -12,6 +12,9 @@ gspecv.commitInfo = {};
  * return 検索関数
  */
 gspecv.commitInfo.setup = function(selecters) {
+  const DEFAULT_TAG_NAME = 'All';
+  var $activeTab;
+
   function find(option) {
     $.post('find', option, function(fileInfos) {
       selecters.$commitInfoTBody.empty();
@@ -118,12 +121,31 @@ gspecv.commitInfo.setup = function(selecters) {
     var fileNames = selecters.$findDialog.find('#file_names').val();
     var fileNameArray = (fileNames === '') ? ([]) : (fileNames.split(','));
 
-    find({
+    $activeTab.findInfo = {
       file_names: fileNameArray,
       inclusion_all_tag_names: selecters.$inclusionAllTagList.tagNames,
       inclusion_any_tag_names: selecters.$inclusionAnyTagList.tagNames,
       exclusion_tag_names: selecters.$exclusionTagList.tagNames
-    });
+    };
+
+    // 検索条件に合ったタグ名を取得する
+    var tagName = (function() {
+      // 検索条件を一つの配列とする
+      var findValueArray = fileNameArray
+                            .concat(selecters.$inclusionAllTagList.tagNames)
+                            .concat(selecters.$inclusionAnyTagList.tagNames)
+                            .concat(selecters.$exclusionTagList.tagNames);
+      if(findValueArray[0]) {
+        // 先頭の要素があれば、その名前を返す
+        return findValueArray[0];
+      }
+
+      return DEFAULT_TAG_NAME;
+    })();
+
+    $activeTab.find('a').text(tagName);
+
+    find($activeTab.findInfo);
   });
 
   // 履歴ダイアログにセットアップメソッドを追加
@@ -176,27 +198,53 @@ gspecv.commitInfo.setup = function(selecters) {
    */
   function createTab(tabName) {
     var $tabName = $('<a>').attr('role', "tab").attr('data-toggle', "tab").text(tabName);
-    return $('<li>').attr('role', 'presentation').append($tabName);
+    var $tab = $('<li>').attr('role', 'presentation').append($tabName);
+    $tab.findInfo = {};
+
+    $tab.on('click', function() {
+      $activeTab = $tab;
+      find($tab.findInfo);
+    });
+
+    return $tab;
   }
 
-  // ローカルストレージを設定
-  localStorage.findInfos = localStorage.findInfos || [];
-  
-  // 最初のタブを追加
-  var $tab = createTab('tab1').addClass('active');
-  selecters.$commitInfoTabPanel.append($tab);
+  /**
+   * @brief タブの追加ボタンを生成する
+   * 
+   * @return タブの追加ボタン
+   */
+  function createAddTabButton() {
+    var $plus = $('<a>').addClass('glyphicon glyphicon-plus').attr('role', 'tab');
+    var $addButton = $('<li>').attr('role', 'presentation').append($plus);
+    $addButton.on('click', function() {
+      // 自分を削除
+      $addButton.remove();
 
-  // タブの追加ボタン
-  var $plus = $('<a>').addClass('glyphicon glyphicon-plus').attr('role', 'tab');
-  var $addButton = $('<li>').attr('role', 'presentation').append($plus);
-  $addButton.on('click', function() {
-    var $tab = createTab('tab2');
+      var $tab = createTab(DEFAULT_TAG_NAME);
+      selecters.$commitInfoTabPanel.append($tab);
+
+      // 新しく追加されたタブの右側に表示するために、新しく追加ボタンを生成
+      selecters.$commitInfoTabPanel.append(createAddTabButton());
+    });
+    selecters.$commitInfoTabPanel.append($addButton);
+  }
+
+  (function() {
+    // ローカルストレージを設定
+    localStorage.findInfos = localStorage.findInfos || [];
+    
+    // 最初のタブを追加
+    var $tab = createTab(DEFAULT_TAG_NAME).addClass('active');
     selecters.$commitInfoTabPanel.append($tab);
-  });
-  selecters.$commitInfoTabPanel.append($addButton);
+    $activeTab = $tab;
 
-  // セットアップ時に、最新のファイルを検索する
-  find();
+    // タブの追加ボタン
+    selecters.$commitInfoTabPanel.append(createAddTabButton());
+
+    // セットアップ時に、最新のファイルを検索する
+    find();
+  })();
 
   return find;
 };
