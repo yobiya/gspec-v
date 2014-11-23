@@ -193,11 +193,16 @@ gspecv.commitInfo.setup = function(selecters) {
   // ローカルストレージを設定
   localStorage.findInfos = localStorage.findInfos || [];
   
-  /// 最初のタブを追加
+  // 最初のタブを追加
   var $tab = createTab('tab1').addClass('active');
   selecters.$commitInfoTabPanel.append($tab);
   var $content = createTabContent();
   selecters.$commitInfoTabContent.append($content);
+
+  // タブの追加ボタン
+  var $plus = $('<a>').addClass('glyphicon glyphicon-plus').attr('role', 'tab');
+  var $addButton = $('<li>').attr('role', 'presentation').append($plus);
+  selecters.$commitInfoTabPanel.append($addButton);
 
   // セットアップ時に、最新のファイルを検索する
   find($content.find('tbody'));
