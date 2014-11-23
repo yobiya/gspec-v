@@ -146,6 +146,24 @@ gspecv.commitInfo.setup = function(selecters) {
     return selecters.$historyDialog;
   };
 
+  /**
+   * @brief タブを生成する
+   *
+   * @param tabName 表示するタブ名
+   *
+   * @return タブのjQueryオブジェクト
+   */
+  function createTab(tabName) {
+    var $tabName = $('<a>').attr('role', "tab").attr('data-toggle', "tab").text(tabName);
+    return $('<li>').attr('role', 'presentation').append($tabName);
+  }
+  
+  /// 最初のタブを追加
+  var $tab = createTab('tab1').addClass('active');
+  selecters.$commitInfoTabPanel.append($tab);
+  var $content = selecters.$commitInfoBase.clone().show();
+  selecters.$commitInfoTabContent.append($content);
+
   // セットアップ時に、最新のファイルを検索する
   find();
 

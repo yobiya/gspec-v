@@ -31,7 +31,9 @@ block scripts
       });
 
       var find = gspecv.commitInfo.setup({
-        $commitInfoTable: $('#find_info tbody'),
+        $commitInfoBase: $('#commit_info_base'),
+        $commitInfoTabPanel: $('#commit_info_tabs .nav-tabs'),
+        $commitInfoTabContent: $('#commit_info_tabs .tab-content'),
         $findDialog: $('#find_dialog'),
         $historyDialog: $('#history_dialog'),
         $historyInfoTable: $('#history_dialog tbody'),
@@ -72,7 +74,11 @@ block content
               li
                 a(href='/login/logout') Logout
 
-  div.container#find_info
+  div#commit_info_tabs(role="tabpanel")
+    ul.nav.nav-tabs(role="tablist")
+    div.tab-content
+
+  div.container#commit_info_base
     button.btn.btn-primary#find_button(data-toggle='modal')
       span.glyphicon.glyphicon-search(aria-hidden="true")
         検索
