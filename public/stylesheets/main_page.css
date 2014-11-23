@@ -2,10 +2,6 @@
   color: lightgray;
 }
 
-#commit_info_base {
-  display: none;
-}
-
 #commit_box {
   position: absolute;
   bottom: 0px;

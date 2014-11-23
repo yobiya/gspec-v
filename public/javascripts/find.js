@@ -17,9 +17,7 @@ gspecv.find.setup = function(selecters) {
     selecters.$livingTagList
   ];
 
-  selecters.$findDialog.setup = function($targetTBody, findInfo) {
-    this.$targetTBody = $targetTBody;
-
+  selecters.$findDialog.setup = function(findInfo) {
     selecters.$inclusionAllTagList.tagNames = findInfo.inclusionAllTagNames;
     selecters.$inclusionAnyTagList.tagNames = findInfo.inclusionAnyTagNames;
     selecters.$exclusionTagList.tagNames = findInfo.exclusionTagNames;
@@ -29,23 +27,6 @@ gspecv.find.setup = function(selecters) {
 
     return this;
   };
-/*
-  selecters.$findButton.on('click', function() {
-    tagListArray.forEach(function(tagList) {
-      tagList.tagNames = [];
-    });
-
-    // 最新のコミットで使用されているタグ名一覧を取得する
-    $.post('/latest_tag_names', {})
-      .done(function(tagNames) {
-        selecters.$livingTagList.tagNames = tagNames;
-        updateTagList();
-        selecters.$findDialog.modal('show');
-      })
-      .fail(function(error, errorMessage) {
-        alert(errorMessage);
-      });
-  });*/
 
   // 各タグの表示領域に、ドロップ設定を追加
   tagListArray.forEach(function(tagList) {
