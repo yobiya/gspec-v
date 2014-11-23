@@ -119,7 +119,12 @@ gspecv.commitInfo.setup = function(selecters) {
     var fileNameArray = (fileNames === '') ? ([]) : (fileNames.split(','));
 
     find({
-      file_names: fileNameArray
+      file_names: fileNameArray,
+      tags: {
+        inclusion_all: [],
+        inclusion_any: [],
+        exclusion: []
+      }
     });
   });
 

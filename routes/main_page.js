@@ -27,11 +27,16 @@ router.get('/main_page', loginCheck, function(request, response) {
 
 /// @brief ファイルを検索して、結果を返す
 router.post('/find', function(request, response) {
-  var fileNames = request.body['file_names[]'];
-  if(fileNames && !Array.isArray(fileNames)) {
-    fileNames = [fileNames];
-  }
-  commit.find(fileNames, function(result) {
+  var params = postParams(request);
+  params.tags = params.tags || {};
+  var findProvision = {
+    fileNames: toArray(params['file_names[]']),
+    inclusionAllTagNames: toArray(params.tags['inclusion_all[]']),
+    inclusionAnyTagNames: toArray(params.tags['inclusion_any[]']),
+    exclusionTagNames: toArray(params.tags['exclusion[]'])
+  };
+
+  commit.find(findProvision, function(result) {
     response.send(result);
   });
 });
@@ -125,8 +130,12 @@ function postParams(request) {
  * @return 配列
  */
 function toArray(data) {
+  if(typeof data === 'undefined') {
+    return [];
+  }
+
   var result = data || [];
-  if(!Array.isArray(data)) {
+    if(!Array.isArray(data)) {
     result = [data];
   }
 

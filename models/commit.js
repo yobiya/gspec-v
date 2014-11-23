@@ -6,6 +6,7 @@ module.exports = function(mongoModels) {
   var path = require('path');
   var constants = require('./constants');
   var util = require('util');
+  var _ = require('lodash');
 
   /**
    * @brief ファイルをコミット
@@ -58,39 +59,36 @@ module.exports = function(mongoModels) {
   /**
    * @brief コミット情報を検索
    *
-   * @param fileNames ファイル名の配列
+   * @param findProvision 検索条件
    * @param resultCallback 結果を渡すコールバック
    */
-  function find(fileNames, resultCallback) {
+  function find(findProvision, resultCallback) {
     mongoModels.latestCommitId.find({}, function(error, docs) {
       if(error) {
         throw error;
       }
 
-      var commitDocIds = [];
-      docs.forEach(function(doc) {
-        commitDocIds.push(doc.commit_doc_id);
-      });
-
+      var commitDocIds = _.pluck(docs, 'commit_doc_id');
       var findInfo = { _id: { $in: commitDocIds } };
 
-      if(fileNames) {
-        // 曖昧検索に対応
-        var likeNames = [];
-        fileNames.forEach(function(name) {
-          likeNames.push(new RegExp(name.trim(), 'i'));
+      // 曖昧検索に対応
+      console.log(findProvision);
+      if(findProvision.fileNames.length > 0) {
+        var likeNames = _.map(findProvision.fileNames, function(name) {
+          return new RegExp(name.trim(), 'i');
         });
         findInfo.name = { $in: likeNames };
       }
+
+      console.log(findInfo);
 
       mongoModels.commitInfo.find(findInfo, function(error, docs) {
         if(error) {
           throw error;
         }
 
-        var result = [];
-        docs.forEach(function(doc) {
-          var fileInfo = {
+        var result = _.map(docs, function(doc) {
+          return {
             _id: doc._id,
             name: doc.name,
             tag_names: doc.tag_names || [],
@@ -98,7 +96,6 @@ module.exports = function(mongoModels) {
             comment: doc.comment,
             user_name: doc.user_name,
           };
-          result.push(fileInfo);
         });
 
         resultCallback(result);
