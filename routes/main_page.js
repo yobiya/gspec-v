@@ -75,7 +75,7 @@ router.post('/commit', function(request, response) {
 
 /// @brief 最新のファイルをダウンロードする
 router.get('/download/:document_id', function(request, response) {
-  commit.download(request.params.document_id, function(downloadPath, fileName) {
+  commit.download(request.session.user, request.params.document_id, function(downloadPath, fileName) {
     response.download(downloadPath, fileName);
   });
 });

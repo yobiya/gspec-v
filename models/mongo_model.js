@@ -2,13 +2,16 @@
  * @brief Mongooseのモデルへのアクセッサ
  */
 module.exports = function(mongoose) {
+  var commitVersionSchema = { file_name: String, version: Number };
   var schemas = {
     commitInfo: mongoose.Schema({name: String, path: String, comment: String, tag_names: [String], version: Number, commit_time: Date, user_name: String}),
     latestCommitId: mongoose.Schema({ commit_doc_id: mongoose.Schema.Types.ObjectId }),
+    userLastViewCommitVersion: mongoose.Schema({ user_name: String, last_views: [commitVersionSchema] })
   };
 
   var commitInfo = mongoose.model('commit_infos', schemas.commitInfo);
   var latestCommitId = mongoose.model('latest_commit_info_ids', schemas.latestCommitId);
+  var userLastViewCommitVersion = mongoose.model('user_last_view_commit_version', schemas.userLastViewCommitVersion);
 
   /**
    * @brief コミットされているファイルの最新のバージョン番号を検索する
@@ -40,6 +43,7 @@ module.exports = function(mongoose) {
   return {
     commitInfo: commitInfo,
     latestCommitId: latestCommitId,
+    userLastViewCommitVersion: userLastViewCommitVersion,
     util: {
       findLatestFileVersion: findLatestFileVersion
     }

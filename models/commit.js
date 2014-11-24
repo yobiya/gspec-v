@@ -136,12 +136,56 @@ module.exports = function(mongoModels) {
   /**
    * @brief コミットされているファイルをダウンロード
    *
+   * @param user ダウンロードを行うユーザー
    * @param documentId DBのドキュメントID
    * @param resultCallback 結果を返すコールバック
    */
-  function download(documentId, resultCallback) {
-    mongoModels.commitInfo.findOne({ _id: documentId }, function(error, doc) {
-      resultCallback(doc.path, doc.name);
+  function download(user, documentId, resultCallback) {
+    mongoModels.commitInfo.findOne({ _id: documentId }, function(error, downloadDoc) {
+      resultCallback(downloadDoc.path, downloadDoc.name);
+
+      mongoModels
+        .userLastViewCommitVersion
+        .findOne({ user_name: user }, function(error, foundDoc) {
+          if(error) {
+            throw error;
+          }
+
+          if(foundDoc) {
+            var updateDoc = foundDoc;
+            var isUpdated = false;
+            updateDoc.last_views.forEach(function(view) {
+              if(view.file_name === downloadDoc.name) {
+                view.version = downloadDoc.version;
+                isUpdated = true;
+              }
+            });
+
+            if(!isUpdated) {
+              updateDoc.last_views.push({ file_name: downloadDoc.name, version: downloadDoc.version });
+            }
+
+            // 既存のドキュメントを削除
+            mongoModels
+              .userLastViewCommitVersion
+              .findByIdAndRemove(foundDoc._id, function(error) {
+                if(error) {
+                  throw error;
+                }
+
+                // 新しくドキュメントを保存
+                var newModel = new mongoModels.userLastViewCommitVersion(updateDoc);
+                newModel.save();
+              });
+          } else {
+            var newDoc = {
+              user_name: user,
+              last_views: [{ file_name: downloadDoc.name, version: downloadDoc.version }]
+            };
+            var newModel = new mongoModels.userLastViewCommitVersion(newDoc);
+            newModel.save();
+          }
+        });
     });
   }
 
@@ -153,6 +197,10 @@ module.exports = function(mongoModels) {
    */
   function downloadWithVersion(documentId, resultCallback) {
     mongoModels.commitInfo.findOne({ _id: documentId }, function(error, doc) {
+      if(error) {
+        throw error;
+      }
+
       var fileNameWithVersion = createSaveFileName(doc.name, doc.version);
       resultCallback(doc.path, fileNameWithVersion);
     });
@@ -166,6 +214,10 @@ module.exports = function(mongoModels) {
    */
   function history(fileName, resultCallback) {
     mongoModels.commitInfo.find({ name: fileName }, function(error, docs) {
+      if(error) {
+        throw error;
+      }
+
       var result = [];
 
       docs.forEach(function(doc) {
