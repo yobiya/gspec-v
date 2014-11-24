@@ -7,6 +7,7 @@ module.exports = function(mongoModels) {
   var constants = require('./constants');
   var util = require('util');
   var _ = require('lodash');
+  require('date-utils');
 
   /**
    * @brief ファイルをコミット
@@ -39,7 +40,7 @@ module.exports = function(mongoModels) {
           comment: comment,
           version: newVersion,
           user_name: userName,
-          commit_time: new Date(),  ///< UTCで保存
+          commit_time: Date.now(),  ///< UTCで保存
         };
 
         // ドキュメントを保存する
@@ -94,6 +95,7 @@ module.exports = function(mongoModels) {
                 version: doc.version,
                 comment: doc.comment,
                 commit_user_name: doc.user_name,
+                commit_time: new Date(doc.commit_time).toFormat('YYYY/MM/DD HH24:MI'),
                 user_last_view_version: lastViewVersion
               };
             });

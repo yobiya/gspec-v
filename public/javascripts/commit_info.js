@@ -39,7 +39,8 @@ gspecv.commitInfo = {};
                           createTagCell(fileInfo.tag_names),
                           fileInfo.version,
                           fileInfo.comment,
-                          fileInfo.commit_user_name);
+                          fileInfo.commit_user_name,
+                          fileInfo.commit_time);
 
         selecters.$commitInfoTBody.append($tableRow);
       });
