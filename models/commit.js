@@ -71,24 +71,32 @@ module.exports = function(mongoModels) {
       var commitDocIds = _.pluck(docs, 'commit_doc_id');
       var findQuery = createCommitInfoFindQuery(commitDocIds, findProvision);
 
-      mongoModels.commitInfo.find(findQuery, function(error, docs) {
+      mongoModels.commitInfo.find(findQuery, function(error, commitInfoDocs) {
         if(error) {
           throw error;
         }
 
-        var result = _.map(docs, function(doc) {
-          return {
-            _id: doc._id,
-            name: doc.name,
-            tag_names: doc.tag_names || [],
-            version: doc.version,
-            comment: doc.comment,
-            commit_user_name: doc.user_name,
-            user_last_view_version: 1
-          };
-        });
+        // 最後に確認したファイルのバージョン情報も含める
+        mongoModels
+          .userLastViewCommitVersion
+          .findOne({ user_name: findProvision.userName }, function(error, lastViewDoc) {
+            var result = _.map(commitInfoDocs, function(doc) {
+              var lastViewFileInfo = _.find(lastViewDoc.last_views, function(fileInfo) { return (fileInfo.file_name === doc.name); });
+              var lastViewVersion = (lastViewFileInfo) ? (lastViewFileInfo.version) : (0);
 
-        resultCallback(result);
+              return {
+                _id: doc._id,
+                name: doc.name,
+                tag_names: doc.tag_names || [],
+                version: doc.version,
+                comment: doc.comment,
+                commit_user_name: doc.user_name,
+                user_last_view_version: lastViewVersion
+              };
+            });
+
+            resultCallback(result);
+          });
       });
     });
   }
