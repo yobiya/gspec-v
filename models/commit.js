@@ -81,8 +81,11 @@ module.exports = function(mongoModels) {
           .userLastViewCommitVersion
           .findOne({ user_name: findProvision.userName }, function(error, lastViewDoc) {
             var result = _.map(commitInfoDocs, function(doc) {
-              var lastViewFileInfo = _.find(lastViewDoc.last_views, function(fileInfo) { return (fileInfo.file_name === doc.name); });
-              var lastViewVersion = (lastViewFileInfo) ? (lastViewFileInfo.version) : (0);
+              var lastViewVersion = 0;
+              if(lastViewDoc) {
+                var lastViewFileInfo = _.find(lastViewDoc.last_views, function(fileInfo) { return (fileInfo.file_name === doc.name); });
+                lastViewVersion = (lastViewFileInfo) ? (lastViewFileInfo.version) : (0);
+              }
 
               return {
                 _id: doc._id,
