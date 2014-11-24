@@ -43,10 +43,19 @@ gspecv.commitInfo.setup = function(selecters) {
         var $tableRow = $('<tr>');
         var notViewVersionCount = fileInfo.version - fileInfo.user_last_view_version;
 
+        $downloadFileName = $('<a>')
+                              .attr('href', 'download/' + fileInfo._id)
+                              .text(fileInfo.name)
+                              .on('click', function() {
+                                // ダウンロードしたファイルが確認済みのファイルになったので
+                                // 未確認のコミットファイルの数を非表示にする
+                                $tableRow.find('td')[1].innerText = '';
+                              });
+
         appendTableRowCell($tableRow,
                           createDropdownMenu(fileInfo),
                           notViewVersionCount || '',
-                          $('<a href=download/' + fileInfo._id + '></a>').text(fileInfo.name),
+                          $downloadFileName,
                           createTagCell(fileInfo.tag_names),
                           fileInfo.version,
                           fileInfo.comment,
