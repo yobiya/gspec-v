@@ -5,6 +5,7 @@ var gspecv = gspecv || {};
 gspecv.commitInfo = {};
 
 (function() {
+  const UPDATE_INTERVAL = 30 * 1000;  // 30秒
   const DEFAULT_TAB_NAME = 'All';
   const TAB_CLASS_NAME = 'find_tab';
   var $activeTab;
@@ -341,6 +342,9 @@ gspecv.commitInfo = {};
 
       // タブの追加ボタン
       selecters.$commitInfoTabPanel.append(createAddTabButton());
+
+      // 一定間隔で、アクティブなタブを更新する
+      setInterval(updateActiveTab, UPDATE_INTERVAL);
     })();
 
     return find;
