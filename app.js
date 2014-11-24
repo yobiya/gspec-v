@@ -31,11 +31,11 @@ app.use(session({
   store: new MongoStore({
     db: 'gspecv',
     host: 'localhost',
-    clear_interval: 60 * 60
+    clear_interval: 60 * 60 * 24 * 7  // 1週間保存
   }),
   cookie: {
     httpOnly: false,
-    maxAge: new Date(Date.now() + 60 * 60 * 1000)
+    maxAge: new Date(Date.now() + 60 * 60 * 24 * 7)
   }
 }));
 
