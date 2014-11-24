@@ -101,9 +101,8 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
       success: function(response) {
         clearCommit();
 
-        if(commitCallback) {
-          commitCallback();
-        }
+        // コミットに成功したら、表示されているタブを更新する
+        gspecv.commitInfo.updateActiveTab();
       }
     }).fail(function(error) {
       alert(error.responseText);

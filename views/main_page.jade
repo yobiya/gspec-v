@@ -56,10 +56,7 @@ block scripts
       },
       find);
 
-      gspecv.setupCommit($('#commit_box'), function() {
-        // コミットを行ったら、ファイル一覧の表示を更新する
-        find();
-      });
+      gspecv.setupCommit($('#commit_box'));
     });
 
 block content
