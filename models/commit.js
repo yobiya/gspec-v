@@ -83,7 +83,8 @@ module.exports = function(mongoModels) {
             tag_names: doc.tag_names || [],
             version: doc.version,
             comment: doc.comment,
-            user_name: doc.user_name,
+            commit_user_name: doc.user_name,
+            user_last_view_version: 1
           };
         });
 

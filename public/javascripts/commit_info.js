@@ -44,11 +44,12 @@ gspecv.commitInfo.setup = function(selecters) {
 
         appendTableRowCell($tableRow,
                           createDropdownMenu(fileInfo),
+                          fileInfo.version - fileInfo.user_last_view_version,
                           $('<a href=download/' + fileInfo._id + '></a>').text(fileInfo.name),
                           createTagCell(fileInfo.tag_names),
                           fileInfo.version,
                           fileInfo.comment,
-                          fileInfo.user_name);
+                          fileInfo.commit_user_name);
 
         selecters.$commitInfoTBody.append($tableRow);
       });

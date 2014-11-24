@@ -30,6 +30,7 @@ router.post('/find', function(request, response) {
   var params = postParams(request);
   params.tags = params.tags || {};
   var findProvision = {
+    userName: request.session.user,
     fileNames: toArray(params['file_names[]']),
     inclusionAllTagNames: toArray(params['inclusion_all_tag_names[]']),
     inclusionAnyTagNames: toArray(params['inclusion_any_tag_names[]']),
