@@ -8,9 +8,8 @@ gspecv.tag = {};
  * @brief タグ関連処理のセットアップ
  *
  * @param selecters セレクタをまとめたオブジェクト
- * @param updateView 表示の更新関数
  */
-gspecv.tag.setup = function(selecters, updateView) {
+gspecv.tag.setup = function(selecters) {
   var editFileName;
   var fileTagNameArray = [];
   var stockTagNameArray = [];
@@ -92,7 +91,7 @@ gspecv.tag.setup = function(selecters, updateView) {
     selecters.$tagEditDialog.modal('hide');
 
     // 表示を更新する
-    updateView();
+    gspecv.commitInfo.updateActiveTab();
   });
 };
 
