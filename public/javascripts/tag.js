@@ -56,8 +56,7 @@ gspecv.tag = {};
       var newTagName = $(selecters.tagCreateNameInput).val();
       if(newTagName !== '') {
         fileTagNameArray.push(newTagName.trim());
-
-        selecters.$fileTagList.append(createTagLabel(newTagName));
+        updateTagList();
       }
     });
 
