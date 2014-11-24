@@ -18,6 +18,8 @@ module.exports = function(mongoose) {
    *
    * @param fileName ファイル名
    * @param successCallback 成功時に呼び出されるコールバック
+   *
+   * @todo 削除予定、findLatestFileCommitInfoを使用するように変更する
    */
   function findLatestFileVersion(fileName, successCallback) {
     commitInfo
@@ -40,12 +42,39 @@ module.exports = function(mongoose) {
       });
   }
 
+  /**
+   * @brief ファイルの最新のコミット情報を検索する
+   *
+   * @param fileName ファイル名
+   * @param successCallback 成功時に呼び出されるコールバック
+   */
+  function findLatestFileCommitInfo(fileName, successCallback) {
+    commitInfo
+      .find({ name: fileName })
+      .sort({ version: -1})
+      .limit(1)
+      .exec(function(error, docs) {
+        if(error) {
+          throw error;
+        }
+
+        if(docs.length > 0) {
+          // コミットされているファイルは見つかった
+          successCallback(docs[0]);
+        } else {
+          // コミットされているファイルは見つからなかった
+          successCallback(null);
+        }
+      });
+  }
+
   return {
     commitInfo: commitInfo,
     latestCommitId: latestCommitId,
     userLastViewCommitVersion: userLastViewCommitVersion,
     util: {
-      findLatestFileVersion: findLatestFileVersion
+      findLatestFileVersion: findLatestFileVersion,
+      findLatestFileCommitInfo: findLatestFileCommitInfo
     }
   };
 };

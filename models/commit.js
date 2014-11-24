@@ -18,11 +18,13 @@ module.exports = function(mongoModels) {
    */
   function commit(uploadFiles, comment, userName) {
     uploadFiles.forEach(function(uploadFile) {
-      // コミットされている同名のファイルの最新バージョン番号を取得する
-      mongoModels.util.findLatestFileVersion(uploadFile.originalname, function(lastVersion, lastDocumentId) {
+      // コミットされている同名のファイルの最新のコミット情報を取得する
+      mongoModels.util.findLatestFileCommitInfo(uploadFile.originalname, function(lastCommitInfo) {
+        lastCommitInfo = lastCommitInfo || { _id: null, version: 0, tag_names: [] };
+
         // ディレクトリが無ければ作成する
         var directoryPath = makeCommitDirectory(0); ///< @todo 適切なコミットディレクトリ名を計算する
-        var newVersion = lastVersion + 1;
+        var newVersion = lastCommitInfo.version + 1;
 
         // 保存するファイル名を決定する
         var commitFilePath = path.join(directoryPath, createSaveFileName(uploadFile.originalname, newVersion));
@@ -37,6 +39,7 @@ module.exports = function(mongoModels) {
         var commitInfo = {
           name: uploadFile.originalname,
           path: commitFilePath,
+          tag_names: lastCommitInfo.tag_names,
           comment: comment,
           version: newVersion,
           user_name: userName,
@@ -51,7 +54,7 @@ module.exports = function(mongoModels) {
           }
 
           // 正常にコミットされた
-          updateLatestCommitList(commitInfoDoc._id, lastDocumentId);
+          updateLatestCommitList(commitInfoDoc._id, lastCommitInfo._id);
         });
       });
     });
