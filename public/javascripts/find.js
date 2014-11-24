@@ -18,8 +18,6 @@ gspecv.find.setup = function(selecters) {
   ];
 
   selecters.$findDialog.setup = function(findInfo) {
-    console.log(findInfo);
-    console.log(selecters.$fileNamesText);
     selecters.$fileNamesText.val(findInfo.fileNames.join(','));
     selecters.$inclusionAllTagList.tagNames = findInfo.inclusionAllTagNames;
     selecters.$inclusionAnyTagList.tagNames = findInfo.inclusionAnyTagNames;

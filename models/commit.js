@@ -69,35 +69,9 @@ module.exports = function(mongoModels) {
       }
 
       var commitDocIds = _.pluck(docs, 'commit_doc_id');
-      var findInfo = { _id: { $in: commitDocIds } };
+      var findQuery = createCommitInfoFindQuery(commitDocIds, findProvision);
 
-      // 曖昧検索に対応
-      if(findProvision.fileNames.length > 0) {
-        var likeNames = _.map(findProvision.fileNames, function(name) {
-          return new RegExp(name.trim(), 'i');
-        });
-        findInfo.name = { $in: likeNames };
-      }
-
-      // 必ず含むタグを設定
-      if(findProvision.inclusionAllTagNames.length > 0) {
-        findInfo.tag_names = findInfo.tag_names || {};
-        findInfo.tag_names.$all = findProvision.inclusionAllTagNames;
-      }
-
-      // いずれかを含むタグを設定
-      if(findProvision.inclusionAnyTagNames.length > 0) {
-        findInfo.tag_names = findInfo.tag_names || {};
-        findInfo.tag_names.$in = findProvision.inclusionAnyTagNames;
-      }
-
-      // 除外するタグを設定
-      if(findProvision.exclusionTagNames.length > 0) {
-        findInfo.tag_names = findInfo.tag_names || {};
-        findInfo.tag_names.$nin = findProvision.exclusionTagNames;
-      }
-
-      mongoModels.commitInfo.find(findInfo, function(error, docs) {
+      mongoModels.commitInfo.find(findQuery, function(error, docs) {
         if(error) {
           throw error;
         }
@@ -116,6 +90,46 @@ module.exports = function(mongoModels) {
         resultCallback(result);
       });
     });
+  }
+
+  /**
+   * @brief 検索条件から、コミット情報の検索クエリーを生成する
+   *
+   * @param commitDocIds 検索対象のドキュメントID
+   * @param findProvision 検索条件
+   *
+   * @return 検索クエリー
+   */
+  function createCommitInfoFindQuery(commitDocIds, findProvision) {
+      var findQuery = { _id: { $in: commitDocIds } };
+
+      // 曖昧検索に対応
+      if(findProvision.fileNames.length > 0) {
+        var likeNames = _.map(findProvision.fileNames, function(name) {
+          return new RegExp(name.trim(), 'i');
+        });
+        findQuery.name = { $in: likeNames };
+      }
+
+      // 必ず含むタグを設定
+      if(findProvision.inclusionAllTagNames.length > 0) {
+        findQuery.tag_names = findQuery.tag_names || {};
+        findQuery.tag_names.$all = findProvision.inclusionAllTagNames;
+      }
+
+      // いずれかを含むタグを設定
+      if(findProvision.inclusionAnyTagNames.length > 0) {
+        findQuery.tag_names = findQuery.tag_names || {};
+        findQuery.tag_names.$in = findProvision.inclusionAnyTagNames;
+      }
+
+      // 除外するタグを設定
+      if(findProvision.exclusionTagNames.length > 0) {
+        findQuery.tag_names = findQuery.tag_names || {};
+        findQuery.tag_names.$nin = findProvision.exclusionTagNames;
+      }
+
+      return findQuery;
   }
 
   /**
