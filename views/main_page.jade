@@ -33,6 +33,7 @@ block scripts
 
       var find = gspecv.commitInfo.setup({
         $findButton: $('#find_button'),
+        $closeTabButton: $('#close_tab_button'),
         $commitInfoTabPanel: $('#commit_info_tabs .nav-tabs'),
         $commitInfoTBody: $('#commit_info tbody'),
         $findDialog: $findDialog,
@@ -79,9 +80,16 @@ block content
     ul.nav.nav-tabs(role="tablist")
 
   div.container#commit_info
-    button.btn.btn-primary#find_button(data-toggle='modal')
-      span.glyphicon.glyphicon-search(aria-hidden="true")
-        検索
+    div.row
+      div.col-xs-1
+        button.btn.btn-primary#find_button(data-toggle='modal')
+          span.glyphicon.glyphicon-search(aria-hidden="true")
+            検索
+      div.col-xs-10
+      div.col-xs-1
+        button.btn#close_tab_button
+          span.glyphicon.glyphicon-remove
+            タブを閉じる
     table.table.table-striped
       thead
         tr

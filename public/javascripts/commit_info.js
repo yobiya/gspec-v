@@ -12,7 +12,8 @@ gspecv.commitInfo = {};
  * return 検索関数
  */
 gspecv.commitInfo.setup = function(selecters) {
-  const DEFAULT_TAG_NAME = 'All';
+  const DEFAULT_TAB_NAME = 'All';
+  const TAB_CLASS_NAME = 'find_tab';
   var $activeTab;
   var tabIdCounter = 0;
 
@@ -28,12 +29,12 @@ gspecv.commitInfo.setup = function(selecters) {
       return findValueArray[0];
     }
 
-    return DEFAULT_TAG_NAME;
+    return DEFAULT_TAB_NAME;
   }
 
   function find(option) {
     $activeTab.find('a').text(changeTagName(option));
-    localStorage['find_infos_' + $activeTab.tabId] = JSON.stringify($activeTab.findInfo);
+    saveTabFindInfo($activeTab);
 
     $.post('find', option, function(fileInfos) {
       selecters.$commitInfoTBody.empty();
@@ -196,6 +197,20 @@ gspecv.commitInfo.setup = function(selecters) {
       });
   });
 
+  // タブを閉じるボタンの動作を設定
+  selecters.$closeTabButton.on('click', function() {
+    if(loadTabFindInfoArray().length <= 1) {
+      // 最後のタブは削除できないようにする
+      return;
+    }
+
+    removeTabFindInfo($activeTab);
+
+    $activeTab.remove();
+
+    $($('.' + TAB_CLASS_NAME)[0]).addClass('active');
+  });
+
   /**
    * @brief タブを生成する
    *
@@ -205,12 +220,12 @@ gspecv.commitInfo.setup = function(selecters) {
    */
   function createTab(tabName) {
     var $tabName = $('<a>').attr('role', "tab").attr('data-toggle', "tab").text(tabName);
-    var $tab = $('<li>').attr('role', 'presentation').append($tabName);
+    var $tab = $('<li>').attr('role', 'presentation').addClass(TAB_CLASS_NAME).append($tabName);
     $tab.findInfo = {};
     $tab.tabId = tabIdCounter;
     tabIdCounter++;
 
-    $tab.on('click', function() {
+    $tab.on('shown.bs.tab', function() {
       $activeTab = $tab;
       find($tab.findInfo);
     });
@@ -230,7 +245,7 @@ gspecv.commitInfo.setup = function(selecters) {
       // 自分を削除
       $addButton.remove();
 
-      var $tab = createTab(DEFAULT_TAG_NAME);
+      var $tab = createTab(DEFAULT_TAB_NAME);
       selecters.$commitInfoTabPanel.append($tab);
 
       // 新しく追加されたタブの右側に表示するために、新しく追加ボタンを生成
@@ -239,26 +254,67 @@ gspecv.commitInfo.setup = function(selecters) {
     selecters.$commitInfoTabPanel.append($addButton);
   }
 
-  (function() {
-    // ローカルストレージを設定
-    var findInfos = _(Object.keys(localStorage))
-                      .filter(function(value) { return /^find_infos_/.test(value); })
-                      .map(function(key) { return localStorage[key]; });
+  /**
+   * @brief タブの検索情報を保存する
+   *
+   * @param $tab 保存するタブのjQueryオブジェクト
+   */
+  function saveTabFindInfo($tab) {
+    localStorage['find_infos_' + $tab.tabId] = JSON.stringify($tab.findInfo);
+  }
 
+  /**
+   * @brief タブの検索情報を取得する
+   *
+   * @return 検索情報の配列
+   */
+  function loadTabFindInfoArray() {
+    return _(Object.keys(localStorage))
+            .filter(function(value) { return /^find_infos_/.test(value); })
+            .map(function(key) { return localStorage[key]; });
+  }
+
+  /**
+   * @brief 保存されているタブの検索情報を削除する
+   *
+   * @param $tab 削除するタブのjQueryオブジェクト
+   */
+  function removeTabFindInfo($tab) {
+    delete localStorage['find_infos_' + $tab.tabId];
+  }
+
+  /**
+   * @brief 保存されているタブの検索情報を全て削除する
+   */
+  function removeTabFindInfoAll($tab) {
+    var findInfoKeys = _(Object.keys(localStorage)).filter(function(value) { return /^find_infos_/.test(value); });
+    findInfoKeys.forEach(function(key) {
+      delete localStorage[key];
+    });
+  }
+
+  (function() {
+    var findInfos = loadTabFindInfoArray();
     if(findInfos.length === 0) {
       // 最初のタブを追加
-      var $tab = createTab(DEFAULT_TAG_NAME).addClass('active');
+      var $tab = createTab(DEFAULT_TAB_NAME).addClass('active');
       selecters.$commitInfoTabPanel.append($tab);
       $activeTab = $tab;
 
       // セットアップ時に、最新のファイルを検索する
       find();
     } else {
+      // タブのIDが振り直されるため、一旦保存されている検索情報を削除
+      removeTabFindInfoAll();
+
       findInfos.forEach(function(info) {
-        var $tab = createTab(DEFAULT_TAG_NAME);
+        var $tab = createTab(DEFAULT_TAB_NAME);
         $tab.findInfo = JSON.parse(info);
         $tab.find('a').text(changeTagName($tab.findInfo));
         selecters.$commitInfoTabPanel.append($tab);
+
+        // 改めてタブの検索情報を保存する
+        saveTabFindInfo($tab);
 
         if(!$activeTab) {
           $activeTab = $tab;
