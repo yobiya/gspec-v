@@ -239,7 +239,8 @@ module.exports = function(mongoModels) {
           name: doc.name,
           version: doc.version,
           comment: doc.comment,
-          user_neme: doc.user_name
+          user_name: doc.user_name,
+          commit_time: new Date(doc.commit_time).toFormat('YYYY/MM/DD HH24:MI')
         });
       });
       resultCallback(result);

@@ -214,11 +214,14 @@ gspecv.commitInfo = {};
       historyInfoArray.forEach(function(historyInfo) {
         var $tableRow = $('<tr>');
 
+        console.log(historyInfo);
+
         appendTableRowCell($tableRow,
                           $('<a href=download_with_version/' + historyInfo._id + '></a>').text(historyInfo.name),
                           historyInfo.version,
                           historyInfo.comment,
-                          historyInfo.user_name);
+                          historyInfo.user_name,
+                          historyInfo.commit_time);
 
         selecters.$historyInfoTable.append($tableRow);
       });
