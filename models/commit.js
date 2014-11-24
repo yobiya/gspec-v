@@ -54,7 +54,9 @@ module.exports = function(mongoModels) {
           }
 
           // 正常にコミットされた
-          updateLatestCommitList(commitInfoDoc._id, lastCommitInfo._id);
+          updateLatestCommitList(commitInfoDoc._id, lastCommitInfo._id, function() {
+            updateLastViewFileVersion(commitInfo.user_name, commitInfo.name, commitInfo.version);
+          });
         });
       });
     });
@@ -160,9 +162,21 @@ module.exports = function(mongoModels) {
     mongoModels.commitInfo.findOne({ _id: documentId }, function(error, downloadDoc) {
       resultCallback(downloadDoc.path, downloadDoc.name);
 
+      updateLastViewFileVersion(user, downloadDoc.name, downloadDoc.version);
+    });
+  }
+
+  /**
+   * @brief 最後に確認したファイルのバージョンを更新する
+   *
+   * @param userName 確認したユーザー名
+   * @param fileName 確認したファイル名
+   * @param fileVersion 確認したファイルのバージョン
+   */
+  function updateLastViewFileVersion(userName, fileName, fileVersion) {
       mongoModels
         .userLastViewCommitVersion
-        .findOne({ user_name: user }, function(error, foundDoc) {
+        .findOne({ user_name: userName }, function(error, foundDoc) {
           if(error) {
             throw error;
           }
@@ -171,14 +185,14 @@ module.exports = function(mongoModels) {
             var updateDoc = foundDoc;
             var isUpdated = false;
             updateDoc.last_views.forEach(function(view) {
-              if(view.file_name === downloadDoc.name) {
-                view.version = downloadDoc.version;
+              if(view.file_name === fileName) {
+                view.version = fileVersion;
                 isUpdated = true;
               }
             });
 
             if(!isUpdated) {
-              updateDoc.last_views.push({ file_name: downloadDoc.name, version: downloadDoc.version });
+              updateDoc.last_views.push({ file_name: fileName, version: fileVersion });
             }
 
             // 既存のドキュメントを削除
@@ -196,13 +210,12 @@ module.exports = function(mongoModels) {
           } else {
             var newDoc = {
               user_name: user,
-              last_views: [{ file_name: downloadDoc.name, version: downloadDoc.version }]
+              last_views: [{ file_name: fileName, version: fileVersion }]
             };
             var newModel = new mongoModels.userLastViewCommitVersion(newDoc);
             newModel.save();
           }
         });
-    });
   }
 
   /**
@@ -300,8 +313,9 @@ module.exports = function(mongoModels) {
    * 
    * @param commitInfoDocId コミットされたドキュメントのID
    * @param previousCommitInfoDocId 一つ前のコミットされているドキュメントのID、無ければundefined
+   * @param resultCallback 結果を渡すコールバック
    */
-  function updateLatestCommitList(commitInfoDocId, previousCommitInfoDocId) {
+  function updateLatestCommitList(commitInfoDocId, previousCommitInfoDocId, resultCallback) {
     if(previousCommitInfoDocId) {
       // 以前のバージョンのコミットが存在するので、その参照情報ドキュメントを削除する
       mongoModels.latestCommitId
@@ -319,6 +333,8 @@ module.exports = function(mongoModels) {
       if(error) {
         throw error;
       }
+
+      resultCallback();
     });
   }
 
