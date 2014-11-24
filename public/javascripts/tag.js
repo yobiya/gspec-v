@@ -5,30 +5,18 @@ var gspecv = gspecv || {};
 gspecv.tag = {};
 
 (function() {
+  var fileTagNameArray = [];
+  var stockTagNameArray = [];
+  var selecters;
 
   /**
    * @brief タグ関連処理のセットアップ
    *
-   * @param selecters セレクタをまとめたオブジェクト
+   * @param selecterObjects セレクタをまとめたオブジェクト
    */
-  function setup(selecters) {
+  function setup(selecterObjects) {
+    selecters = selecterObjects;
     var editFileName;
-    var fileTagNameArray = [];
-    var stockTagNameArray = [];
-
-    function updateTagList() {
-      // 既存のタグ情報を削除
-      selecters.$fileTagList.find('.tag').remove();
-      selecters.$stockTagList.find('.tag').remove();
-
-      fileTagNameArray.forEach(function(tagName) {
-        selecters.$fileTagList.append(gspecv.tag.createTagLabel(tagName));
-      });
-
-      stockTagNameArray.forEach(function(tagName) {
-        selecters.$stockTagList.append(gspecv.tag.createTagLabel(tagName));
-      });
-    }
 
     // ダイアログのセットアップメソッドを設定
     selecters.$tagEditDialog.setup = function(fileName, data) {
@@ -69,7 +57,7 @@ gspecv.tag = {};
       if(newTagName !== '') {
         fileTagNameArray.push(newTagName.trim());
 
-        selecters.$fileTagList.append(gspecv.tag.createTagLabel(newTagName));
+        selecters.$fileTagList.append(createTagLabel(newTagName));
       }
     });
 
@@ -111,8 +99,35 @@ gspecv.tag = {};
             .text(tagName);
   }
 
+  function updateTagList() {
+    // 既存のタグ情報を削除
+    selecters.$fileTagList.find('.tag').remove();
+    selecters.$fileTagList.find('br').remove();
+    selecters.$stockTagList.find('.tag').remove();
+    selecters.$stockTagList.find('br').remove();
+
+    var fileRowTagCount = 0;
+    fileTagNameArray.forEach(function(tagName) {
+      selecters.$fileTagList.append(createTagLabel(tagName));
+      fileRowTagCount++;
+      if(fileRowTagCount >= 3) {
+        selecters.$fileTagList.append('<br>');
+        fileRowTagCount = 0;
+      }
+    });
+
+    var stockRowTagCount = 0;
+    stockTagNameArray.forEach(function(tagName) {
+      selecters.$stockTagList.append(createTagLabel(tagName));
+      stockRowTagCount++;
+      if(stockRowTagCount >= 3) {
+        selecters.$stockTagList.append('<br>');
+        stockRowTagCount = 0;
+      }
+    });
+  }
+
   // 外部に公開する関数を設定
   gspecv.tag.setup = setup;
   gspecv.tag.createTagLabel = createTagLabel;
-
 })();
