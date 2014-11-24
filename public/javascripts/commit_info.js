@@ -41,10 +41,11 @@ gspecv.commitInfo.setup = function(selecters) {
 
       fileInfos.forEach(function(fileInfo) {
         var $tableRow = $('<tr>');
+        var notViewVersionCount = fileInfo.version - fileInfo.user_last_view_version;
 
         appendTableRowCell($tableRow,
                           createDropdownMenu(fileInfo),
-                          fileInfo.version - fileInfo.user_last_view_version,
+                          notViewVersionCount || '',
                           $('<a href=download/' + fileInfo._id + '></a>').text(fileInfo.name),
                           createTagCell(fileInfo.tag_names),
                           fileInfo.version,
