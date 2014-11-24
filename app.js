@@ -35,7 +35,7 @@ app.use(session({
   }),
   cookie: {
     httpOnly: false,
-    maxAge: new Date(Date.now() + 60 * 60 * 24 * 7)
+    maxAge: new Date(Date.now() + 60 * 60 * 24 * 7 * 1000)
   }
 }));
 
