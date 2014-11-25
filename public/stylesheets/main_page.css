@@ -3,6 +3,9 @@
 }
 
 #commit_box {
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
   position: absolute;
   bottom: 0px;
   border: solid;
@@ -47,14 +50,24 @@
 }
 
 .find_tag_list {
-  height: 60px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  height: 70px;
 }
 
 .living_tag_list {
-  height: 220px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  height: 70px;
+  height: 210px;
 }
 
 .tag_edit_list {
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
   height: 200px;
 }
 
