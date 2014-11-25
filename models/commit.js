@@ -182,6 +182,7 @@ module.exports = function(mongoModels) {
           }
 
           if(foundDoc) {
+            // ユーザーの最後に確認したファイルの情報が見つかった
             var updateDoc = foundDoc;
             var isUpdated = false;
             updateDoc.last_views.forEach(function(view) {
@@ -208,8 +209,9 @@ module.exports = function(mongoModels) {
                 newModel.save();
               });
           } else {
+            // ユーザーの最後に確認したファイルの情報は見つからなかった
             var newDoc = {
-              user_name: user,
+              user_name: userName,
               last_views: [{ file_name: fileName, version: fileVersion }]
             };
             var newModel = new mongoModels.userLastViewCommitVersion(newDoc);
