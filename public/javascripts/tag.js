@@ -29,6 +29,16 @@ gspecv.tag = {};
         drop: function(event, ui) {
           var $dropedSelecter = $(ui.draggable[0]);
           var droppedTagName = $dropedSelecter.text();
+
+          function isDroppedTagName(name) {
+            return name === droppedTagName;
+          }
+
+          if(_.any(fileTagNameArray, isDroppedTagName)) {
+            // 同じタグ名が既に存在していたら、何もしない
+            return;
+          }
+
           fileTagNameArray.push(droppedTagName);
           stockTagNameArray = _.remove(stockTagNameArray, function(name) { return name !== droppedTagName; });
 
@@ -39,6 +49,16 @@ gspecv.tag = {};
         drop: function(event, ui) {
           var $dropedSelecter = $(ui.draggable[0]);
           var droppedTagName = $dropedSelecter.text();
+
+          function isDroppedTagName(name) {
+            return name === droppedTagName;
+          }
+
+          if(_.any(stockTagNameArray, isDroppedTagName)) {
+            // 同じタグ名が既に存在していたら、何もしない
+            return;
+          }
+
           stockTagNameArray.push(droppedTagName);
           fileTagNameArray = _.remove(fileTagNameArray, function(name) { return name !== droppedTagName; });
 

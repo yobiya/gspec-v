@@ -36,6 +36,15 @@ gspecv.find.setup = function(selecters) {
         var $dropedSelecter = $(ui.draggable[0]);
         var droppedTagName = $dropedSelecter.text();
 
+        function isDroppedTagName(name) {
+          return name === droppedTagName;
+        }
+
+        if(_.any(tagList.tagNames, isDroppedTagName)) {
+          // 同じタグ名が既に存在していたら、何もしない
+          return;
+        }
+
         tagList.tagNames.push(droppedTagName);
         _(tagListArray)
           .reject(function(other) { return other === tagList; })
@@ -52,8 +61,14 @@ gspecv.find.setup = function(selecters) {
     tagListArray.forEach(function(tagList) {
       tagList.empty();
 
+      var tagCount = 0;
       tagList.tagNames.forEach(function(name) {
         tagList.append(gspecv.tag.createTagLabel(name));
+        tagCount++;
+        if(tagCount >= 5) {
+          tagList.append('<br>');
+          tagCount = 0;
+        }
       });
     });
   }
