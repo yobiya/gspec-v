@@ -58,9 +58,11 @@ gspecv.commitInfo = {};
                           .concat(findInfo.inclusion_all_tag_names || [])
                           .concat(findInfo.inclusion_any_tag_names || [])
                           .concat(findInfo.exclusion_tag_names || []);
-    if(findValueArray[0]) {
-      // 先頭の要素があれば、その名前を返す
-      return findValueArray[0];
+
+    var headName = findValueArray[0];
+    if(headName) {
+      // 先頭の要素があれば、プレフィックスを除いた名前を返す
+      return headName.match('[^:]+$');
     }
 
     return DEFAULT_TAB_NAME;
