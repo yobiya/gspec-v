@@ -37,8 +37,8 @@ gspecv.find.setup = function(selecters) {
   tagListArray.forEach(function(tagList) {
     tagList.droppable({
       drop: function(event, ui) {
-        var $dropedSelecter = $(ui.draggable[0]);
-        var droppedTagName = $dropedSelecter.text();
+        var $droppedTagLabel = $(ui.draggable[0]);
+        var droppedTagName = $droppedTagLabel.attr('tag_prefix') + $droppedTagLabel.text();
 
         function isDroppedTagName(name) {
           return name === droppedTagName;

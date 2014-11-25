@@ -7,6 +7,15 @@ gspecv.tag = {};
 (function() {
   var selecters;
 
+  const TAG_PREFIX_SYSTEM = 'system:';
+  const TAG_NAME = {
+    PREFIX: {
+      FREE: 'free:',
+      SYSTEM: TAG_PREFIX_SYSTEM
+    },
+    CLOSED: TAG_PREFIX_SYSTEM + 'closed'
+  };
+
   /**
    * @brief タグ関連処理のセットアップ
    *
@@ -25,8 +34,8 @@ gspecv.tag = {};
       // タグリストを構築
       selecters.$fileTagList.droppable({
         drop: function(event, ui) {
-          var $dropedSelecter = $(ui.draggable[0]);
-          var droppedTagName = $dropedSelecter.text();
+          var $droppedTagLabel = $(ui.draggable[0]);
+          var droppedTagName = $droppedTagLabel.attr('tag_prefix') + $droppedTagLabel.text();
 
           function isDroppedTagName(name) {
             return name === droppedTagName;
@@ -45,8 +54,8 @@ gspecv.tag = {};
       });
       selecters.$stockTagList.droppable({
         drop: function(event, ui) {
-          var $dropedSelecter = $(ui.draggable[0]);
-          var droppedTagName = $dropedSelecter.text();
+          var $droppedTagLabel = $(ui.draggable[0]);
+          var droppedTagName = $droppedTagLabel.attr('tag_prefix') + $droppedTagLabel.text();
 
           function isDroppedTagName(name) {
             return name === droppedTagName;
@@ -73,7 +82,8 @@ gspecv.tag = {};
       // 新しいタグをリストに追加する
       var newTagName = $(selecters.tagCreateNameInput).val();
       if(newTagName !== '') {
-        selecters.$fileTagList.tagNames.push(newTagName.trim());
+        // ユーザーが作成したラベルはフリーラベルになる
+        selecters.$fileTagList.tagNames.push(TAG_NAME.PREFIX.FREE + newTagName.trim());
         updateTagLists();
       }
     });
@@ -106,14 +116,28 @@ gspecv.tag = {};
    * @brief タグのラベルを生成
    *
    * @param tagName タグ名
+   * @param isDraggable ドラッグの有効化フラグ
    *
    * @return タグのラベル
    */
-  function createTagLabel(tagName) {
-    return $('<span>')
-            .addClass('label label-default tag')
-            .draggable({ revert: true })
-            .text(tagName);
+  function createTagLabel(tagName, isDraggable) {
+    $label = $('<span>').addClass('label tag');
+    if(isDraggable) {
+      $label.draggable({ revert: true });
+    }
+
+    // ラベル名のプレフィックス別に色とプレフィックを削除した名前を設定
+    var viewTagName = tagName;
+    if(RegExp('^' + TAG_NAME.PREFIX.FREE + '(.+)').test(tagName)) {
+      $label.addClass('label-primary').attr('tag_prefix', TAG_NAME.PREFIX.FREE);
+      viewTagName = tagName.substr(TAG_NAME.PREFIX.FREE.length);
+    } else {
+      $label.addClass('label-default');
+    }
+
+    $label.text(viewTagName);
+
+    return $label;
   }
 
   function updateTagLists() {
@@ -138,7 +162,7 @@ gspecv.tag = {};
     // タグをリストに追加
     var rowTagCount = 0;
     $tagList.tagNames.forEach(function(tagName) {
-      $tagList.append(createTagLabel(tagName));
+      $tagList.append(createTagLabel(tagName, true));
       rowTagCount++;
       if(rowTagCount >= maxRowTagCount) {
         // 指定数を超えたら改行

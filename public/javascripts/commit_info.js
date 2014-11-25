@@ -117,7 +117,7 @@ gspecv.commitInfo = {};
     $cell = $('<div>');
 
     tagNames.forEach(function(name) {
-      $cell.append(gspecv.tag.createTagLabel(name));
+      $cell.append(gspecv.tag.createTagLabel(name, false));
     });
 
     return $cell;
