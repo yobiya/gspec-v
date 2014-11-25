@@ -17,6 +17,10 @@ gspecv.find.setup = function(selecters) {
     selecters.$livingTagList
   ];
 
+  selecters.$inclusionAllTagList.hintText = '必ず含むタグ';
+  selecters.$inclusionAnyTagList.hintText = 'いずれかを含むタグ';
+  selecters.$exclusionTagList.hintText = '除外するタグ';
+
   selecters.$findDialog.setup = function(findInfo) {
     selecters.$fileNamesText.val(findInfo.fileNames.join(','));
     selecters.$inclusionAllTagList.tagNames = findInfo.inclusionAllTagNames;
@@ -70,6 +74,11 @@ gspecv.find.setup = function(selecters) {
           tagCount = 0;
         }
       });
+
+
+      if(tagList.tagNames.length === 0) {
+        tagList.append($('<p>').addClass('hint_text').text(tagList.hintText));
+      }
     });
   }
 };
