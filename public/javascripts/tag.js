@@ -5,8 +5,6 @@ var gspecv = gspecv || {};
 gspecv.tag = {};
 
 (function() {
-  var fileTagNameArray = [];
-  var stockTagNameArray = [];
   var selecters;
 
   /**
@@ -21,8 +19,8 @@ gspecv.tag = {};
     // ダイアログのセットアップメソッドを設定
     selecters.$tagEditDialog.setup = function(fileName, data) {
       editFileName = fileName;
-      fileTagNameArray = data.file_tags;
-      stockTagNameArray = data.stock_tags;
+      selecters.$fileTagList.tagNames = data.file_tags;
+      selecters.$stockTagList.tagNames = data.stock_tags;
 
       // タグリストを構築
       selecters.$fileTagList.droppable({
@@ -34,15 +32,15 @@ gspecv.tag = {};
             return name === droppedTagName;
           }
 
-          if(_.any(fileTagNameArray, isDroppedTagName)) {
+          if(_.any(selecters.$fileTagList.tagNames, isDroppedTagName)) {
             // 同じタグ名が既に存在していたら、何もしない
             return;
           }
 
-          fileTagNameArray.push(droppedTagName);
-          stockTagNameArray = _.remove(stockTagNameArray, function(name) { return name !== droppedTagName; });
+          selecters.$fileTagList.tagNames.push(droppedTagName);
+          selecters.$stockTagList.tagNames = _.remove(selecters.$stockTagList.tagNames, function(name) { return name !== droppedTagName; });
 
-          updateTagList();
+          updateTagLists();
         }
       });
       selecters.$stockTagList.droppable({
@@ -54,19 +52,19 @@ gspecv.tag = {};
             return name === droppedTagName;
           }
 
-          if(_.any(stockTagNameArray, isDroppedTagName)) {
+          if(_.any(selecters.$stockTagList.tagNames, isDroppedTagName)) {
             // 同じタグ名が既に存在していたら、何もしない
             return;
           }
 
-          stockTagNameArray.push(droppedTagName);
-          fileTagNameArray = _.remove(fileTagNameArray, function(name) { return name !== droppedTagName; });
+          selecters.$stockTagList.tagNames.push(droppedTagName);
+          selecters.$fileTagList.tagNames = _.remove(selecters.$fileTagList.tagNames, function(name) { return name !== droppedTagName; });
 
-          updateTagList();
+          updateTagLists();
         }
       });
 
-      updateTagList();
+      updateTagLists();
 
       return selecters.$tagEditDialog;
     };
@@ -75,8 +73,8 @@ gspecv.tag = {};
       // 新しいタグをリストに追加する
       var newTagName = $(selecters.tagCreateNameInput).val();
       if(newTagName !== '') {
-        fileTagNameArray.push(newTagName.trim());
-        updateTagList();
+        selecters.$fileTagList.tagNames.push(newTagName.trim());
+        updateTagLists();
       }
     });
 
@@ -84,7 +82,7 @@ gspecv.tag = {};
     selecters.$applyTagButton.on('click', function() {
       var info = {
         file_name: editFileName,
-        tag_names: fileTagNameArray
+        tag_names: selecters.$fileTagList.tagNames
       };
 
       $.post('/apply_tag', info)
@@ -118,35 +116,45 @@ gspecv.tag = {};
             .text(tagName);
   }
 
-  function updateTagList() {
+  function updateTagLists() {
     // 既存のタグ情報を削除
-    selecters.$fileTagList.find('.tag').remove();
-    selecters.$fileTagList.find('br').remove();
-    selecters.$stockTagList.find('.tag').remove();
-    selecters.$stockTagList.find('br').remove();
+    updateTagList(selecters.$fileTagList, 3);
+    updateTagList(selecters.$stockTagList, 3);
+  }
 
-    var fileRowTagCount = 0;
-    fileTagNameArray.forEach(function(tagName) {
-      selecters.$fileTagList.append(createTagLabel(tagName));
-      fileRowTagCount++;
-      if(fileRowTagCount >= 3) {
-        selecters.$fileTagList.append('<br>');
-        fileRowTagCount = 0;
+  /**
+   * @brief タグのリストを更新する
+   *
+   * @param $tagList 更新するタグのリスト
+   * @param maxRowTagCount １行に表示するタグの最大数
+   */
+  function updateTagList($tagList, maxRowTagCount) {
+    // タグリスト内の情報を削除
+    // 削除したくない情報が含まれている場合があるので、emptyメソッドは使用しない
+    $tagList.find('.tag').remove();
+    $tagList.find('br').remove();
+    $tagList.find('p').remove();
+
+    // タグをリストに追加
+    var rowTagCount = 0;
+    $tagList.tagNames.forEach(function(tagName) {
+      $tagList.append(createTagLabel(tagName));
+      rowTagCount++;
+      if(rowTagCount >= maxRowTagCount) {
+        // 指定数を超えたら改行
+        $tagList.append('<br>');
+        rowTagCount = 0;
       }
     });
 
-    var stockRowTagCount = 0;
-    stockTagNameArray.forEach(function(tagName) {
-      selecters.$stockTagList.append(createTagLabel(tagName));
-      stockRowTagCount++;
-      if(stockRowTagCount >= 3) {
-        selecters.$stockTagList.append('<br>');
-        stockRowTagCount = 0;
-      }
-    });
+    // タグが無い状態で、ヒントのテキストがあれば表示
+    if($tagList.tagNames.length === 0 && $tagList.hintText) {
+      $tagList.append($('<p>').addClass('hint_text').text($tagList.hintText));
+    }
   }
 
   // 外部に公開する関数を設定
   gspecv.tag.setup = setup;
   gspecv.tag.createTagLabel = createTagLabel;
+  gspecv.tag.updateTagList = updateTagList;
 })();

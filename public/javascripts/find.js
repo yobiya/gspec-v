@@ -28,7 +28,7 @@ gspecv.find.setup = function(selecters) {
     selecters.$exclusionTagList.tagNames = findInfo.exclusionTagNames;
     selecters.$livingTagList.tagNames = findInfo.livingTagNames;
 
-    updateTagList();
+    updateTagLists();
 
     return this;
   };
@@ -56,29 +56,14 @@ gspecv.find.setup = function(selecters) {
             other.tagNames = _.remove(other.tagNames, function(name) { return name !== droppedTagName; });
           });
 
-        updateTagList();
+        updateTagLists();
       }
     });
   });
 
-  function updateTagList() {
-    tagListArray.forEach(function(tagList) {
-      tagList.empty();
-
-      var tagCount = 0;
-      tagList.tagNames.forEach(function(name) {
-        tagList.append(gspecv.tag.createTagLabel(name));
-        tagCount++;
-        if(tagCount >= 5) {
-          tagList.append('<br>');
-          tagCount = 0;
-        }
-      });
-
-
-      if(tagList.tagNames.length === 0) {
-        tagList.append($('<p>').addClass('hint_text').text(tagList.hintText));
-      }
+  function updateTagLists() {
+    tagListArray.forEach(function($tagList) {
+      gspecv.tag.updateTagList($tagList, 5);
     });
   }
 };
