@@ -81,6 +81,18 @@ module.exports = function(mongoModels) {
                         .uniq()
                         .value();
 
+        // 終了タグがなければ追加する
+        (function() {
+          // @todo クライアント側と定義を共通化する
+          function isClosed(name) {
+            return name === 'system:closed';
+          }
+
+          if(!_.any(tagNames, isClosed)) {
+            tagNames.push('system:closed');
+          }
+        })();
+
         resultCallback(tagNames);
       });
     });
