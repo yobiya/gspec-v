@@ -7,6 +7,7 @@ gspecv.tag = {};
 (function() {
   var selecters;
 
+  const TAG_NAME_ATTR = 'tag_prefix';
   const TAG_PREFIX_SYSTEM = 'system:';
   const TAG_NAME = {
     PREFIX: {
@@ -126,16 +127,31 @@ gspecv.tag = {};
       $label.draggable({ revert: true });
     }
 
-    // ラベル名のプレフィックス別に色とプレフィックを削除した名前を設定
-    var viewTagName = tagName;
-    if(RegExp('^' + TAG_NAME.PREFIX.FREE + '(.+)').test(tagName)) {
-      $label.addClass('label-primary').attr('tag_prefix', TAG_NAME.PREFIX.FREE);
-      viewTagName = tagName.substr(TAG_NAME.PREFIX.FREE.length);
-    } else {
-      $label.addClass('label-default');
-    }
+    // プレフィックス別に処理を分ける
+    var prefixRegExp = new RegExp('^[^:]+:');
+    switch(prefixRegExp.exec(tagName)[0]) {
+      case TAG_NAME.PREFIX.FREE:
+        $label
+          .addClass('label-primary')
+          .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.FREE)
+          .text(tagName.substr(TAG_NAME.PREFIX.FREE.length));
+        break;
 
-    $label.text(viewTagName);
+      case TAG_NAME.PREFIX.SYSTEM:
+        if(tagName === TAG_NAME.CLOSED) {
+          $label
+            .addClass('label-default')
+            .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.SYSTEM)
+            .append($('<div>').addClass('glyphicon glyphicon-ban-circle').text('closed'));
+        } else {
+          $label.addClass('label-default').text(tagName);
+        }
+        break;
+
+      default:
+        $label.addClass('label-default').text(tagName);
+        break;
+    }
 
     return $label;
   }
