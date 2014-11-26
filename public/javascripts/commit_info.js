@@ -162,7 +162,8 @@ gspecv.commitInfo = {};
   function loadTabFindInfoArray() {
     return _(Object.keys(localStorage))
             .filter(function(value) { return /^find_infos_/.test(value); })
-            .map(function(key) { return localStorage[key]; });
+            .map(function(key) { return localStorage[key]; })
+            .value();
   }
 
   /**
@@ -322,7 +323,7 @@ gspecv.commitInfo = {};
         $activeTab = $tab;
 
         // セットアップ時に、最新のファイルを検索する
-        find();
+        find({});
       } else {
         // タブのIDが振り直されるため、一旦保存されている検索情報を削除
         removeTabFindInfoAll();
