@@ -174,18 +174,17 @@ gspecv.tag = {};
 
     // タグをリストに追加
     var rowTagCount = 0;
-    $tagList.tagNames.forEach(function(tagName) {
+    $tagList.tagNames.forEach(function(tagName, index) {
       $tagList.append(createTagLabel(tagName, true));
-      rowTagCount++;
-      if(rowTagCount >= maxRowTagCount) {
+
+      if(((index + 1) % maxRowTagCount) === 0) {
         // 指定数を超えたら改行
         $tagList.append('<p>');
-        rowTagCount = 0;
       }
     });
 
     // タグが無い状態で、ヒントのテキストがあれば表示
-    if($tagList.tagNames.length === 0 && $tagList.hintText) {
+    if(_.isEmpty($tagList.tagNames) && $tagList.hintText) {
       $tagList.append($('<p>').addClass('hint_text').text($tagList.hintText));
     }
   }
