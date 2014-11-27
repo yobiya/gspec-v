@@ -38,10 +38,9 @@ gspecv.find.setup = function(selecters) {
     gspecv.tag.setupDrppableTagList($tagList, function(droppedTagName) {
       $tagList.tagNames.push(droppedTagName);
 
-      var curryIsEqual = _.curry(_.isEqual, 2);
-      var otherTagLists = _.reject(tagListArray, curryIsEqual($tagList));
+      var otherTagLists = _.without(tagListArray, $tagList);
       otherTagLists.forEach(function($tagList) {
-        $tagList.tagNames = _.reject($tagList.tagNames, curryIsEqual(droppedTagName));
+        $tagList.tagNames = _.without($tagList.tagNames, droppedTagName);
       });
 
       updateTagLists();

@@ -32,18 +32,16 @@ gspecv.tag = {};
       selecters.$fileTagList.tagNames = data.file_tags;
       selecters.$stockTagList.tagNames = data.stock_tags;
 
-      var curryIsEqual = _.curry(_.isEqual, 2);
-
       // タグリストを構築
       setupDrppableTagList(selecters.$fileTagList, function(droppedTagName) {
         selecters.$fileTagList.tagNames.push(droppedTagName);
-        selecters.$stockTagList.tagNames = _.reject(selecters.$stockTagList.tagNames, curryIsEqual(droppedTagName));
+        selecters.$stockTagList.tagNames = _.without(selecters.$stockTagList.tagNames, droppedTagName);
 
         updateTagLists();
       });
       setupDrppableTagList(selecters.$stockTagList, function(droppedTagName) {
         selecters.$stockTagList.tagNames.push(droppedTagName);
-        selecters.$fileTagList.tagNames = _.reject(selecters.$fileTagList.tagNames, curryIsEqual(droppedTagName));
+        selecters.$fileTagList.tagNames = _.without(selecters.$fileTagList.tagNames, droppedTagName);
 
         updateTagLists();
       });
@@ -172,7 +170,6 @@ gspecv.tag = {};
     // タグリスト内の情報を削除
     // 削除したくない情報が含まれている場合があるので、emptyメソッドは使用しない
     $tagList.find('.tag').remove();
-    $tagList.find('br').remove();
     $tagList.find('p').remove();
 
     // タグをリストに追加
@@ -182,7 +179,7 @@ gspecv.tag = {};
       rowTagCount++;
       if(rowTagCount >= maxRowTagCount) {
         // 指定数を超えたら改行
-        $tagList.append('<br>');
+        $tagList.append('<p>');
         rowTagCount = 0;
       }
     });
