@@ -51,32 +51,6 @@ gspecv.tag = {};
       return selecters.$tagEditDialog;
     };
 
-    /**
-     * @brief タグのドロップを受け付けるタグリストを設定する
-     *
-     * @param $tagList タグリスト
-     * @param droppedCollback ドロップされた場合に呼ばれるコールバック
-     */
-    function setupDrppableTagList($tagList, droppedCollback) {
-      $tagList.droppable({
-        drop: function(event, ui) {
-          var $droppedTagLabel = $(ui.draggable[0]);
-          var droppedTagName = $droppedTagLabel.attr('tag_prefix') + $droppedTagLabel.text();
-
-          function isDroppedTagName(name) {
-            return name === droppedTagName;
-          }
-
-          if(_.any($tagList.tagNames, isDroppedTagName)) {
-            // 同じタグ名が既に存在していたら、何もしない
-            return;
-          }
-
-          droppedCollback(droppedTagName);
-        }
-      });
-    }
-
     selecters.$tagCreateButton.on('click', function() {
       // 新しいタグをリストに追加する
       var newTagName = $(selecters.tagCreateNameInput).val();
@@ -154,6 +128,32 @@ gspecv.tag = {};
     return $label;
   }
 
+  /**
+   * @brief タグのドロップを受け付けるタグリストを設定する
+   *
+   * @param $tagList タグリスト
+   * @param droppedCollback ドロップされた場合に呼ばれるコールバック
+   */
+  function setupDrppableTagList($tagList, droppedCollback) {
+    $tagList.droppable({
+      drop: function(event, ui) {
+        var $droppedTagLabel = $(ui.draggable[0]);
+        var droppedTagName = $droppedTagLabel.attr('tag_prefix') + $droppedTagLabel.text();
+
+        function isDroppedTagName(name) {
+          return name === droppedTagName;
+        }
+
+        if(_.any($tagList.tagNames, isDroppedTagName)) {
+          // 同じタグ名が既に存在していたら、何もしない
+          return;
+        }
+
+        droppedCollback(droppedTagName);
+      }
+    });
+  }
+
   function updateTagLists() {
     // 既存のタグ情報を削除
     updateTagList(selecters.$fileTagList, 3);
@@ -194,5 +194,6 @@ gspecv.tag = {};
   // 外部に公開する関数を設定
   gspecv.tag.setup = setup;
   gspecv.tag.createTagLabel = createTagLabel;
+  gspecv.tag.setupDrppableTagList = setupDrppableTagList;
   gspecv.tag.updateTagList = updateTagList;
 })();

@@ -34,30 +34,16 @@ gspecv.find.setup = function(selecters) {
   };
 
   // 各タグの表示領域に、ドロップ設定を追加
-  tagListArray.forEach(function(tagList) {
-    tagList.droppable({
-      drop: function(event, ui) {
-        var $droppedTagLabel = $(ui.draggable[0]);
-        var droppedTagName = ($droppedTagLabel.attr('tag_prefix') || '') + $droppedTagLabel.text();
+  tagListArray.forEach(function($tagList) {
+    gspecv.tag.setupDrppableTagList($tagList, function(droppedTagName) {
+      $tagList.tagNames.push(droppedTagName);
+      _(tagListArray)
+        .reject(function(other) { return other === $tagList; })
+        .each(function(other) {
+          other.tagNames = _.remove(other.tagNames, function(name) { return name !== droppedTagName; });
+        });
 
-        function isDroppedTagName(name) {
-          return name === droppedTagName;
-        }
-
-        if(_.any(tagList.tagNames, isDroppedTagName)) {
-          // 同じタグ名が既に存在していたら、何もしない
-          return;
-        }
-
-        tagList.tagNames.push(droppedTagName);
-        _(tagListArray)
-          .reject(function(other) { return other === tagList; })
-          .each(function(other) {
-            other.tagNames = _.remove(other.tagNames, function(name) { return name !== droppedTagName; });
-          });
-
-        updateTagLists();
-      }
+      updateTagLists();
     });
   });
 
