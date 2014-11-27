@@ -77,34 +77,36 @@ gspecv.commitInfo = {};
     var $button = $('<a>').addClass('dropdown-toggle glyphicon glyphicon-th-list').attr('data-toggle', 'dropdown');
     $button.append($('<b>').addClass('caret'));
 
-    var $history = $('<a>').addClass('glyphicon glyphicon-time')
-                            .text(' 履歴')
-                            .on('click', function() {
-                              $.post('/history', { file_name: fileInfo.name })
-                                .done(function(historyInfoArray) {
-                                  selecters.$historyDialog.setup(historyInfoArray).modal('show');
-                                })
-                                .fail(function(error, errorMessage) {
-                                  alert(errorMessage);
-                                });
-                            });
-    var $tagEdit = $('<a>').addClass('glyphicon glyphicon-tags')
-                            .text(' タグ編集')
-                            .on('click', function() {
-                              $.post('/edit_tag_info', { file_name: fileInfo.name })
-                                .done(function(data) {
-                                  selecters.$tagEditDialog
-                                    .setup(fileInfo.name, data)
-                                    .modal('show');
-                                })
-                                .fail(function(error, errorMessage) {
-                                  alert(errorMessage);
-                                });
-                            });
+    var $history = $('<a>')
+                    .addClass('glyphicon glyphicon-time')
+                    .text(' 履歴')
+                    .on('click', function() {
+                      $.post('/history', { file_name: fileInfo.name })
+                        .done(function(historyInfoArray) {
+                          selecters.$historyDialog.setup(historyInfoArray).modal('show');
+                        })
+                        .fail(function(error, errorMessage) {
+                          alert(errorMessage);
+                        });
+                    });
 
-    var $menuContents = $('<li>').addClass('dropdown-menu')
-                                .append($('<li>').append($history))
-                                .append($('<li>').append($tagEdit));
+    var $tagEdit = $('<a>')
+                    .addClass('glyphicon glyphicon-tags')
+                    .text(' タグ編集')
+                    .on('click', function() {
+                      $.post('/edit_tag_info', { file_name: fileInfo.name })
+                        .done(function(data) {
+                          selecters.$tagEditDialog.setup(fileInfo.name, data).modal('show');
+                        })
+                        .fail(function(error, errorMessage) {
+                          alert(errorMessage);
+                        });
+                    });
+
+    var $menuContents = $('<li>')
+                          .addClass('dropdown-menu')
+                          .append($('<li>').append($history))
+                          .append($('<li>').append($tagEdit));
 
     var $menu = $('<div>').append($button).append($menuContents);
     return $('<div>').addClass('dropdown').append($menu);
@@ -189,8 +191,6 @@ gspecv.commitInfo = {};
    * @brief コミット情報処理のセットアップ
    *
    * @param selecterObjects セレクタをまとめたオブジェクト
-   *
-   * return 検索関数
    */
   function setup(selecterObjects) {
     selecters = selecterObjects;
@@ -351,8 +351,6 @@ gspecv.commitInfo = {};
       // 一定間隔で、アクティブなタブを更新する
       setInterval(updateActiveTab, UPDATE_INTERVAL);
     })();
-
-    return find;
   }
 
   /**
@@ -365,6 +363,5 @@ gspecv.commitInfo = {};
   // 外部に公開する関数を設定
   gspecv.commitInfo.setup = setup;
   gspecv.commitInfo.updateActiveTab = updateActiveTab;
-
 })();
 
