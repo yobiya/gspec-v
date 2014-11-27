@@ -33,27 +33,32 @@ gspecv.tag = {};
       selecters.$stockTagList.tagNames = data.stock_tags;
 
       // タグリストを構築
-      selecters.$fileTagList.droppable({
-        drop: function(event, ui) {
-          var $droppedTagLabel = $(ui.draggable[0]);
-          var droppedTagName = ($droppedTagLabel.attr('tag_prefix') || '') + $droppedTagLabel.text();
+      setupDrppableTagList(selecters.$fileTagList, function(droppedTagName) {
+        selecters.$fileTagList.tagNames.push(droppedTagName);
+        selecters.$stockTagList.tagNames = _.remove(selecters.$stockTagList.tagNames, function(name) { return name !== droppedTagName; });
 
-          function isDroppedTagName(name) {
-            return name === droppedTagName;
-          }
-
-          if(_.any(selecters.$fileTagList.tagNames, isDroppedTagName)) {
-            // 同じタグ名が既に存在していたら、何もしない
-            return;
-          }
-
-          selecters.$fileTagList.tagNames.push(droppedTagName);
-          selecters.$stockTagList.tagNames = _.remove(selecters.$stockTagList.tagNames, function(name) { return name !== droppedTagName; });
-
-          updateTagLists();
-        }
+        updateTagLists();
       });
-      selecters.$stockTagList.droppable({
+      setupDrppableTagList(selecters.$stockTagList, function(droppedTagName) {
+        selecters.$stockTagList.tagNames.push(droppedTagName);
+        selecters.$fileTagList.tagNames = _.remove(selecters.$fileTagList.tagNames, function(name) { return name !== droppedTagName; });
+
+        updateTagLists();
+      });
+
+      updateTagLists();
+
+      return selecters.$tagEditDialog;
+    };
+
+    /**
+     * @brief タグのドロップを受け付けるタグリストを設定する
+     *
+     * @param $tagList タグリスト
+     * @param droppedCollback ドロップされた場合に呼ばれるコールバック
+     */
+    function setupDrppableTagList($tagList, droppedCollback) {
+      $tagList.droppable({
         drop: function(event, ui) {
           var $droppedTagLabel = $(ui.draggable[0]);
           var droppedTagName = $droppedTagLabel.attr('tag_prefix') + $droppedTagLabel.text();
@@ -62,22 +67,15 @@ gspecv.tag = {};
             return name === droppedTagName;
           }
 
-          if(_.any(selecters.$stockTagList.tagNames, isDroppedTagName)) {
+          if(_.any($tagList.tagNames, isDroppedTagName)) {
             // 同じタグ名が既に存在していたら、何もしない
             return;
           }
 
-          selecters.$stockTagList.tagNames.push(droppedTagName);
-          selecters.$fileTagList.tagNames = _.remove(selecters.$fileTagList.tagNames, function(name) { return name !== droppedTagName; });
-
-          updateTagLists();
+          droppedCollback(droppedTagName);
         }
       });
-
-      updateTagLists();
-
-      return selecters.$tagEditDialog;
-    };
+    }
 
     selecters.$tagCreateButton.on('click', function() {
       // 新しいタグをリストに追加する
