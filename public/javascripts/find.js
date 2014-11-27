@@ -37,11 +37,12 @@ gspecv.find.setup = function(selecters) {
   tagListArray.forEach(function($tagList) {
     gspecv.tag.setupDrppableTagList($tagList, function(droppedTagName) {
       $tagList.tagNames.push(droppedTagName);
-      _(tagListArray)
-        .reject(function(other) { return other === $tagList; })
-        .each(function(other) {
-          other.tagNames = _.remove(other.tagNames, function(name) { return name !== droppedTagName; });
-        });
+
+      var curryIsEqual = _.curry(_.isEqual, 2);
+      var otherTagLists = _.reject(tagListArray, curryIsEqual($tagList));
+      otherTagLists.forEach(function($tagList) {
+        $tagList.tagNames = _.reject($tagList.tagNames, curryIsEqual(droppedTagName));
+      });
 
       updateTagLists();
     });

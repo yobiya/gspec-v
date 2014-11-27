@@ -32,16 +32,18 @@ gspecv.tag = {};
       selecters.$fileTagList.tagNames = data.file_tags;
       selecters.$stockTagList.tagNames = data.stock_tags;
 
+      var curryIsEqual = _.curry(_.isEqual, 2);
+
       // タグリストを構築
       setupDrppableTagList(selecters.$fileTagList, function(droppedTagName) {
         selecters.$fileTagList.tagNames.push(droppedTagName);
-        selecters.$stockTagList.tagNames = _.remove(selecters.$stockTagList.tagNames, function(name) { return name !== droppedTagName; });
+        selecters.$stockTagList.tagNames = _.reject(selecters.$stockTagList.tagNames, curryIsEqual(droppedTagName));
 
         updateTagLists();
       });
       setupDrppableTagList(selecters.$stockTagList, function(droppedTagName) {
         selecters.$stockTagList.tagNames.push(droppedTagName);
-        selecters.$fileTagList.tagNames = _.remove(selecters.$fileTagList.tagNames, function(name) { return name !== droppedTagName; });
+        selecters.$fileTagList.tagNames = _.reject(selecters.$fileTagList.tagNames, curryIsEqual(droppedTagName));
 
         updateTagLists();
       });
