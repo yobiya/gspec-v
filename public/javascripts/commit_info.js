@@ -198,10 +198,9 @@ gspecv.commitInfo = {};
     // 検索の実行
     selecters.$findDialog.find('#find_button').on('click', function() {
       var fileNames = selecters.$findDialog.find('#file_names').val();
-      var fileNameArray = (fileNames === '') ? ([]) : (fileNames.split(','));
 
       $activeTab.findInfo = {
-        file_names: fileNameArray,
+        file_names: _.compact(fileNames.split(',')),
         inclusion_all_tag_names: selecters.$inclusionAllTagList.tagNames,
         inclusion_any_tag_names: selecters.$inclusionAnyTagList.tagNames,
         exclusion_tag_names: selecters.$exclusionTagList.tagNames
