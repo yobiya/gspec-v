@@ -2,23 +2,17 @@ var util = require('util');
 var cookie = require('cookie');
 var express = require('express');
 var router = express.Router();
-var mongoModels;
 
-// MongoDBへの接続
-(function() {
-  var mongoose = require('mongoose');
-  mongoose.connect('mongodb://localhost/gspecv');
-  var db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function() {
-    console.log('Connect to mongodb.');
-  });
+var commit;
+var tag;
 
-  mongoModels = require('../models/mongo_model')(mongoose);
-})();
+router.setup = function(mongoose) {
+  var mongoModels = require('../models/mongo_model')(mongoose);
+  commit = require('../models/commit')(mongoModels);
+  tag = require('../models/tag')(mongoModels);
 
-var commit = require('../models/commit')(mongoModels);
-var tag = require('../models/tag')(mongoModels);
+  return this;
+};
 
 // Main page
 router.get('/main_page', loginCheck, function(request, response) {

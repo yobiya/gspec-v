@@ -1,20 +1,15 @@
 var util = require('util');
 var cookie = require('cookie');
-var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
 
-// MongoDBへの接続
-(function() {
-  mongoose.connect('mongodb://localhost/gspecv');
-  var db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function() {
-    console.log('Connect to mongodb.');
-  });
-})();
+var auth;
 
-var auth = require('../models/auth')(mongoose);
+router.setup = function(mongoose) {
+  auth = require('../models/auth')(mongoose);
+
+  return this;
+};
 
 // Login page
 router.get('/', function(request, response) {

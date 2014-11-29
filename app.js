@@ -7,9 +7,22 @@ var MongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
 var multer = require('multer');
 
+// MongoDBへの接続
+var mongoose = (function() {
+  var mongoose = require('mongoose');
+  mongoose.connect('mongodb://localhost/gspecv');
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function() {
+    console.log('Connect to mongodb.');
+  });
+
+  return mongoose;
+})();
+
 var constants = require('./models/constants.js');
-var main_page = require('./routes/main_page');
-var login = require('./routes/login');
+var main_page = require('./routes/main_page').setup(mongoose);
+var login = require('./routes/login').setup(mongoose);
 
 var express = require('express');
 var app = express();
