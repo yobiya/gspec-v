@@ -7,9 +7,9 @@ gspecv.tag = {};
 (function() {
   var selecters;
 
-  const TAG_NAME_ATTR = 'tag_prefix';
-  const TAG_PREFIX_SYSTEM = 'system:';
-  const TAG_NAME = {
+  var TAG_NAME_ATTR = 'tag_prefix';
+  var TAG_PREFIX_SYSTEM = 'system:';
+  var TAG_NAME = {
     PREFIX: {
       FREE: 'free:',
       SYSTEM: TAG_PREFIX_SYSTEM

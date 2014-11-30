@@ -75,25 +75,27 @@ module.exports = function(mongoModels) {
           throw error;
         }
 
+        // @todo タグの定義をクライアント側と共通化する
         var tagNames = _(docs)
                         .pluck('tag_names')
                         .flatten()
-                        .uniq()
                         .value();
 
-        // 終了タグがなければ追加する
-        (function() {
-          // @todo クライアント側と定義を共通化する
-          function isClosed(name) {
-            return name === 'system:closed';
-          }
+        // システムタグを追加する
+        tagNames.push('system:closed');
 
-          if(!_.any(tagNames, isClosed)) {
-            tagNames.push('system:closed');
-          }
-        })();
+        // 個人タグを追加する
+        mongoModels.users.find({}, function(error, userDocs) {
+          console.log(userDocs);
+          var personalTagNames = _(userDocs)
+                                  .pluck('name')
+                                  .map(function(name) { return 'personal:' + name; })
+                                  .value();
+          console.log(personalTagNames);
+          var allTagNames = _.uniq(tagNames.concat(personalTagNames));
 
-        resultCallback(tagNames);
+          resultCallback(allTagNames);
+        });
       });
     });
   }
