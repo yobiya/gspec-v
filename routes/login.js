@@ -5,8 +5,8 @@ var router = express.Router();
 
 var auth;
 
-router.setup = function(mongoose) {
-  auth = require('../models/auth')(mongoose);
+router.setup = function(mongoModels) {
+  auth = require('../models/auth')(mongoModels);
 
   return this;
 };

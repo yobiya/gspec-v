@@ -20,9 +20,11 @@ var mongoose = (function() {
   return mongoose;
 })();
 
+var mongoModels = require('./models/mongo_model')(mongoose);
+
 var constants = require('./models/constants.js');
-var main_page = require('./routes/main_page').setup(mongoose);
-var login = require('./routes/login').setup(mongoose);
+var main_page = require('./routes/main_page').setup(mongoModels);
+var login = require('./routes/login').setup(mongoModels);
 
 var express = require('express');
 var app = express();

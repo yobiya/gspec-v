@@ -1,14 +1,7 @@
 /**
  * @brief ユーザー認証
  */
-module.exports = function(mongoose) {
-  var userSchema = new mongoose.Schema({ name: String, password: String });
-  var sessionSchema = new mongoose.Schema({ session: String, userObjectId: mongoose.Schema.Types.ObjectId });
-
-  var mongoModels = {
-    users: mongoose.model('users', userSchema),
-    sessions: mongoose.model('sessions', sessionSchema)
-  };
+module.exports = function(mongoModels) {
 
   /**
    * @brief ログイン認証を行う

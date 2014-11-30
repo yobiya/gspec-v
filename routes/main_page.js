@@ -6,8 +6,7 @@ var router = express.Router();
 var commit;
 var tag;
 
-router.setup = function(mongoose) {
-  var mongoModels = require('../models/mongo_model')(mongoose);
+router.setup = function(mongoModels) {
   commit = require('../models/commit')(mongoModels);
   tag = require('../models/tag')(mongoModels);
 
