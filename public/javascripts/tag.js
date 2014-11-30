@@ -12,6 +12,7 @@ gspecv.tag = {};
   var TAG_NAME = {
     PREFIX: {
       FREE: 'free:',
+      PERSONAL: 'personal:',
       SYSTEM: TAG_PREFIX_SYSTEM
     },
     CLOSED: TAG_PREFIX_SYSTEM + 'closed'
@@ -107,6 +108,20 @@ gspecv.tag = {};
           .addClass('label-primary')
           .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.FREE)
           .text(tagName.substr(TAG_NAME.PREFIX.FREE.length));
+        break;
+
+      case TAG_NAME.PREFIX.PERSONAL:
+        (function() {
+          var userName = tagName.substr(TAG_NAME.PREFIX.PERSONAL.length);
+          var $content = $('<div>')
+                          .addClass('glyphicon glyphicon-user')
+                          .text(userName);
+
+          $label
+            .addClass('label-warning')
+            .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.PERSONAL)
+            .append($content);
+        })();
         break;
 
       case TAG_NAME.PREFIX.SYSTEM:

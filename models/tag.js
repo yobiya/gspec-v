@@ -86,12 +86,10 @@ module.exports = function(mongoModels) {
 
         // 個人タグを追加する
         mongoModels.users.find({}, function(error, userDocs) {
-          console.log(userDocs);
           var personalTagNames = _(userDocs)
                                   .pluck('name')
                                   .map(function(name) { return 'personal:' + name; })
                                   .value();
-          console.log(personalTagNames);
           var allTagNames = _.uniq(tagNames.concat(personalTagNames));
 
           resultCallback(allTagNames);
