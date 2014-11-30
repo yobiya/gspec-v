@@ -17,7 +17,7 @@
 }
 
 #file_names {
-  height: 160px;
+  height: 60px;
 }
 
 #comment_text {
@@ -30,6 +30,11 @@
   height: 100px;
   margin-left: 6px;
   margin-right: 6px;
+}
+
+.commit_info_table {
+  overflow: auto;
+  height: 100px;
 }
 
 #find_dialog #file_names {

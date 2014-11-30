@@ -313,6 +313,11 @@ gspecv.commitInfo = {};
       selecters.$commitInfoTabPanel.append($addButton);
     }
 
+    // 画面サイズに合わせて、コミット情報の表示領域を変更する
+    $(window).on('load resize', function() {
+      $('.commit_info_table').height($(window).height() - 310);
+    });
+
     (function() {
       var findInfos = loadTabFindInfoArray();
       if(findInfos.length === 0) {
