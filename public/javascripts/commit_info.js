@@ -120,6 +120,18 @@ gspecv.commitInfo = {};
   function createTagCell(tagNames) {
     $cell = $('<div>');
 
+    tagNames = _.sortBy(tagNames, function(tagName) {
+      var prefixRegExp = new RegExp('^[^:]+:');
+      switch(prefixRegExp.exec(tagName)[0]) {
+        case 'system:': return 0;
+        case 'edit:': return 1;
+        case 'personal:': return 2;
+        case 'free:': return 3;
+      }
+
+      return 5;
+    });
+
     tagNames.forEach(function(name) {
       $cell.append(gspecv.tag.createTagLabel(name, false));
     });
