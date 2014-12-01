@@ -4,6 +4,8 @@
 module.exports = function(mongoModels) {
   var _ = require('lodash');
 
+  var commonConstant = require('../public/javascripts/common/constant.js');
+
   /**
    * @brief タグ編集用情報を取得する
    *
@@ -87,13 +89,13 @@ module.exports = function(mongoModels) {
                         .value();
 
         // システムタグを追加する
-        tagNames.push('system:closed');
+        tagNames.push(commonConstant.TAG_NAME.CLOSED);
 
         // 個人タグを追加する
         mongoModels.users.find({}, function(error, userDocs) {
           var personalTagNames = _(userDocs)
                                   .pluck('name')
-                                  .map(function(name) { return 'personal:' + name; })
+                                  .map(function(name) { return commonConstant.TAG_NAME.PREFIX.PERSONAL + name; })
                                   .value();
           var allTagNames = _.uniq(tagNames.concat(personalTagNames));
 

@@ -8,16 +8,7 @@ gspecv.tag = {};
   var selecters;
 
   var TAG_NAME_ATTR = 'tag_prefix';
-  var TAG_PREFIX_SYSTEM = 'system:';
-  var TAG_NAME = {
-    PREFIX: {
-      FREE: 'free:',
-      PERSONAL: 'personal:',
-      EDIT: 'edit:',
-      SYSTEM: TAG_PREFIX_SYSTEM
-    },
-    CLOSED: TAG_PREFIX_SYSTEM + 'closed'
-  };
+  var TAG_NAME = gspecv.constant.TAG_NAME;
 
   /**
    * @brief タグ関連処理のセットアップ
