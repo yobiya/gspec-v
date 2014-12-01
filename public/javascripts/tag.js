@@ -13,6 +13,7 @@ gspecv.tag = {};
     PREFIX: {
       FREE: 'free:',
       PERSONAL: 'personal:',
+      EDIT: 'edit:',
       SYSTEM: TAG_PREFIX_SYSTEM
     },
     CLOSED: TAG_PREFIX_SYSTEM + 'closed'
@@ -95,6 +96,8 @@ gspecv.tag = {};
    * @return タグのラベル
    */
   function createTagLabel(tagName, isDraggable) {
+    var u = gspecv.util;
+
     $label = $('<span>').addClass('label tag');
     if(isDraggable) {
       $label.draggable({ revert: true });
@@ -113,14 +116,20 @@ gspecv.tag = {};
       case TAG_NAME.PREFIX.PERSONAL:
         (function() {
           var userName = tagName.substr(TAG_NAME.PREFIX.PERSONAL.length);
-          var $content = $('<div>')
-                          .addClass('glyphicon glyphicon-user')
-                          .text(userName);
-
           $label
             .addClass('label-warning')
             .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.PERSONAL)
-            .append($content);
+            .append(u.createIconText('user', userName, 'black'));
+        })();
+        break;
+
+      case TAG_NAME.PREFIX.EDIT:
+        (function() {
+          var userName = tagName.substr(TAG_NAME.PREFIX.EDIT.length);
+          $label
+            .addClass('label-success')
+            .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.EDIT)
+            .append(u.createIconText('edit', userName, 'black'));
         })();
         break;
 
@@ -129,7 +138,7 @@ gspecv.tag = {};
           $label
             .addClass('label-default')
             .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.SYSTEM)
-            .append($('<div>').addClass('glyphicon glyphicon-ban-circle').text('closed'));
+            .append(u.createIconText('ban-circle', 'closed', 'white'));
         } else {
           $label.addClass('label-default').text(tagName);
         }

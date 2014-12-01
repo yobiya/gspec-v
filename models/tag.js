@@ -10,7 +10,7 @@ module.exports = function(mongoModels) {
    * @param fileName 対象のファイル名
    * @param resultCallback 結果を渡すコールバック
    */
-  function getTagEditInfo(fileName, resultCallback) {
+  function getTagEditInfo(userName, fileName, resultCallback) {
     mongoModels.util.findLatestFileVersion(fileName, function(lastVersion, lastDocumentId) {
       if(lastVersion === 0) {
         resultCallback({ errorMessage: '対象のファイルは見つかりませんでした' });
@@ -19,8 +19,13 @@ module.exports = function(mongoModels) {
 
       mongoModels
         .commitInfo
-        .findOne({ _id: lastDocumentId }, function(error, doc) {
+        .findById(lastDocumentId, function(error, doc) {
           findAllLatestTagNames(function(tagNames) {
+            tagNames = _.reject(tagNames, function(tagName) {
+              return /^edit:/.test(tagName);
+            });
+            tagNames.push('edit:' + userName);
+
             var info = {
               file_tags: doc.tag_names,
               stock_tags: _.difference(tagNames, doc.tag_names)

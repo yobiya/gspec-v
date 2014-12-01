@@ -38,7 +38,7 @@ router.post('/find', function(request, response) {
 /// @brief タグの編集情報を返す
 router.post('/edit_tag_info', function(request, response) {
   var params = postParams(request);
-  tag.getTagEditInfo(params.file_name, function(result) {
+  tag.getTagEditInfo(request.session.user, params.file_name, function(result) {
     response.send(result);
   });
 });
