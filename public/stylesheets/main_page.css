@@ -80,3 +80,27 @@
   position: absolute;
   bottom: 0px;
 }
+
+#loader {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  border: 8px solid #17cddd;
+  border-right-color: transparent;
+
+  -webkit-animation: spin 1s infinite linear;
+  -moz-animation: spin 1s infinite linear;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); opacity: 0.4; }
+  50%  { -webkit-transform: rotate(180deg); opacity: 1; }
+  100%   { -webkit-transform: rotate(360deg); opacity: 0.4; }
+}
+
+@-moz-keyframes spin {
+  0% { -moz-transform: rotate(0deg); opacity: 0.4; }
+  50%  { -moz-transform: rotate(180deg); opacity: 1; }
+  100%   { -moz-transform: rotate(360deg); opacity: 0.4; }
+}

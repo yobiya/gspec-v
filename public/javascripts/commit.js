@@ -5,11 +5,8 @@ var gspecv = gspecv || {};
 
 /**
  * @brief コミット処理のセットアップ
- *
- * @param $commitBox コミット領域のセレクタ
- * @param commitCallback コミットを行った場合に呼ばれるコールバック
  */
-gspecv.setupCommit = function($commitBox, commitCallback) {
+gspecv.setupCommit = function(selecters) {
   function createFileArray() {
     var array = [];
     array.add = function(file) {
@@ -31,10 +28,10 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
   }
 
   var commitFiles = createFileArray();
-  $fileNames = $commitBox.find('#file_names');
-  $cancelButton = $commitBox.find('#cancel_button');
-  $execButton = $commitBox.find('#commit_button');
-  $commentTextArea = $commitBox.find('#comment_text');
+  $fileNames = selecters.$commitBox.find('#file_names');
+  $cancelButton = selecters.$commitBox.find('#cancel_button');
+  $execButton = selecters.$commitBox.find('#commit_button');
+  $commentTextArea = selecters.$commitBox.find('#comment_text');
 
   // ページ全体にファイルをドロップされてもブラウザが処理を行わないように無視する
   $('html').on('drop', function(e) {
@@ -45,7 +42,7 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
   });
 
   // コミット用のドロップ領域にファイルがドロップされた場合の処理
-  $commitBox.on('dragover', function(e) {
+  selecters.$commitBox.on('dragover', function(e) {
     e.preventDefault();
     e.stopPropagation();
   })
@@ -92,6 +89,9 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
     });
     formData.append('comment', $commentTextArea.val());
 
+    // アップロード中表示
+    selecters.$uploadingDialog.modal('show');
+
     // ファイルをアップロード
     $.ajax('commit', {
       method: 'POST',
@@ -103,6 +103,8 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
 
         // コミットに成功したら、表示されているタブを更新する
         gspecv.commitInfo.updateActiveTab();
+
+        selecters.$uploadingDialog.modal('hide');
       }
     }).fail(function(error) {
       alert(error.responseText);
@@ -111,5 +113,6 @@ gspecv.setupCommit = function($commitBox, commitCallback) {
 
   // 初期化としてクリア処理を行う
   clearCommit();
+
 };
 

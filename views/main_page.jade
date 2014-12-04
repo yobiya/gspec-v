@@ -44,7 +44,7 @@ block scripts
         $tagEditDialog: $tagEditDialog,
         $inclusionAllTagList: $inclusionAllTagList,
         $inclusionAnyTagList: $inclusionAnyTagList,
-        $exclusionTagList: $exclusionTagList
+        $exclusionTagList: $exclusionTagList,
       });
 
       gspecv.tag.setup({
@@ -57,7 +57,10 @@ block scripts
         $stockTagList: $('#tag_edit_dialog .right_tag_list')
       });
 
-      gspecv.setupCommit($('#commit_box'));
+      gspecv.setupCommit({
+        $commitBox: $('#commit_box'),
+        $uploadingDialog: $('#uploadingDialog')
+      });
     });
 
 block content
@@ -113,3 +116,4 @@ block content
   include ./find_dialog.jade
   include ./tag_edit_dialog.jade
   include ./history_dialog.jade
+  include ./loading.jade
