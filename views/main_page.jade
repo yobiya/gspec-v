@@ -112,12 +112,13 @@ block content
             td コミット時間
         tbody
 
-  div#commit_box
-    div#file_names
-    textarea.form-control#comment_text
-    div.row
-      button.btn.pull-right.btn-primary#commit_button(disabled) コミット
-      button.btn.pull-right#cancel_button(disabled) キャンセル
+  form
+    div#commit_box
+      div#file_names
+      textarea.form-control#comment_text(required)
+      div.row
+        button.btn.pull-right.btn-primary#commit_button(disabled) コミット
+        button.btn.pull-right#cancel_button(disabled) キャンセル
 
   include ./find_dialog.jade
   include ./tag_edit_dialog.jade

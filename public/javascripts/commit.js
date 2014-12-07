@@ -92,11 +92,17 @@ gspecv.commit = (function() {
    * @brief コミットを行う
    */
   function doCommit() {
+    var commitMessage = $commentTextArea.val();
+    if(commitMessage === '') {
+      // コミットメッセージが入力されていない場合は、無視する
+      return;
+    }
+
     var formData = new FormData();
     commitFiles.forEach(function(file) {
       formData.append('file', file);
     });
-    formData.append('comment', $commentTextArea.val());
+    formData.append('comment', commitMessage);
 
     // アップロード中表示
     selecters.$uploadingDialog.modal('show');
