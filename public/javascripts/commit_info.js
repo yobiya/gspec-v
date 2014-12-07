@@ -5,9 +5,9 @@ var gspecv = gspecv || {};
 gspecv.commitInfo = {};
 
 (function() {
-  const UPDATE_INTERVAL = 30 * 1000;  // 30秒
-  const DEFAULT_TAB_NAME = 'All';
-  const TAB_CLASS_NAME = 'find_tab';
+  var UPDATE_INTERVAL = 30 * 1000;  // 30秒
+  var DEFAULT_TAB_NAME = 'All';
+  var TAB_CLASS_NAME = 'find_tab';
   var $activeTab;
   var tabIdCounter = 0;
   var selecters;
@@ -32,15 +32,15 @@ gspecv.commitInfo = {};
                                 $tableRow.find('td')[1].innerText = '';
                               });
 
-        appendTableRowCell($tableRow,
-                          createDropdownMenu(fileInfo),
-                          notViewVersionCount || '',
-                          $downloadFileName,
-                          createTagCell(fileInfo.tag_names),
-                          fileInfo.version,
-                          fileInfo.comment,
-                          fileInfo.commit_user_name,
-                          fileInfo.commit_time);
+        gspecv.util.appendTableRowCell($tableRow,
+                                        createDropdownMenu(fileInfo),
+                                        notViewVersionCount || '',
+                                        $downloadFileName,
+                                        createTagCell(fileInfo.tag_names),
+                                        fileInfo.version,
+                                        fileInfo.comment,
+                                        fileInfo.commit_user_name,
+                                        fileInfo.commit_time);
 
         selecters.$commitInfoTBody.append($tableRow);
       });
@@ -140,26 +140,6 @@ gspecv.commitInfo = {};
   }
 
   /**
-   * @brief テーブルの行に複数のセルを追加する
-   *
-   * @param $tableRow テーブルの行
-   * @param arguments 可変長引数で、追加するセルを受け取る
-   */
-  function appendTableRowCell($tableRow) {
-    for(var i = 1; i < arguments.length; i++) {
-      var cellContent = arguments[i];
-
-      if(typeof cellContent === 'string') {
-        // 文字列なら、テキストとして設定
-        $tableRow.append($('<td>').text(cellContent));
-      } else {
-        // 文字列以外なら、要素として追加
-        $tableRow.append($('<td>').append(cellContent));
-      }
-    }
-  }
-
-  /**
    * @brief タブの検索情報を保存する
    *
    * @param $tab 保存するタブのjQueryオブジェクト
@@ -220,27 +200,6 @@ gspecv.commitInfo = {};
 
       find($activeTab.findInfo);
     });
-
-    // 履歴ダイアログにセットアップメソッドを追加
-    selecters.$historyDialog.setup = function(historyInfoArray) {
-      selecters.$historyInfoTable.empty();
-
-      historyInfoArray.forEach(function(historyInfo) {
-        var $tableRow = $('<tr>');
-
-        appendTableRowCell($tableRow,
-                          $('<a href=download_with_version/' + historyInfo._id + '></a>').text(historyInfo.name),
-                          historyInfo.version,
-                          historyInfo.comment,
-                          historyInfo.user_name,
-                          historyInfo.commit_time);
-
-        selecters.$historyInfoTable.append($tableRow);
-      });
-   
-
-      return selecters.$historyDialog;
-    };
 
     // 検索ボタンの動作を設定
     selecters.$findButton.on('click', function() {

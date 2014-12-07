@@ -15,11 +15,13 @@ block scripts
   script(src='javascripts/find.js')
   script(src='javascripts/commit_info.js')
   script(src='javascripts/tag.js')
+  script(src='javascripts/history.js')
   script(src='javascripts/commit.js')
   script(type='text/javascript').
     $(function() {
       var $findDialog = $('#find_dialog');
       var $tagEditDialog = $('#tag_edit_dialog');
+      var $historyDialog = $('#history_dialog');
       var $inclusionAllTagList = $('#inclusion_all_tag_list');
       var $inclusionAnyTagList = $('#inclusion_any_tag_list');
       var $exclusionTagList = $('#exclusion_tag_list');
@@ -39,9 +41,8 @@ block scripts
         $commitInfoTabPanel: $('#commit_info_tabs .nav-tabs'),
         $commitInfoTBody: $('#commit_info tbody'),
         $findDialog: $findDialog,
-        $historyDialog: $('#history_dialog'),
-        $historyInfoTable: $('#history_dialog tbody'),
         $tagEditDialog: $tagEditDialog,
+        $historyDialog: $historyDialog,
         $inclusionAllTagList: $inclusionAllTagList,
         $inclusionAnyTagList: $inclusionAnyTagList,
         $exclusionTagList: $exclusionTagList,
@@ -57,7 +58,12 @@ block scripts
         $stockTagList: $('#tag_edit_dialog .right_tag_list')
       });
 
-      gspecv.setupCommit({
+      gspecv.history.setup({
+        $historyDialog: $historyDialog,
+        $historyInfoTable: $('#history_dialog tbody')
+      });
+
+      gspecv.commit.setup({
         $commitBox: $('#commit_box'),
         $uploadingDialog: $('#uploadingDialog')
       });

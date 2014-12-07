@@ -3,7 +3,7 @@
  */
 var gspecv = gspecv || {};
 
-(function() {
+gspecv.util = (function() {
   /**
    * @brief アイコン付きテキストjQueryオブジェクトを生成する
    *
@@ -20,7 +20,28 @@ var gspecv = gspecv || {};
             .text(text);
   }
 
-  gspecv.util = {
-    createIconText: createIconText
+  /**
+   * @brief テーブルの行に複数のセルを追加する
+   *
+   * @param $tableRow テーブルの行
+   * @param arguments 可変長引数で、追加するセルを受け取る
+   */
+  function appendTableRowCell($tableRow) {
+    for(var i = 1; i < arguments.length; i++) {
+      var cellContent = arguments[i];
+
+      if(typeof cellContent === 'string') {
+        // 文字列なら、テキストとして設定
+        $tableRow.append($('<td>').text(cellContent));
+      } else {
+        // 文字列以外なら、要素として追加
+        $tableRow.append($('<td>').append(cellContent));
+      }
+    }
+  }
+
+  return {
+    createIconText: createIconText,
+    appendTableRowCell: appendTableRowCell
   };
 })();
