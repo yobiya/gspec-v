@@ -31,6 +31,22 @@ gspecv.commitInfo = (function() {
                                 // 未確認のコミットファイルの数を非表示にする
                                 $tableRow.find('td')[1].innerText = '';
 
+                                var userEditTagName = gspecv.constant.TAG_NAME.PREFIX.EDIT + userName;
+                                var otherUserEditTagName = _.find(fileInfo.tag_names, function(tagName) {
+                                  // 自分以外の編集中タグ名ならtrueを返す
+                                  if(tagName === userEditTagName) {
+                                    return false;
+                                  }
+
+                                  return new RegExp("^" + gspecv.constant.TAG_NAME.PREFIX.EDIT).test(tagName);
+                                });
+
+                                if(otherUserEditTagName) {
+                                  var otherUserName = otherUserEditTagName.substr(gspecv.constant.TAG_NAME.PREFIX.EDIT.length);
+                                  alert(otherUserName + " が編集中なので、" + userName + " 編集中タグを追加できませんでした");
+                                  return;
+                                }
+
                                 // 編集中タグを追加する
                                 var tagNames = [gspecv.constant.TAG_NAME.PREFIX.EDIT + userName];
                                 gspecv.util.post('add_tag',
