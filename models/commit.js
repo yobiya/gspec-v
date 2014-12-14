@@ -32,13 +32,11 @@ module.exports = function(mongoModels) {
           // 変種中のユーザーはいないか、コミットしようとしているユーザーの編集中なら
           // コミットに問題はない
           d.resolve();
-          console.log("B");
         } else {
           // 他のユーザーが編集中なので、コミットはできない
           var editUserName = editTagName.substr(commonConstant.TAG_NAME.PREFIX.EDIT.length);
           var message = fileName + "は" + editUserName + "が編集中です";
 
-          console.log(message);
           d.reject(message);
         }
       });

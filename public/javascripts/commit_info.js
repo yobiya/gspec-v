@@ -2,15 +2,15 @@
  * @brief コミット情報処理
  */
 var gspecv = gspecv || {};
-gspecv.commitInfo = {};
 
-(function() {
+gspecv.commitInfo = (function() {
   var UPDATE_INTERVAL = 30 * 1000;  // 30秒
   var DEFAULT_TAB_NAME = 'All';
   var TAB_CLASS_NAME = 'find_tab';
   var $activeTab;
   var tabIdCounter = 0;
   var selecters;
+  var userName;
 
   function find(option) {
     $activeTab.find('a').text(changeTagName(option));
@@ -22,6 +22,23 @@ gspecv.commitInfo = {};
       fileInfos.forEach(function(fileInfo) {
         var $tableRow = $('<tr>');
         var notViewVersionCount = fileInfo.version - fileInfo.user_last_view_version;
+
+        $editAndFileDownload = $('<a>')
+                              .attr('href', 'download/' + fileInfo._id)
+                              .append('<div class="glyphicon glyphicon-edit">')
+                              .on('click', function() {
+                                // ダウンロードしたファイルが確認済みのファイルになったので
+                                // 未確認のコミットファイルの数を非表示にする
+                                $tableRow.find('td')[1].innerText = '';
+
+                                // 編集中タグを追加する
+                                var tagNames = [gspecv.constant.TAG_NAME.PREFIX.EDIT + userName];
+                                gspecv.util.post('add_tag',
+                                  { commit_document_id: fileInfo._id, tag_names: tagNames },
+                                  function(data) {
+                                    gspecv.commitInfo.updateActiveTab();
+                                  });
+                              });
 
         $downloadFileName = $('<a>')
                               .attr('href', 'download/' + fileInfo._id)
@@ -35,6 +52,7 @@ gspecv.commitInfo = {};
         gspecv.util.appendTableRowCell($tableRow,
                                         createDropdownMenu(fileInfo),
                                         notViewVersionCount || '',
+                                        $editAndFileDownload,
                                         $downloadFileName,
                                         createTagCell(fileInfo.tag_names),
                                         fileInfo.version,
@@ -183,9 +201,11 @@ gspecv.commitInfo = {};
    * @brief コミット情報処理のセットアップ
    *
    * @param selecterObjects セレクタをまとめたオブジェクト
+   * @param userAccountName ユーザー名
    */
-  function setup(selecterObjects) {
+  function setup(selecterObjects, userAccountName) {
     selecters = selecterObjects;
+    userName = userAccountName; 
 
     // 検索の実行
     selecters.$findDialog.find('#find_button').on('click', function() {
@@ -336,7 +356,9 @@ gspecv.commitInfo = {};
   }
 
   // 外部に公開する関数を設定
-  gspecv.commitInfo.setup = setup;
-  gspecv.commitInfo.updateActiveTab = updateActiveTab;
+  return {
+    setup: setup,
+    updateActiveTab: updateActiveTab
+  };
 })();
 

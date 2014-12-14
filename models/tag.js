@@ -3,6 +3,7 @@
  */
 module.exports = function(mongoModels) {
   var _ = require('lodash');
+  var $ = require('jquery-deferred');
 
   var commonConstant = require('../public/javascripts/common/constant.js');
 
@@ -68,6 +69,53 @@ module.exports = function(mongoModels) {
   }
 
   /**
+   * @brief タグを追加する
+   *
+   * @param commitDocumentId タグを追加するコミットドキュメントのID
+   * @param addTagNames 追加するタグ名
+   *
+   * @return deferredオブジェクト
+   */
+  function addTags(commitDocumentId, addTagNames) {
+    return (function() {
+      var d = $.Deferred();
+
+      mongoModels
+        .commitInfo
+        .findById(commitDocumentId, function(error, doc) {
+          if(error) {
+            d.reject(error);
+            return;
+          }
+
+          d.resolve(doc.tag_names);
+        });
+
+      return d.promise();
+    })()
+    .then(function(baseTagNames) {
+      var d = $.Deferred();
+
+      var newTagNames = _.uniq(baseTagNames.concat(addTagNames));
+
+      mongoModels
+        .commitInfo
+        .findOneAndUpdate({ _id: commitDocumentId },
+                          { tag_names: newTagNames },
+                          function(error, docs) {
+                            if(error) {
+                              d.reject(error);
+                              return;
+                            }
+
+                            d.resolve();
+                          });
+
+      return d.promise();
+    });
+  }
+
+  /**
    * @brief 最新のコミット情報のタグを全て取得する
    *
    * @param resultCallback 結果を渡すコールバック
@@ -108,6 +156,7 @@ module.exports = function(mongoModels) {
   return {
     getTagEditInfo: getTagEditInfo,
     applyTagEditInfo: applyTagEditInfo,
+    addTags: addTags,
     findAllLatestTagNames: findAllLatestTagNames
   };
 };

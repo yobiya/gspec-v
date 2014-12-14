@@ -46,7 +46,7 @@ block scripts
         $inclusionAllTagList: $inclusionAllTagList,
         $inclusionAnyTagList: $inclusionAnyTagList,
         $exclusionTagList: $exclusionTagList,
-      });
+      }, '#{user_name}');
 
       gspecv.tag.setup({
         tagCreateDialog: '#tag_create_dialog',
@@ -104,6 +104,8 @@ block content
             td
             td
               div.glyphicon.glyphicon-eye-open
+            td
+              div.glyphicon.glyphicon-edit
             td ファイル名
             td タグ
             td バージョン

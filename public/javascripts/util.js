@@ -4,6 +4,24 @@
 var gspecv = gspecv || {};
 
 gspecv.util = (function() {
+
+  /**
+   * @brief POSTリクエストで、APIを呼び出す
+   *
+   * @param apiName API名
+   * @param param リクエストパラメータ
+   * @param successFunc 成功時に呼ばれる関数
+   *
+   * @note エラー処理はダイアログが表示される
+   */
+  function post(apiName, param, successFunc) {
+    $.post('/' + apiName, param)
+      .done(successFunc)
+      .fail(function(error, errorMessage) {
+        alert(errorMessage);
+      });
+  }
+
   /**
    * @brief アイコン付きテキストjQueryオブジェクトを生成する
    *
@@ -41,6 +59,7 @@ gspecv.util = (function() {
   }
 
   return {
+    post: post,
     createIconText: createIconText,
     appendTableRowCell: appendTableRowCell
   };

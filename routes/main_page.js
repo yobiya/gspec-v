@@ -54,16 +54,29 @@ router.post('/apply_tag', function(request, response) {
   });
 });
 
+/// @brief ファイルにタグを追加する
+router.post('/add_tag', function(request, response) {
+  var params = postParams(request);
+  var tagNames = toArray(params['tag_names[]']);
+  tag.addTags(params.commit_document_id, tagNames)
+    .done(function() {
+      response.send({ response_code: 0 });
+    })
+    .fail(function(errorMessage) {
+      response.send({ response_code: 1, message: errorMessage });
+    });
+});
+
 /// @brief コミットの安全性をチェックする
 router.post('/check_commit_safety', function(request, response) {
   var params = postParams(request);
   commit.checkSafety(toArray(params['file_names[]']), request.session.user)
-  .done(function(docs) {
-    response.send({ response_code: 0, docs: docs });
-  })
-  .fail(function(errorMessage) {
-    response.send({ response_code: 1, message: errorMessage });
-  });
+    .done(function(docs) {
+      response.send({ response_code: 0, docs: docs });
+    })
+    .fail(function(errorMessage) {
+      response.send({ response_code: 1, message: errorMessage });
+    });
 });
 
 /// @brief ファイルをコミットする
