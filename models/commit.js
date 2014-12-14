@@ -7,7 +7,51 @@ module.exports = function(mongoModels) {
   var constants = require('./constants');
   var util = require('util');
   var _ = require('lodash');
+  var $ = require('jquery-deferred');
   require('date-utils');
+
+  var commonConstant = require('../public/javascripts/common/constant.js');
+
+  /**
+   * @brief コミットの安全性をチェックする
+   *
+   * @param fileNames ファイル名の配列
+   * @param userName コミットを行うユーザー名
+   */
+  function checkSafety(fileNames, userName) {
+    function latestFileEditUser(fileName) {
+      var d = new $.Deferred();
+      
+      mongoModels.util.findLatestFileCommitInfo(fileName, function(lastCommitInfo) {
+        var editTagName = _(lastCommitInfo.tag_names)
+          .find(function(tagName) {
+            return /^edit:/.test(tagName);
+          });
+
+        if(!editTagName || editTagName === commonConstant.TAG_NAME.PREFIX.EDIT + userName) {
+          // 変種中のユーザーはいないか、コミットしようとしているユーザーの編集中なら
+          // コミットに問題はない
+          d.resolve();
+          console.log("B");
+        } else {
+          // 他のユーザーが編集中なので、コミットはできない
+          var editUserName = editTagName.substr(commonConstant.TAG_NAME.PREFIX.EDIT.length);
+          var message = fileName + "は" + editUserName + "が編集中です";
+
+          console.log(message);
+          d.reject(message);
+        }
+      });
+
+      return d.promise();
+    }
+
+    var procs = _.map(fileNames, function(fileName) { 
+      return latestFileEditUser(fileName);
+    });
+
+    return $.when.apply($, procs);
+  }
 
   /**
    * @brief ファイルをコミット
@@ -341,6 +385,7 @@ module.exports = function(mongoModels) {
   }
 
   return {
+    checkSafety: checkSafety,
     commit: commit,
     find: find,
     download: download,

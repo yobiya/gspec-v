@@ -54,6 +54,18 @@ router.post('/apply_tag', function(request, response) {
   });
 });
 
+/// @brief コミットの安全性をチェックする
+router.post('/check_commit_safety', function(request, response) {
+  var params = postParams(request);
+  commit.checkSafety(toArray(params['file_names[]']), request.session.user)
+  .done(function(docs) {
+    response.send({ response_code: 0, docs: docs });
+  })
+  .fail(function(errorMessage) {
+    response.send({ response_code: 1, message: errorMessage });
+  });
+});
+
 /// @brief ファイルをコミットする
 router.post('/commit', function(request, response) {
   var files = request.files.file;

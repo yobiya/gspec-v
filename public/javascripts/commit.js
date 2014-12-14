@@ -98,31 +98,61 @@ gspecv.commit = (function() {
       return;
     }
 
-    var formData = new FormData();
-    commitFiles.forEach(function(file) {
-      formData.append('file', file);
-    });
-    formData.append('comment', commitMessage);
-
     // アップロード中表示
     selecters.$uploadingDialog.modal('show');
 
-    // ファイルをアップロード
-    $.ajax('commit', {
-      method: 'POST',
-      contentType: false,
-      processData: false,
-      data:formData,
-      success: function(response) {
-        clearCommit();
+    (function() {
+      var d = new $.Deferred();
+      var fileNames = _.pluck(commitFiles, 'name');
 
-        // コミットに成功したら、表示されているタブを更新する
-        gspecv.commitInfo.updateActiveTab();
+      $.post('/check_commit_safety', { 'file_names': fileNames })
+        .done(function(data) {
+          if(data.response_code !== 0) {
+            d.reject(data.message);
+            return;
+          }
 
+          d.resolve();
+        })
+        .fail(function(error, errorMessage) {
+          d.reject(errorMessage);
+        });
+
+      return d.promise();
+    })()
+    .then(function() {
+      var d = new $.Deferred();
+      var formData = new FormData();
+      commitFiles.forEach(function(file) {
+        formData.append('file', file);
+      });
+      formData.append('comment', commitMessage);
+
+      // ファイルをアップロード
+      $.ajax('commit', {
+        method: 'POST',
+        contentType: false,
+        processData: false,
+        data:formData,
+        success: function(response) {
+          clearCommit();
+
+          // コミットに成功したら、表示されているタブを更新する
+          gspecv.commitInfo.updateActiveTab();
+
+          d.resolve();
+        }
+      }).fail(function(error) {
+        d.reject(error.responseText);
+      });
+
+      return d.promise();
+    })
+    .fail(function(errorMessage) {
+        alert(errorMessage);
+    })
+    .always(function() {
         selecters.$uploadingDialog.modal('hide');
-      }
-    }).fail(function(error) {
-      alert(error.responseText);
     });
   }
 
