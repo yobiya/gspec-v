@@ -11,15 +11,15 @@ gspecv.util = (function() {
    * @param apiName API名
    * @param param リクエストパラメータ
    * @param successFunc 成功時に呼ばれる関数
+   * @param errorFunc エラー時に呼ばれる関数（省略可能）
    *
    * @note エラー処理はダイアログが表示される
    */
-  function post(apiName, param, successFunc) {
+  function post(apiName, param, successFunc, errorFunc) {
+    errorFunc = errorFunc || function(error, errorMessage) { alert(errorMessage); };
     $.post('/' + apiName, param)
       .done(successFunc)
-      .fail(function(error, errorMessage) {
-        alert(errorMessage);
-      });
+      .fail(errorFunc);
   }
 
   /**

@@ -13,6 +13,61 @@ gspecv.commitInfo = (function() {
   var userName;
 
   function find(option) {
+    // 編集中タグを追加する
+    function addEditTag(fileInfo) {
+      (function() {
+        var d = new $.Deferred();
+
+        // 最新のタグ情報を取得
+        $.post('/edit_tag_info', { file_name: fileInfo.name })
+          .done(function(data) {
+            d.resolve(data.file_tags);
+          })
+          .fail(function(error, errorMessage) {
+            d.reject(errorMessage);
+          });
+
+        return d.promise();
+      })()
+      .then(function(tagNames) {
+        var d = new $.Deferred();
+
+        var userEditTagName = gspecv.constant.TAG_NAME.PREFIX.EDIT + userName;
+        var otherUserEditTagName = _.find(tagNames, function(tagName) {
+          // 自分以外の編集中タグ名ならtrueを返す
+          if(tagName === userEditTagName) {
+            return false;
+          }
+
+          return new RegExp("^" + gspecv.constant.TAG_NAME.PREFIX.EDIT).test(tagName);
+        });
+
+        if(otherUserEditTagName) {
+          var otherUserName = otherUserEditTagName.substr(gspecv.constant.TAG_NAME.PREFIX.EDIT.length);
+          console.log(otherUserName );
+          d.reject(otherUserName + " が編集中なので、" + userName + " 編集中タグを追加できませんでした");
+          return d.promise();
+        }
+
+        // 編集中タグを追加する
+        var editTagNames = [gspecv.constant.TAG_NAME.PREFIX.EDIT + userName];
+        gspecv.util.post('add_tag',
+          { commit_document_id: fileInfo._id, tag_names: editTagNames },
+          function(data) {
+            gspecv.commitInfo.updateActiveTab();
+            d.resolve();
+          },
+          function(error, errorMessage) {
+            d.reject(errorMessage);
+          });
+
+        return d.promise();
+      })
+      .fail(function(errorMessage) {
+        alert(errorMessage);
+      });
+    }
+
     $activeTab.find('a').text(changeTagName(option));
     saveTabFindInfo($activeTab);
 
@@ -31,29 +86,8 @@ gspecv.commitInfo = (function() {
                                 // 未確認のコミットファイルの数を非表示にする
                                 $tableRow.find('td')[1].innerText = '';
 
-                                var userEditTagName = gspecv.constant.TAG_NAME.PREFIX.EDIT + userName;
-                                var otherUserEditTagName = _.find(fileInfo.tag_names, function(tagName) {
-                                  // 自分以外の編集中タグ名ならtrueを返す
-                                  if(tagName === userEditTagName) {
-                                    return false;
-                                  }
-
-                                  return new RegExp("^" + gspecv.constant.TAG_NAME.PREFIX.EDIT).test(tagName);
-                                });
-
-                                if(otherUserEditTagName) {
-                                  var otherUserName = otherUserEditTagName.substr(gspecv.constant.TAG_NAME.PREFIX.EDIT.length);
-                                  alert(otherUserName + " が編集中なので、" + userName + " 編集中タグを追加できませんでした");
-                                  return;
-                                }
-
                                 // 編集中タグを追加する
-                                var tagNames = [gspecv.constant.TAG_NAME.PREFIX.EDIT + userName];
-                                gspecv.util.post('add_tag',
-                                  { commit_document_id: fileInfo._id, tag_names: tagNames },
-                                  function(data) {
-                                    gspecv.commitInfo.updateActiveTab();
-                                  });
+                                addEditTag(fileInfo);
                               });
 
         $downloadFileName = $('<a>')
