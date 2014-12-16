@@ -23,6 +23,12 @@ module.exports = function(mongoModels) {
       var d = new $.Deferred();
       
       mongoModels.util.findLatestFileCommitInfo(fileName, function(lastCommitInfo) {
+        if(!lastCommitInfo) {
+          // ドキュメント情報がなければ、新規ファイルなのでコミットは可能
+          d.resolve();
+          return;
+        }
+
         var editTagName = _(lastCommitInfo.tag_names)
           .find(function(tagName) {
             return /^edit:/.test(tagName);
