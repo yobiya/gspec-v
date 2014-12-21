@@ -116,9 +116,13 @@ router.post('/latest_tag_names', function(request, response) {
 router.post('/history', function(request, response) {
   var fileName = postParams(request).file_name;
 
-  commit.history(fileName, function(historyInfos) {
-    response.send(historyInfos);
-  });
+  commit.history(fileName)
+    .done(function(historyInfo) {
+      response.send(historyInfo);
+    })
+    .fail(function(errorMessage) {
+      response.send({ response_code: 1, message: errorMessage });
+    });
 });
 
 /// @brief ログインされているかチェックする

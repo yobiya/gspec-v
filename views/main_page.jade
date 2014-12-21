@@ -59,8 +59,9 @@ block scripts
       });
 
       gspecv.history.setup({
-        $historyDialog: $historyDialog,
-        $historyInfoTable: $('#history_dialog tbody')
+        $dialog: $historyDialog,
+        $infoTable: $('#history_dialog tbody'),
+        $diffButton: $('#history_dialog #diff_button')
       });
 
       gspecv.commit.setup({

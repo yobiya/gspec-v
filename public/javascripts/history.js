@@ -10,8 +10,17 @@ gspecv.history = (function() {
     selecters = selecterObjects;
 
     // 履歴ダイアログにセットアップメソッドを追加
-    selecters.$historyDialog.setup = function(historyInfoArray) {
-      selecters.$historyInfoTable.empty();
+    selecters.$dialog.setup = function(historyInfoArray, isDiffSupport) {
+      selecters.$infoTable.empty();
+
+      // 差分に対応したフォーマットの場合は、差分表示を有効にする
+      (function() {
+        if(isDiffSupport) {
+          selecters.$diffButton.removeAttr('disabled');
+        } else {
+          selecters.$diffButton.attr('disabled', 'disabled');
+        }
+      })();
 
       historyInfoArray.forEach(function(historyInfo) {
         var $tableRow = $('<tr>');
@@ -23,10 +32,10 @@ gspecv.history = (function() {
                                         historyInfo.user_name,
                                         historyInfo.commit_time);
 
-        selecters.$historyInfoTable.append($tableRow);
+        selecters.$infoTable.append($tableRow);
       });
    
-      return selecters.$historyDialog;
+      return selecters.$dialog;
     };
   }
 

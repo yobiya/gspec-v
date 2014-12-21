@@ -150,8 +150,8 @@ gspecv.commitInfo = (function() {
                     .text(' 履歴')
                     .on('click', function() {
                       $.post('/history', { file_name: fileInfo.name })
-                        .done(function(historyInfoArray) {
-                          selecters.$historyDialog.setup(historyInfoArray).modal('show');
+                        .done(function(historyInfo) {
+                          selecters.$historyDialog.setup(historyInfo.info_array, historyInfo.diff_support).modal('show');
                         })
                         .fail(function(error, errorMessage) {
                           alert(errorMessage);

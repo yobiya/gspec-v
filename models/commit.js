@@ -289,28 +289,35 @@ module.exports = function(mongoModels) {
    * @brief ファイルの履歴を取得する
    *
    * @param fileName ファイル名
-   * @param resultCallback 結果を返すコールバック
+   *
+   * @return deferredオブジェクト
    */
-  function history(fileName, resultCallback) {
-    mongoModels.commitInfo.find({ name: fileName }, function(error, docs) {
-      if(error) {
-        throw error;
-      }
+  function history(fileName) {
+    return (function() {
+      var d = new $.Deferred();
 
-      var result = [];
+      mongoModels.commitInfo.find({ name: fileName }, function(error, docs) {
+        if(error) {
+          d.reject(error);
+          return;
+        }
 
-      docs.forEach(function(doc) {
-        result.push({
-          _id: doc._id,
-          name: doc.name,
-          version: doc.version,
-          comment: doc.comment,
-          user_name: doc.user_name,
-          commit_time: new Date(doc.commit_time).toFormat('YYYY/MM/DD HH24:MI')
+        var infoArray = _.map(docs, function(doc) {
+          return {
+            _id: doc._id,
+            name: doc.name,
+            version: doc.version,
+            comment: doc.comment,
+            user_name: doc.user_name,
+            commit_time: new Date(doc.commit_time).toFormat('YYYY/MM/DD HH24:MI')
+          };
         });
+
+        d.resolve({ info_array: infoArray, diff_support: false });
       });
-      resultCallback(result);
-    });
+
+      return d.promise();
+    })();
   }
 
   /**
