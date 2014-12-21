@@ -39,7 +39,7 @@
 
 #find_dialog #file_names {
   height: 30px;
-  width: 86%
+  width: 86%;
 }
 
 .left_tag_list {
@@ -79,6 +79,10 @@
 #create_tag_button {
   position: absolute;
   bottom: 0px;
+}
+
+#history_dialog #diff_button {
+  float: left;
 }
 
 #loader {
