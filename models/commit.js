@@ -313,7 +313,15 @@ module.exports = function(mongoModels) {
           };
         });
 
-        d.resolve({ info_array: infoArray, diff_support: false });
+        // @todo 必要な外部ツールが使用可能か確認する
+        var isDiffSupport = false;
+        if(/\.xlsx?/.test(fileName)) {
+          // 拡張子がxlsかxlsxの場合
+          // 差分表示をサポートしている
+          isDiffSupport = true;
+        }
+
+        d.resolve({ info_array: infoArray, diff_support: isDiffSupport });
       });
 
       return d.promise();
