@@ -5,10 +5,12 @@ var router = express.Router();
 
 var commit;
 var tag;
+var history;
 
 router.setup = function(mongoModels) {
   commit = require('../models/commit')(mongoModels);
   tag = require('../models/tag')(mongoModels);
+  history = require('../models/history')(mongoModels);
 
   return this;
 };
@@ -116,9 +118,22 @@ router.post('/latest_tag_names', function(request, response) {
 router.post('/history', function(request, response) {
   var fileName = postParams(request).file_name;
 
-  commit.history(fileName)
+  history.history(fileName)
     .done(function(historyInfo) {
       response.send(historyInfo);
+    })
+    .fail(function(errorMessage) {
+      response.send({ response_code: 1, message: errorMessage });
+    });
+});
+
+/// @brief ファイルの差分情報を取得する
+router.post('/diff', function(request, response) {
+  var params = postParams(request);
+
+  history.diff(params.file_name, params.old_version, params.new_version)
+    .done(function() {
+      response.send({ response_code: 0 });
     })
     .fail(function(errorMessage) {
       response.send({ response_code: 1, message: errorMessage });

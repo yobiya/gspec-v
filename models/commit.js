@@ -286,49 +286,6 @@ module.exports = function(mongoModels) {
   }
 
   /**
-   * @brief ファイルの履歴を取得する
-   *
-   * @param fileName ファイル名
-   *
-   * @return deferredオブジェクト
-   */
-  function history(fileName) {
-    return (function() {
-      var d = new $.Deferred();
-
-      mongoModels.commitInfo.find({ name: fileName }, function(error, docs) {
-        if(error) {
-          d.reject(error);
-          return;
-        }
-
-        var infoArray = _.map(docs, function(doc) {
-          return {
-            _id: doc._id,
-            name: doc.name,
-            version: doc.version,
-            comment: doc.comment,
-            user_name: doc.user_name,
-            commit_time: new Date(doc.commit_time).toFormat('YYYY/MM/DD HH24:MI')
-          };
-        });
-
-        // @todo 必要な外部ツールが使用可能か確認する
-        var isDiffSupport = false;
-        if(/\.xlsx?/.test(fileName)) {
-          // 拡張子がxlsかxlsxの場合
-          // 差分表示をサポートしている
-          isDiffSupport = true;
-        }
-
-        d.resolve({ info_array: infoArray, diff_support: isDiffSupport });
-      });
-
-      return d.promise();
-    })();
-  }
-
-  /**
    * @biref コミット用ディレクトリが無ければ作成する
    *
    * @param dirNumber ディレクトリ番号
@@ -408,7 +365,6 @@ module.exports = function(mongoModels) {
     commit: commit,
     find: find,
     download: download,
-    downloadWithVersion: downloadWithVersion,
-    history: history
+    downloadWithVersion: downloadWithVersion
   };
 };
