@@ -74,7 +74,8 @@ gspecv.history = (function() {
           old_version: oldVersion,
           new_version: newVersion
         },
-        function() {
+        function(data) {
+          console.log(data);
         }
       );
     });

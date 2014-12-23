@@ -2,6 +2,7 @@
  * @brief 履歴
  */
 module.exports = function(mongoModels) {
+  var fs = require('fs');
   var path = require('path');
   var constants = require('./constants');
   var _ = require('lodash');
@@ -72,6 +73,7 @@ module.exports = function(mongoModels) {
       var d = new $.Deferred();
 
       mongoModels.commitInfo.find({ name: fileName }, function(error, docs) {
+        // 比較するファイルのパスを取得する
         if(error) {
           d.reject(error);
           return;
@@ -93,6 +95,7 @@ module.exports = function(mongoModels) {
       return d.promise();
     })()
     .then(function(oldFilePath, newFilePath) {
+      // 比較するファイルをHTMLに変換する
       var d = new $.Deferred();
 
       // @todo 変換済みのファイルが存在したら、変換は行わない
@@ -109,26 +112,54 @@ module.exports = function(mongoModels) {
 
       return d.promise();
     })
-//    .then(function(oldDiffHtmlFilePath, newDiffHtmlFilePath) {
-//      // HTMLに変換されたファイルの参照している画像ファイルを、URLスキームとして埋め込む
-//      var d = new $.Deferred();
-//
-//      return d.promise(oldDiffHtmlFilePath, newDiffHtmlFilePath);
-//    })
+/*    .then(function(oldDiffHtmlFilePath, newDiffHtmlFilePath) {
+      // HTMLに変換されたファイルの参照している画像ファイルを、URLスキームとして埋め込む
+      var d = new $.Deferred();
+
+      return d.promise(oldDiffHtmlFilePath, newDiffHtmlFilePath);
+    })*/
     .then(function(oldDiffHtmlFilePath, newDiffHtmlFilePath) {
+      // HTMLファイルを比較して、差分情報を取得する
       var d = new $.Deferred();
 
       var command = 'diff -E -B ' + oldDiffHtmlFilePath + ' ' + newDiffHtmlFilePath;
+      command += ' | grep "^\\d"';  // 差分ある行の情報のみにフィルタリングする
       exec(command, function(error, stdout, stderr) {
         if(error) {
-          // diffコマンドはファイルに差分が有る場合はエラーとして扱うので
-          // ここで、ファイルの差分情報を受け取る
-          d.resolve(stdout);
+          d.reject(error.code);
           return;
         }
 
-        console.log(stdout);
-        d.resolve();
+        d.resolve(oldDiffHtmlFilePath, newDiffHtmlFilePath, stdout);
+      });
+
+      return d.promise();
+    })
+    .then(function(oldDiffHtmlFilePath, newDiffHtmlFilePath, diffInfo) {
+      // 比較する古いHTMLを読み込む
+      var d = new $.Deferred();
+
+      fs.readFile(oldDiffHtmlFilePath, { encoding: 'utf-8' }, function(error, data) {
+        if(error) {
+          d.reject(error);
+          return;
+        }
+
+        d.resolve(data, newDiffHtmlFilePath, diffInfo);
+      });
+
+      return d.promise();
+    }).then(function(oldDiffHtml, newDiffHtmlFilePath, diffInfo) {
+      // 比較する新しいファイルを読み込む
+      var d = new $.Deferred();
+
+      fs.readFile(newDiffHtmlFilePath, { encoding: 'utf-8' }, function(error, data) {
+        if(error) {
+          d.reject(error);
+          return;
+        }
+
+        d.resolve(oldDiffHtml, data, diffInfo);
       });
 
       return d.promise();

@@ -132,8 +132,13 @@ router.post('/diff', function(request, response) {
   var params = postParams(request);
 
   history.diff(params.file_name, params.old_version, params.new_version)
-    .done(function() {
-      response.send({ response_code: 0 });
+    .done(function(oldDiffHtml, newDiffHtml, diffInfo) {
+      response.send({
+        response_code: 0,
+        old_diff_html: oldDiffHtml,
+        new_diff_html: newDiffHtml,
+        diff_info: diffInfo
+      });
     })
     .fail(function(errorMessage) {
       response.send({ response_code: 1, message: errorMessage });
