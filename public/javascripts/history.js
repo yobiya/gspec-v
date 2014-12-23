@@ -91,9 +91,18 @@ gspecv.history = (function() {
                                       diffInfoLeftLineNumbers(diffInfo, 'd'),
                                       diffInfoLeftLineNumbers(diffInfo, 'c'),
                                       []);
+      var rightHtml = convertViewHtml(newDiffHtml,
+                                      [],
+                                      diffInfoRightLineNumbers(diffInfo, 'c'),
+                                      diffInfoRightLineNumbers(diffInfo, 'a'));
 
-      $this.find('#left_iframe')[0].contentDocument.documentElement.innerHTML = leftHtml;
-      $this.find('#right_iframe')[0].contentDocument.documentElement.innerHTML = newDiffHtml;
+      var $leftDoc = $($this.find('#left_iframe')[0].contentDocument.documentElement);
+      var $rightDoc = $($this.find('#right_iframe')[0].contentDocument.documentElement);
+      $leftDoc.html(leftHtml);
+      $rightDoc.html(rightHtml);
+
+      setCss($leftDoc);
+      setCss($rightDoc);
 
       return this;
     };
@@ -101,6 +110,13 @@ gspecv.history = (function() {
 
   function splitLines(text) {
     return text.split(/\r\n|\r|\n/);
+  }
+
+  function setCss($doc) {
+      $doc.find('td').css('white-space', 'nowrap');
+      $doc.find('.diff_delete').css('border', '3px solid gray');
+      $doc.find('.diff_change').css('border', '3px solid green');
+      $doc.find('.diff_add').css('border', '3px solid red');
   }
 
   /**
@@ -113,6 +129,38 @@ gspecv.history = (function() {
     // 削除された行情報
     diffInfoList.forEach(function(info) {
       var rangeInfo = new RegExp('([\\d,]+)' + typeChar).exec(info);
+      if(!rangeInfo) {
+        return;
+      }
+
+      var range = rangeInfo[1];
+      var multiLineInfo = /(\d+),(\d+)/.exec(range);
+
+      var lineNumbers = [];
+      if(multiLineInfo) {
+        // カンマで区切られているので、複数行とみなす
+        var begin = parseInt(multiLineInfo[1]);
+        var end = parseInt(multiLineInfo[2]) + 1;
+        result = result.concat(_.range(begin, end));
+      } else {
+        // カンマで区切られていないので、1行とみなす
+        result.push(parseInt(range));
+      }
+    });
+
+    return result;
+  }
+
+  /**
+   * @brief 差分情報から右側の変更行番号を配列として返す
+   */
+  function diffInfoRightLineNumbers(diffInfo, typeChar) {
+    var diffInfoList = splitLines(diffInfo);
+    var result = [];
+
+    // 削除された行情報
+    diffInfoList.forEach(function(info) {
+      var rangeInfo = new RegExp(typeChar + '([\\d,]+)').exec(info);
       if(!rangeInfo) {
         return;
       }
