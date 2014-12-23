@@ -87,8 +87,10 @@ gspecv.history = (function() {
       $this.find('#left_title').text(fileName + ' v' + oldVersion);
       $this.find('#right_title').text(fileName + ' v' + newVersion);
 
-      var leftViewInfos = getOldDiffInfo(diffInfo);
-      var leftHtml = convertViewHtml(oldDiffHtml, leftViewInfos);
+      var leftHtml = convertViewHtml(oldDiffHtml, 
+                                      diffInfoLeftLineNumbers(diffInfo, 'd'),
+                                      diffInfoLeftLineNumbers(diffInfo, 'c'),
+                                      []);
 
       $this.find('#left_iframe')[0].contentDocument.documentElement.innerHTML = leftHtml;
       $this.find('#right_iframe')[0].contentDocument.documentElement.innerHTML = newDiffHtml;
@@ -102,9 +104,9 @@ gspecv.history = (function() {
   }
 
   /**
-   * @brief 差分情報から左側の変更情報と範囲を取得する
+   * @brief 差分情報から左側の変更行番号を配列として返す
    */
-  function diffInfoLeftRange(diffInfo, typeChar) {
+  function diffInfoLeftLineNumbers(diffInfo, typeChar) {
     var diffInfoList = splitLines(diffInfo);
     var result = [];
 
@@ -118,41 +120,32 @@ gspecv.history = (function() {
       var range = rangeInfo[1];
       var multiLineInfo = /(\d+),(\d+)/.exec(range);
 
-      var lineNubers = [];
+      var lineNumbers = [];
       if(multiLineInfo) {
         // カンマで区切られているので、複数行とみなす
         var begin = parseInt(multiLineInfo[1]);
         var end = parseInt(multiLineInfo[2]) + 1;
-        lineNubers = _.range(begin, end);
+        result = result.concat(_.range(begin, end));
       } else {
         // カンマで区切られていないので、1行とみなす
-        lineNubers = [parseInt(range)];
+        result.push(parseInt(range));
       }
-
-      result.push({
-        type: typeChar,
-        lineNumbers: lineNubers
-      });
     });
 
     return result;
   }
 
-  /**
-   * @brief 比較する古いファイルの差分情報を取得する
-   */
-  function getOldDiffInfo(diffInfo) {
-    var deleteLinesInfo = diffInfoLeftRange(diffInfo, 'd');
-    var changeLinesInfo = diffInfoLeftRange(diffInfo, 'c');
-
-    return deleteLinesInfo.concat(changeLinesInfo);
-  }
-
-  function convertViewHtml(htmlText, viewInfos) {
+  function convertViewHtml(htmlText, deleteLineNumbers, changeLineNumbers, addLineNumbers) {
     var lines = splitLines(htmlText);
 
     // ヘッダは無視する
+    var bodyLineIndex = _.findIndex(lines, function(line) {
+      return /<body>/.test(line);
+    });
 
+    console.log(deleteLineNumbers);
+    console.log(changeLineNumbers);
+    console.log(addLineNumbers);
 
     return htmlText;
   }
