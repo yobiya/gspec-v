@@ -75,6 +75,10 @@ gspecv.history = (function() {
           new_version: newVersion
         },
         function(data) {
+          if(data.response_code !== 0) {
+            alert(data.message);
+            return;
+          }
           selecters.$diffDialog.setup(oldVersion, newVersion, data.old_diff_html, data.new_diff_html, data.diff_info).modal('show');
         }
       );
