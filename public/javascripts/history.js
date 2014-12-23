@@ -87,8 +87,8 @@ gspecv.history = (function() {
       $this.find('#left_title').text(fileName + ' v' + oldVersion);
       $this.find('#right_title').text(fileName + ' v' + newVersion);
 
-      $this.find('#left_iframe');
-      $this.find('#right_iframe');
+      $this.find('#left_iframe')[0].contentDocument.documentElement.innerHTML = oldDiffHtml;
+      $this.find('#right_iframe')[0].contentDocument.documentElement.innerHTML = newDiffHtml;
 
       return this;
     };
