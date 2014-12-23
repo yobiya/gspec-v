@@ -135,19 +135,51 @@ gspecv.history = (function() {
     return result;
   }
 
+  function insertTagClassInDiffLines(textLines, lineNumbers, className) {
+    lineNumbers.forEach(function(lineNumber) {
+      var index = lineNumber - 1;
+      var line = textLines[index];
+
+      var topTagInfo = /^\s*<\w+ /.exec(line);
+      if(!topTagInfo) {
+        // もし、先頭のタグがなければ、何も行わない
+        return;
+      }
+
+      var insertIndex = topTagInfo[0].length;
+      textLines[index] = line.slice(0, insertIndex) + 'class="' + className + '" ' + line.slice(insertIndex);
+    });
+
+    return textLines;
+  }
+
   function convertViewHtml(htmlText, deleteLineNumbers, changeLineNumbers, addLineNumbers) {
     var lines = splitLines(htmlText);
 
     // ヘッダは無視する
-    var bodyLineIndex = _.findIndex(lines, function(line) {
-      return /<body>/.test(line);
+    (function() {
+      var bodyLineIndex = 1 + _.findIndex(lines, function(line) {
+        return /<body>/.test(line);
+      });
+
+      var outHeaderLine = function(number) {
+        return number > bodyLineIndex;
+      };
+      deleteLineNumbers = _.filter(deleteLineNumbers, outHeaderLine);
+      changeLineNumbers = _.filter(changeLineNumbers, outHeaderLine);
+      addLineNumbers = _.filter(addLineNumbers, outHeaderLine);
+    })();
+
+    lines = insertTagClassInDiffLines(lines, deleteLineNumbers, 'diff_delete');
+    lines = insertTagClassInDiffLines(lines, changeLineNumbers, 'diff_change');
+    lines = insertTagClassInDiffLines(lines, addLineNumbers, 'diff_add');
+
+    var result = '';
+    lines.forEach(function(line) {
+      result = result.concat(line);
     });
 
-    console.log(deleteLineNumbers);
-    console.log(changeLineNumbers);
-    console.log(addLineNumbers);
-
-    return htmlText;
+    return result;
   }
 
   return {
