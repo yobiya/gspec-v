@@ -2,6 +2,7 @@
  * @brief 履歴
  */
 module.exports = function(mongoModels) {
+  var path = require('path');
   var constants = require('./constants');
   var _ = require('lodash');
   var $ = require('jquery-deferred');
@@ -60,6 +61,13 @@ module.exports = function(mongoModels) {
    * @return deferredオブジェクト
    */
   function diff(fileName, oldVersion, newVersion) {
+
+    function convertToTempHtmlPath(originalFilePath) {
+        var fileExt = path.extname(originalFilePath);
+        var fileBaseName = path.basename(originalFilePath, fileExt);
+        return path.join(constants.DIFF_FILE_TEMP_DIRECTORY, fileBaseName) + '.html';
+    }
+
     return (function() {
       var d = new $.Deferred();
 
@@ -87,6 +95,8 @@ module.exports = function(mongoModels) {
     .then(function(oldFilePath, newFilePath) {
       var d = new $.Deferred();
 
+      // @todo 変換済みのファイルが存在したら、変換は行わない
+
       var command = 'soffice --headless --convert-to html --outdir ' + constants.DIFF_FILE_TEMP_DIRECTORY + ' ' + oldFilePath + ' ' + newFilePath;
       exec(command, function(error, stdout, stderr) {
         if(error) {
@@ -94,9 +104,31 @@ module.exports = function(mongoModels) {
           return;
         }
 
+        d.resolve(convertToTempHtmlPath(oldFilePath), convertToTempHtmlPath(newFilePath));
+      });
+
+      return d.promise();
+    })
+//    .then(function(oldDiffHtmlFilePath, newDiffHtmlFilePath) {
+//      // HTMLに変換されたファイルの参照している画像ファイルを、URLスキームとして埋め込む
+//      var d = new $.Deferred();
+//
+//      return d.promise(oldDiffHtmlFilePath, newDiffHtmlFilePath);
+//    })
+    .then(function(oldDiffHtmlFilePath, newDiffHtmlFilePath) {
+      var d = new $.Deferred();
+
+      var command = "diff -E -B " + oldDiffHtmlFilePath + " " + newDiffHtmlFilePath;
+      exec(command, function(error, stdout, stderr) {
+        if(error) {
+        console.log(error);
+          d.reject(error.code);
+          return;
+        }
+
         console.log(stdout);
 
-        d.resolve();
+        return d.resolve();
       });
 
       return d.promise();
