@@ -118,17 +118,17 @@ module.exports = function(mongoModels) {
     .then(function(oldDiffHtmlFilePath, newDiffHtmlFilePath) {
       var d = new $.Deferred();
 
-      var command = "diff -E -B " + oldDiffHtmlFilePath + " " + newDiffHtmlFilePath;
+      var command = 'diff -E -B ' + oldDiffHtmlFilePath + ' ' + newDiffHtmlFilePath;
       exec(command, function(error, stdout, stderr) {
         if(error) {
-        console.log(error);
-          d.reject(error.code);
+          // diffコマンドはファイルに差分が有る場合はエラーとして扱うので
+          // ここで、ファイルの差分情報を受け取る
+          d.resolve(stdout);
           return;
         }
 
         console.log(stdout);
-
-        return d.resolve();
+        d.resolve();
       });
 
       return d.promise();
