@@ -85,6 +85,36 @@
   float: left;
 }
 
+#diff_dialog .modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin-left: 0px;
+  margin-right: 0px; 
+  margin-top: 0px;
+  margin-bottom: 0px; 
+}
+
+#diff_dialog .modal-content {
+  height: 100%;
+}
+
+#diff_dialog .modal-body {
+  height: 87%;
+}
+
+#diff_dialog table {
+  height: 100%;
+}
+
+#diff_dialog iframe {
+  width: 100%;
+  height: 100%;
+  margin-left: 0px;
+  margin-right: 0px; 
+  margin-top: 0px;
+  margin-bottom: 0px; 
+}
+
 #loader {
   position: absolute;
   width: 30px;

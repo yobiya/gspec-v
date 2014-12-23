@@ -61,7 +61,8 @@ block scripts
       gspecv.history.setup({
         $dialog: $historyDialog,
         $infoTable: $('#history_dialog tbody'),
-        $diffButton: $('#history_dialog #diff_button')
+        $diffButton: $('#history_dialog #diff_button'),
+        $diffDialog: $('#diff_dialog')
       });
 
       gspecv.commit.setup({
@@ -125,4 +126,5 @@ block content
   include ./find_dialog.jade
   include ./tag_edit_dialog.jade
   include ./history_dialog.jade
+  include ./diff_dialog.jade
   include ./loading.jade

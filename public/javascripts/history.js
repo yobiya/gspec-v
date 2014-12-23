@@ -75,10 +75,23 @@ gspecv.history = (function() {
           new_version: newVersion
         },
         function(data) {
-          console.log(data);
+          selecters.$diffDialog.setup(oldVersion, newVersion, data.old_diff_html, data.new_diff_html, data.diff_info).modal('show');
         }
       );
     });
+
+    // 差分表示ダイアログのセットアップ処理
+    selecters.$diffDialog.setup = function(oldVersion, newVersion, oldDiffHtml, newDiffHtml, diffInfo) {
+      var $this = $(this);
+
+      $this.find('#left_title').text(fileName + ' v' + oldVersion);
+      $this.find('#right_title').text(fileName + ' v' + newVersion);
+
+      $this.find('#left_iframe');
+      $this.find('#right_iframe');
+
+      return this;
+    };
   }
 
   return {

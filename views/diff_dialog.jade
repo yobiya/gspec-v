@@ -1,0 +1,23 @@
+//- 比較ダイアログ
+div.modal.fade#diff_dialog(tabindex='-1' role='dialog' aria-hidden='true')
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h4.modal-title
+          span(aria-hidden="true")
+            ファイルの比較
+      div.modal-body
+        table.table.table-striped
+          thead
+            tr
+              td#left_title
+              td#right_title
+          tbody
+            tr
+              td
+                iframe#left_iframe
+              td
+                iframe#right_iframe
+      div.modal-footer
+        button.btn.btn-default(data-dismiss='modal') クローズ
+
