@@ -123,7 +123,7 @@ module.exports = function(mongoModels) {
       var d = new $.Deferred();
 
       var command = 'diff -E -B ' + oldDiffHtmlFilePath + ' ' + newDiffHtmlFilePath;
-      command += ' | grep "^\\d"';  // 差分ある行の情報のみにフィルタリングする
+      command += ' | grep "^[0-9]"';  // 差分ある行の情報のみにフィルタリングする（Cygwin環境では\\dが期待通りに認識されなかったので数字は[0-9]で扱う）
       exec(command, function(error, stdout, stderr) {
         if(error) {
           d.reject(error.code);
