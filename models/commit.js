@@ -35,7 +35,7 @@ module.exports = function(mongoModels) {
           });
 
         if(!editTagName || editTagName === commonConstant.TAG_NAME.PREFIX.EDIT + userName) {
-          // 変種中のユーザーはいないか、コミットしようとしているユーザーの編集中なら
+          // 編集中のユーザーはいないか、コミットしようとしているユーザーの編集中なら
           // コミットに問題はない
           d.resolve();
         } else {
@@ -71,11 +71,11 @@ module.exports = function(mongoModels) {
         lastCommitInfo = lastCommitInfo || { _id: null, version: 0, tag_names: [] };
 
         // ディレクトリが無ければ作成する
-        var directoryPath = makeCommitDirectory(0); ///< @todo 適切なコミットディレクトリ名を計算する
+        var directoryPath = _makeCommitDirectory(0); ///< @todo 適切なコミットディレクトリ名を計算する
         var newVersion = lastCommitInfo.version + 1;
 
         // 保存するファイル名を決定する
-        var commitFilePath = path.join(directoryPath, createSaveFileName(uploadFile.originalname, newVersion));
+        var commitFilePath = path.join(directoryPath, _createSaveFileName(uploadFile.originalname, newVersion));
 
         // アップロードされたファイルをコミット用ディレクトリに移動させる
         var error = fs.renameSync(uploadFile.path, commitFilePath);
@@ -102,8 +102,8 @@ module.exports = function(mongoModels) {
           }
 
           // 正常にコミットされた
-          updateLatestCommitList(commitInfoDoc._id, lastCommitInfo._id, function() {
-            updateLastViewFileVersion(commitInfo.user_name, commitInfo.name, commitInfo.version);
+          _updateLatestCommitList(commitInfoDoc._id, lastCommitInfo._id, function() {
+            _updateLastViewFileVersion(commitInfo.user_name, commitInfo.name, commitInfo.version);
           });
         });
       });
@@ -210,7 +210,7 @@ module.exports = function(mongoModels) {
     mongoModels.commitInfo.findOne({ _id: documentId }, function(error, downloadDoc) {
       resultCallback(downloadDoc.path, downloadDoc.name);
 
-      updateLastViewFileVersion(user, downloadDoc.name, downloadDoc.version);
+      _updateLastViewFileVersion(user, downloadDoc.name, downloadDoc.version);
     });
   }
 
@@ -221,7 +221,7 @@ module.exports = function(mongoModels) {
    * @param fileName 確認したファイル名
    * @param fileVersion 確認したファイルのバージョン
    */
-  function updateLastViewFileVersion(userName, fileName, fileVersion) {
+  function _updateLastViewFileVersion(userName, fileName, fileVersion) {
       mongoModels
         .userLastViewCommitVersion
         .findOne({ user_name: userName }, function(error, foundDoc) {
@@ -280,8 +280,74 @@ module.exports = function(mongoModels) {
         throw error;
       }
 
-      var fileNameWithVersion = createSaveFileName(doc.name, doc.version);
+      var fileNameWithVersion = _createSaveFileName(doc.name, doc.version);
       resultCallback(doc.path, fileNameWithVersion);
+    });
+  }
+
+  /**
+   * @brief ユーザーのコミット確認状況を取得
+   *
+   * @param fileName ファイル名
+   *
+   * @return deferredオブジェクト
+   */
+  function usersView(fileName) {
+    return (function() {
+      var d = new $.Deferred();
+
+      mongoModels.users.find({}, function(error, userDocs) {
+        if(error) {
+          d.reject(error);
+          return;
+        }
+
+        var userNames = _.pluck(userDocs, 'name');
+
+        d.resolve(userNames);
+      });
+
+      return d.promise();
+    })()
+    .then(function(userNames) {
+      var d = new $.Deferred();
+      mongoModels.util.findLatestFileCommitInfo(fileName, function(doc) {
+        d.resolve(doc.version, userNames);
+      });
+
+      return d.promise(); 
+    })
+    .then(function(latestVersion, userNames) {
+      var d = new $.Deferred();
+
+      var viewInfos = [];
+      userNames.forEach(function(userName) {
+        mongoModels
+          .userLastViewCommitVersion
+          .findOne({ user_name: userName }, function(error, doc) {
+            if(error) {
+              d.reject(error);
+              return;
+            }
+
+            var lastViewInfo = _.find(doc.last_views, { file_name: fileName });
+            var lastViewVersion = (lastViewInfo) ? (lastViewInfo.version) : (0);
+            
+            viewInfos.push({
+              user_name: userName,
+              last_view_version: lastViewVersion
+            });
+
+            if(viewInfos.length >= userNames.length) {
+              d.resolve({
+                file_latest_version: latestVersion,
+                user_view_infos: viewInfos
+              });
+            }
+          });
+      });
+
+      return d.promise();
     });
   }
 
@@ -292,7 +358,7 @@ module.exports = function(mongoModels) {
    *
    * @return 作成されたディレクトリのパス
    */
-  function makeCommitDirectory(dirNumber) {
+  function _makeCommitDirectory(dirNumber) {
     var isTopDirectoryExists = fs.existsSync(constants.FILE_COMMIT_TOP_DIRECTORY);
     if(!isTopDirectoryExists) {
       var topDirectoryMakeError = fs.mkdirSync(constants.FILE_COMMIT_TOP_DIRECTORY);
@@ -323,7 +389,7 @@ module.exports = function(mongoModels) {
    *
    * @return 保存するファイル名
    */
-  function createSaveFileName(fileName, version) {
+  function _createSaveFileName(fileName, version) {
     var extName = path.extname(fileName);
     var baseName = path.basename(fileName, extName);
 
@@ -337,7 +403,7 @@ module.exports = function(mongoModels) {
    * @param previousCommitInfoDocId 一つ前のコミットされているドキュメントのID、無ければundefined
    * @param resultCallback 結果を渡すコールバック
    */
-  function updateLatestCommitList(commitInfoDocId, previousCommitInfoDocId, resultCallback) {
+  function _updateLatestCommitList(commitInfoDocId, previousCommitInfoDocId, resultCallback) {
     if(previousCommitInfoDocId) {
       // 以前のバージョンのコミットが存在するので、その参照情報ドキュメントを削除する
       mongoModels.latestCommitId
@@ -365,6 +431,7 @@ module.exports = function(mongoModels) {
     commit: commit,
     find: find,
     download: download,
-    downloadWithVersion: downloadWithVersion
+    downloadWithVersion: downloadWithVersion,
+    usersView: usersView
   };
 };

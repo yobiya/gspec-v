@@ -171,10 +171,24 @@ gspecv.commitInfo = (function() {
                         });
                     });
 
+    var $usersView = $('<a>')
+                    .addClass('glyphicon glyphicon-eye-open')
+                    .text(' ユーザーの確認状況')
+                    .on('click', function() {
+                      $.post('/users_view_info', { file_name: fileInfo.name })
+                        .done(function(data) {
+                          selecters.$userViewDialog.setup(data).modal('show');
+                        })
+                        .fail(function(error, errorMessage) {
+                          alert(errorMessage);
+                        });
+                    });
+
     var $menuContents = $('<li>')
                           .addClass('dropdown-menu')
                           .append($('<li>').append($history))
-                          .append($('<li>').append($tagEdit));
+                          .append($('<li>').append($tagEdit))
+                          .append($('<li>').append($usersView));
 
     var $menu = $('<div>').append($button).append($menuContents);
     return $('<div>').addClass('dropdown').append($menu);

@@ -17,10 +17,12 @@ block scripts
   script(src='javascripts/tag.js')
   script(src='javascripts/history.js')
   script(src='javascripts/commit.js')
+  script(src='javascripts/user_view.js')
   script(type='text/javascript').
     $(function() {
       var $findDialog = $('#find_dialog');
       var $tagEditDialog = $('#tag_edit_dialog');
+      var $userViewDialog = $('#user_view_dialog');
       var $historyDialog = $('#history_dialog');
       var $inclusionAllTagList = $('#inclusion_all_tag_list');
       var $inclusionAnyTagList = $('#inclusion_any_tag_list');
@@ -42,6 +44,7 @@ block scripts
         $commitInfoTBody: $('#commit_info tbody'),
         $findDialog: $findDialog,
         $tagEditDialog: $tagEditDialog,
+        $userViewDialog: $userViewDialog,
         $historyDialog: $historyDialog,
         $inclusionAllTagList: $inclusionAllTagList,
         $inclusionAnyTagList: $inclusionAnyTagList,
@@ -68,6 +71,10 @@ block scripts
       gspecv.commit.setup({
         $commitBox: $('#commit_box'),
         $uploadingDialog: $('#uploadingDialog')
+      });
+
+      gspecv.userView.setup({
+        $dialog: $userViewDialog
       });
     });
 
@@ -125,6 +132,7 @@ block content
 
   include ./find_dialog.jade
   include ./tag_edit_dialog.jade
+  include ./user_view_dialog.jade
   include ./history_dialog.jade
   include ./diff_dialog.jade
   include ./loading.jade

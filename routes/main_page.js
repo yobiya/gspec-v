@@ -145,6 +145,26 @@ router.post('/diff', function(request, response) {
     });
 });
 
+// POSTリクエストを受け取る
+function post(path, action) {
+  router.post(path, function(request, response) {
+    var params = postParams(request);
+    action(params, response);
+  });
+}
+
+/// @brief ユーザーのコミット確認状況を取得する
+post('/users_view_info', function(params, response) {
+  commit
+    .usersView(params.file_name)
+    .done(function(usersViewInfo) {
+      response.send(usersViewInfo);
+    })
+    .fail(function(errorMessage) {
+      response.send({ response_code: 1, message: errorMessage });
+    });
+});
+
 /// @brief ログインされているかチェックする
 function loginCheck(request, response, next) {
   if(request.session.user) {

@@ -1,0 +1,18 @@
+//- ユーザー状況確認ダイアログ
+div.modal.fade#user_view_dialog(tabindex='-1' role='dialog' aria-hidden='true')
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h4.modal-title
+          span.glyphicon.glyphicon-search(aria-hidden="true")
+            ユーザーの確認状況
+      div.modal-body
+        table.table.table-striped
+          thead
+            tr
+              td ユーザー名
+              td
+                div.glyphicon.glyphicon-eye-open 未確認バージョン数
+          tbody
+      div.modal-footer
+        button.btn.btn-primary(data-dismiss='modal') OK
