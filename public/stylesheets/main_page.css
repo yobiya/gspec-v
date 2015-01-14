@@ -1,3 +1,8 @@
+body {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .hint_text {
   color: lightgray;
 }
@@ -9,7 +14,7 @@
   position: absolute;
   bottom: 0px;
   border: solid;
-  width: 90%;
+  width: 100%;
 }
 
 #commit_box .row {
@@ -30,6 +35,10 @@
   height: 100px;
   margin-left: 6px;
   margin-right: 6px;
+}
+
+#commit_info {
+  width: 100%;
 }
 
 .commit_info_table {
