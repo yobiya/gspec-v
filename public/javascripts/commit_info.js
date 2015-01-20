@@ -322,7 +322,7 @@ gspecv.commitInfo = (function() {
 
       $activeTab.remove();
 
-      $($('.' + TAB_CLASS_NAME)[0]).addClass('active');
+      $($('.' + TAB_CLASS_NAME)[0]);
     });
 
     /**
@@ -340,11 +340,22 @@ gspecv.commitInfo = (function() {
       tabIdCounter++;
 
       $tab.on('shown.bs.tab', function() {
-        $activeTab = $tab;
-        find($tab.findInfo);
+        setActiveTab($tab);
       });
 
       return $tab;
+    }
+
+    /**
+     * @brief タブをアクティブにする
+     *
+     * @param $tab タブ
+     */
+    function setActiveTab($tab) {
+        $activeTab = $tab;
+
+        var findInfo = $activeTab.findInfo || {};
+        find(findInfo);
     }
 
     /**
@@ -370,12 +381,9 @@ gspecv.commitInfo = (function() {
       var findInfos = loadTabFindInfoArray();
       if(findInfos.length === 0) {
         // 最初のタブを追加
-        var $tab = createTab(DEFAULT_TAB_NAME).addClass('active');
+        var $tab = createTab(DEFAULT_TAB_NAME);
         selecters.$commitInfoTabPanel.append($tab);
-        $activeTab = $tab;
-
-        // セットアップ時に、最新のファイルを検索する
-        find({});
+        setActiveTab($tab);
       } else {
         // タブのIDが振り直されるため、一旦保存されている検索情報を削除
         removeTabFindInfoAll();
@@ -390,9 +398,7 @@ gspecv.commitInfo = (function() {
           saveTabFindInfo($tab);
 
           if(!$activeTab) {
-            $activeTab = $tab;
-            $activeTab.addClass('active');
-            find($activeTab.findInfo);
+            setActiveTab($tab);
           }
         });
       }
