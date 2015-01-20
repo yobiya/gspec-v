@@ -2,9 +2,7 @@
  * @brief タグ関連処理
  */
 var gspecv = gspecv || {};
-gspecv.tag = {};
-
-(function() {
+gspecv.tag = (function() {
   var selecters;
 
   var TAG_NAME_ATTR = 'tag_prefix';
@@ -171,8 +169,8 @@ gspecv.tag = {};
 
   function updateTagLists() {
     // 既存のタグ情報を削除
-    updateTagList(selecters.$fileTagList, 3);
-    updateTagList(selecters.$stockTagList, 3);
+    updateTagList(selecters.$fileTagList, 4);
+    updateTagList(selecters.$stockTagList, 4);
   }
 
   /**
@@ -205,8 +203,10 @@ gspecv.tag = {};
   }
 
   // 外部に公開する関数を設定
-  gspecv.tag.setup = setup;
-  gspecv.tag.createTagLabel = createTagLabel;
-  gspecv.tag.setupDrppableTagList = setupDrppableTagList;
-  gspecv.tag.updateTagList = updateTagList;
+  return {
+    setup: setup,
+    createTagLabel: createTagLabel,
+    setupDrppableTagList: setupDrppableTagList,
+    updateTagList: updateTagList
+  };
 })();
