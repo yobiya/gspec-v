@@ -356,14 +356,7 @@ gspecv.commitInfo = (function() {
       var $plus = $('<a>').addClass('glyphicon glyphicon-plus').attr('role', 'tab');
       var $addButton = $('<li>').attr('role', 'presentation').append($plus);
       $addButton.on('click', function() {
-        // 自分を削除
-        $addButton.remove();
-
-        var $tab = createTab(DEFAULT_TAB_NAME);
-        selecters.$commitInfoTabPanel.append($tab);
-
-        // 新しく追加されたタブの右側に表示するために、新しく追加ボタンを生成
-        selecters.$commitInfoTabPanel.append(createAddTabButton());
+        $addButton.before(createTab(DEFAULT_TAB_NAME));
       });
       selecters.$commitInfoTabPanel.append($addButton);
     }
