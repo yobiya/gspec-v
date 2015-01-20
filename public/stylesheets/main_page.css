@@ -46,6 +46,28 @@ body {
   height: 100px;
 }
 
+.tag {
+  display: inline-block;
+  float: left;
+  margin-right: 2px;
+}
+
+.tag-free {
+  background-color: #428bca;
+}
+
+.tag-edit {
+  background-color: #5cb85c;
+}
+
+.tag-personal {
+  background-color: #f0ad4e;
+}
+
+.tag-system {
+  background-color: #777;
+}
+
 #find_dialog #file_names {
   height: 30px;
   width: 86%;

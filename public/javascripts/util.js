@@ -32,10 +32,23 @@ gspecv.util = (function() {
    * @return jQueryオブジェクト
    */
   function createIconText(iconName, text, color) {
+    var iconCss = {
+      'color': color,
+      'float': 'left',
+      'margin-right': '3px'
+    };
+
+    var textCss = {
+      'color': color,
+      'float': 'left'
+    };
+
+    var $icon = $('<div>').addClass('glyphicon glyphicon-' + iconName).css(iconCss);
+    var $text = $('<div>').text(text).css(textCss);
+
     return $('<div>')
-            .addClass('glyphicon glyphicon-' + iconName)
-            .css({ color: color })
-            .text(text);
+            .append($icon)
+            .append($text);
   }
 
   /**

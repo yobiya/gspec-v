@@ -87,7 +87,7 @@ gspecv.tag = (function() {
   function createTagLabel(tagName, isDraggable) {
     var u = gspecv.util;
 
-    $label = $('<span>').addClass('label tag');
+    $label = $('<div>').addClass('tag label');
     if(isDraggable) {
       $label.draggable({ revert: true });
     }
@@ -97,7 +97,7 @@ gspecv.tag = (function() {
     switch(prefixRegExp.exec(tagName)[0]) {
       case TAG_NAME.PREFIX.FREE:
         $label
-          .addClass('label-primary')
+          .addClass('tag-free')
           .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.FREE)
           .text(tagName.substr(TAG_NAME.PREFIX.FREE.length));
         break;
@@ -106,7 +106,7 @@ gspecv.tag = (function() {
         (function() {
           var userName = tagName.substr(TAG_NAME.PREFIX.PERSONAL.length);
           $label
-            .addClass('label-warning')
+            .addClass('tag-personal')
             .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.PERSONAL)
             .append(u.createIconText('user', userName, 'black'));
         })();
@@ -116,7 +116,7 @@ gspecv.tag = (function() {
         (function() {
           var userName = tagName.substr(TAG_NAME.PREFIX.EDIT.length);
           $label
-            .addClass('label-success')
+            .addClass('tag-edit')
             .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.EDIT)
             .append(u.createIconText('edit', userName, 'black'));
         })();
@@ -125,16 +125,16 @@ gspecv.tag = (function() {
       case TAG_NAME.PREFIX.SYSTEM:
         if(tagName === TAG_NAME.CLOSED) {
           $label
-            .addClass('label-default')
+            .addClass('tag-system')
             .attr(TAG_NAME_ATTR, TAG_NAME.PREFIX.SYSTEM)
             .append(u.createIconText('ban-circle', 'closed', 'white'));
         } else {
-          $label.addClass('label-default').text(tagName);
+          $label.addClass('tag-system').text(tagName);
         }
         break;
 
       default:
-        $label.addClass('label-default').text(tagName);
+        $label.addClass('tag-system').text(tagName);
         break;
     }
 
