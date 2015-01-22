@@ -184,11 +184,26 @@ gspecv.commitInfo = (function() {
                         });
                     });
 
+    var $removeFile = $('<a>')
+                    .addClass('glyphicon glyphicon-trash')
+                    .text(' 削除')
+                    .on('click', function() {
+/*                      $.post('/users_view_info', { file_name: fileInfo.name })
+                        .done(function(data) {
+                          selecters.$userViewDialog.setup(data).modal('show');
+                        })
+                        .fail(function(error, errorMessage) {
+                          alert(errorMessage);
+                        });*/
+                    });
+
     var $menuContents = $('<li>')
                           .addClass('dropdown-menu')
                           .append($('<li>').append($history))
                           .append($('<li>').append($tagEdit))
-                          .append($('<li>').append($usersView));
+                          .append($('<li>').append($usersView))
+                          .append($('<li>').append('<a><hr/></a>'))
+                          .append($('<li>').append($removeFile));
 
     var $menu = $('<div>').append($button).append($menuContents);
     return $('<div>').addClass('dropdown').append($menu);
@@ -321,8 +336,6 @@ gspecv.commitInfo = (function() {
       removeTabFindInfo($activeTab);
 
       $activeTab.remove();
-
-      $($('.' + TAB_CLASS_NAME)[0]);
     });
 
     /**
