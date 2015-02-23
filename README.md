@@ -26,3 +26,4 @@ MIT Lisence
 * morgan
 * multer
 * serve-favicon
+* DefinitelyTyped
