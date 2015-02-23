@@ -20,7 +20,7 @@
   if(typeof window === 'undefined') {
     module.exports = result;
   } else {
-    window.gspecv = window.gspecv || {};
-    window.gspecv.constant = result;
+    window['gspecv'] = window['gspecv'] || {};
+    window['gspecv'].constant = result;
   }
 })();
