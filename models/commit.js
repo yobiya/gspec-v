@@ -10,7 +10,7 @@ module.exports = function(mongoModels) {
   var $ = require('jquery-deferred');
   require('date-utils');
 
-  var commonConstant = require('../public/javascripts/common/constant.js');
+  var commonConstant = require('../server/common/constant.js');
 
   /**
    * @brief コミットの安全性をチェックする

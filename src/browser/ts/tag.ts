@@ -1,6 +1,9 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
 /// <reference path="../../typings/lodash/lodash.d.ts" />
+/// <reference path="../../typings/requirejs/require.d.ts" />
+
+import Constant = require('_common/constant');
 
 /**
  * @brief タグ関連処理
@@ -10,7 +13,7 @@ gspecv.tag = (function() {
   var selecters;
 
   var TAG_NAME_ATTR = 'tag_prefix';
-  var TAG_NAME = gspecv.constant.TAG_NAME;
+  var TAG_NAME = Constant.TAG_NAME;
 
   /**
    * @brief タグ関連処理のセットアップ

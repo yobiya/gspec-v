@@ -5,7 +5,7 @@ module.exports = function(mongoModels) {
   var _ = require('lodash');
   var $ = require('jquery-deferred');
 
-  var commonConstant = require('../public/javascripts/common/constant.js');
+  var commonConstant = require('../server/common/constant.js');
 
   /**
    * @brief タグ編集用情報を取得する

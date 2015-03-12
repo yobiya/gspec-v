@@ -19,6 +19,11 @@ gspecv.find.setup = function (selecters) {
     selecters.$inclusionAllTagList.hintText = '必ず含むタグ';
     selecters.$inclusionAnyTagList.hintText = 'いずれかを含むタグ';
     selecters.$exclusionTagList.hintText = '除外するタグ';
+    function updateTagLists() {
+        tagListArray.forEach(function ($tagList) {
+            gspecv.tag.updateTagList($tagList, 5);
+        });
+    }
     selecters.$findDialog.setup = function (findInfo) {
         selecters.$fileNamesText.val(findInfo.fileNames.join(','));
         selecters.$inclusionAllTagList.tagNames = findInfo.inclusionAllTagNames;
@@ -39,9 +44,4 @@ gspecv.find.setup = function (selecters) {
             updateTagLists();
         });
     });
-    function updateTagLists() {
-        tagListArray.forEach(function ($tagList) {
-            gspecv.tag.updateTagList($tagList, 5);
-        });
-    }
 };
