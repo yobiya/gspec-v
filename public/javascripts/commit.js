@@ -1,10 +1,9 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/lodash/lodash.d.ts" />
-/**
- * @brief コミット関連処理
- */
-var gspecv = gspecv || {};
-gspecv.commit = (function () {
+define(["require", "exports"], function (require, exports) {
+    /**
+     * @brief コミット関連処理
+     */
     var selecters;
     var commitFiles = createFileArray();
     var $fileNames;
@@ -48,6 +47,7 @@ gspecv.commit = (function () {
         // 初期化としてクリア処理を行う
         clearCommit();
     }
+    exports.setup = setup;
     function createFileArray() {
         var array = [];
         array['add'] = function (file) {
@@ -114,7 +114,7 @@ gspecv.commit = (function () {
                 success: function (response) {
                     clearCommit();
                     // コミットに成功したら、表示されているタブを更新する
-                    gspecv.commitInfo.updateActiveTab();
+                    //        gspecv.commitInfo.updateActiveTab();
                     d.resolve();
                 }
             }).fail(function (error) {
@@ -127,7 +127,4 @@ gspecv.commit = (function () {
             selecters.$uploadingDialog.modal('hide');
         });
     }
-    return {
-        setup: setup
-    };
-})();
+});
