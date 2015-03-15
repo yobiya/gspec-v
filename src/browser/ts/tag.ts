@@ -6,7 +6,9 @@
 /**
  * @brief タグ関連処理
  */
-import Constant = require('_common/constant');
+import Constant = require('./_common/constant');
+import CommitInfo = require('./commit_info');
+import Util = require('./util');
 
 var selecters;
 
@@ -77,7 +79,7 @@ export function setup(selecterObjects) {
     selecters.$tagEditDialog.modal('hide');
 
     // 表示を更新する
-    gspecv.commitInfo.updateActiveTab();
+    CommitInfo.updateActiveTab();
   });
 }
 
@@ -90,7 +92,7 @@ export function setup(selecterObjects) {
  * @return タグのラベル
  */
 export function createTagLabel(tagName, isDraggable) {
-  var u = gspecv.util;
+  var u = Util;
 
   var $label = $('<div>').addClass('tag label');
   if(isDraggable) {

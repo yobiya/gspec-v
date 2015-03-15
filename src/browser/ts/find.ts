@@ -3,15 +3,14 @@
 /**
  * @brief 検索関連処理
  */
-var gspecv = gspecv || {};
-gspecv.find = {};
+import Tag = require('./tag');
 
 /**
  * @brief 検索処理のセットアップ
  *
  * @param selecters セレクタをまとめたオブジェクト
  */
-gspecv.find.setup = function(selecters) {
+export function setup(selecters) {
   var tagListArray = [
     selecters.$inclusionAllTagList,
     selecters.$inclusionAnyTagList,
@@ -37,7 +36,7 @@ gspecv.find.setup = function(selecters) {
 
   // 各タグの表示領域に、ドロップ設定を追加
   tagListArray.forEach(function($tagList) {
-    gspecv.tag.setupDrppableTagList($tagList, function(droppedTagName) {
+    Tag.setupDrppableTagList($tagList, function(droppedTagName) {
       $tagList.tagNames.push(droppedTagName);
 
       var otherTagLists = _.without(tagListArray, $tagList);
@@ -51,7 +50,7 @@ gspecv.find.setup = function(selecters) {
 
   function updateTagLists() {
     tagListArray.forEach(function($tagList) {
-      gspecv.tag.updateTagList($tagList, 5);
+      Tag.updateTagList($tagList, 5);
     });
   }
 };

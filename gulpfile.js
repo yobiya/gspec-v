@@ -4,13 +4,13 @@ var typescript = require('gulp-typescript');
 gulp.task('browser-typescript', function() {
   gulp
     .src('src/common/*.ts', { base: 'src/common' })
-    .pipe(gulp.dest('src/browser/ts/_common'));
+    .pipe(gulp.dest('src/browser/_common'));
 
   gulp
     .src('src/browser/ts/**/*.ts')
-    .pipe(typescript({ target: 'ES5', module: 'AMD' }))
+    .pipe(typescript({ target: 'ES5', module: 'commonjs' }))
     .js
-    .pipe(gulp.dest('public/javascripts'));
+    .pipe(gulp.dest('temp/browser'));
 });
 
 gulp.task('server-typescript', function() {

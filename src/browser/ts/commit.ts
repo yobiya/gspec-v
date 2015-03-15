@@ -4,6 +4,8 @@
 /**
  * @brief コミット関連処理
  */
+import CommitInfo = require('./commit_info');
+
 var selecters;
 var commitFiles = createFileArray();
 var $fileNames;
@@ -140,7 +142,7 @@ function doCommit() {
         clearCommit();
 
         // コミットに成功したら、表示されているタブを更新する
-//        gspecv.commitInfo.updateActiveTab();
+        CommitInfo.updateActiveTab();
 
         d.resolve();
       }

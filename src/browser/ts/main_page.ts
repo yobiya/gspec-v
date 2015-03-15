@@ -3,8 +3,12 @@
 declare var gspecv: any;
 declare var $: JQueryStatic;
 
-import Tag = require('tag');
-import Commit = require('commit');
+import Tag = require('./tag');
+import CommitInfo = require('./commit_info');
+import Commit = require('./commit');
+import Find = require('./find');
+import History = require('./history');
+import UserView = require('./user_view');
 
 $(function() {
   var $findDialog = $('#find_dialog');
@@ -15,7 +19,7 @@ $(function() {
   var $inclusionAnyTagList = $('#inclusion_any_tag_list');
   var $exclusionTagList = $('#exclusion_tag_list');
 
-  gspecv.find.setup({
+  Find.setup({
     $findDialog: $findDialog,
     $fileNamesText: $('#find_dialog #file_names'),
     $inclusionAllTagList: $inclusionAllTagList,
@@ -24,7 +28,7 @@ $(function() {
     $livingTagList: $('.living_tag_list')
   });
 
-  gspecv.commitInfo.setup({
+  CommitInfo.setup({
     $findButton: $('#find_button'),
     $closeTabButton: $('#close_tab_button'),
     $commitInfoTabPanel: $('#commit_info_tabs .nav-tabs'),
@@ -48,7 +52,7 @@ $(function() {
     $stockTagList: $('#tag_edit_dialog .right_tag_list')
   });
 
-  gspecv.history.setup({
+  History.setup({
     $dialog: $historyDialog,
     $infoTable: $('#history_dialog tbody'),
     $diffButton: $('#history_dialog #diff_button'),
@@ -60,7 +64,7 @@ $(function() {
     $uploadingDialog: $('#uploadingDialog')
   });
 
-  gspecv.userView.setup({
+  UserView.setup({
     $dialog: $userViewDialog
   });
 });
