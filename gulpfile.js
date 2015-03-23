@@ -1,45 +1,44 @@
 var gulp = require('gulp');
-var rimraf = require('rimraf');
+var del = require('del');
 var typescript = require('gulp-typescript');
 var webpack = require('gulp-webpack');
-var replace = require('gulp-replace');
 
-gulp.task('rebuild-browser', ['cleanup-browser', 'build-browser']);
-
-gulp.task('cleanup-browser', function(cb) {
-  rimfaf('./temp', cb);
+gulp.task('cleanup-browser', function() {
+  del(['./temp'], function(error, deletedFiles) {
+    console.error(error);
+  });
 });
 
-gulp.task('build-browser', ['browser-typescript', 'browser-webpack']);
+gulp.task('build-browser', ['cleanup-browser', 'browser-webpack']);
 
-gulp.task('browser-typescript', function() {
+gulp.task('copy-source-browser', ['cleanup-browser'], function() {
   gulp
     .src('src/common/*.ts', { base: 'src/common' })
     .pipe(gulp.dest('src/browser/ts/_common'));
 
-  gulp
-    .src('src/browser/ts/**/*.ts')
-    .pipe(typescript({ target: 'ES5', module: 'commonjs' }))
-    .js
-    .pipe(replace(/WPRequire/, 'require'))
-    .pipe(gulp.dest('temp/browser'));
+  return gulp
+          .src('src/browser/jade', { base: 'src/browser' })
+          .pipe(gulp.dest('public'));
 });
 
-gulp.task('browser-webpack', function() {
-  gulp
-    .src('./temp/browser/main_page.js')
-    .pipe(
-      webpack({
-        resolve: {
-          alias: {
-            jade: '/src/browser/jade'
-          }
-        },
-        output: {
-          filename: 'packed.js',
-        },
-      }))
-    .pipe(gulp.dest('./public/javascripts'));
+gulp.task('browser-typescript', ['cleanup-browser', 'copy-source-browser'], function() {
+  return gulp
+          .src('src/browser/ts/**/*.ts')
+          .pipe(typescript({ target: 'ES5', module: 'commonjs' }))
+          .js
+          .pipe(gulp.dest('temp/browser'));
+});
+
+gulp.task('browser-webpack', ['browser-typescript'], function() {
+  return gulp
+          .src('./temp/browser/main_page.js')
+          .pipe(
+            webpack({
+              output: {
+                filename: 'packed.js',
+              },
+            }))
+          .pipe(gulp.dest('./public/javascripts'));
 });
 
 gulp.task('server-typescript', function() {
@@ -56,4 +55,4 @@ gulp.task('server-typescript', function() {
     .pipe(gulp.dest('server/common'));
 });
 
-gulp.task('default', ['rebuild-browser', 'server-typescript']);
+gulp.task('default', ['build-browser', 'server-typescript']);
