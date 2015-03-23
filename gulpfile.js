@@ -11,17 +11,13 @@ gulp.task('cleanup-browser', function() {
 
 gulp.task('build-browser', ['cleanup-browser', 'browser-webpack']);
 
-gulp.task('copy-source-browser', ['cleanup-browser'], function() {
-  gulp
-    .src('src/common/*.ts', { base: 'src/common' })
-    .pipe(gulp.dest('src/browser/ts/_common'));
-
+gulp.task('browser-copy-source', ['cleanup-browser'], function() {
   return gulp
-          .src('src/browser/jade', { base: 'src/browser' })
-          .pipe(gulp.dest('public'));
+          .src('src/common/*.ts', { base: 'src/common' })
+          .pipe(gulp.dest('src/browser/ts/_common'));
 });
 
-gulp.task('browser-typescript', ['cleanup-browser', 'copy-source-browser'], function() {
+gulp.task('browser-typescript', ['cleanup-browser', 'browser-copy-source'], function() {
   return gulp
           .src('src/browser/ts/**/*.ts')
           .pipe(typescript({ target: 'ES5', module: 'commonjs' }))
@@ -41,18 +37,18 @@ gulp.task('browser-webpack', ['browser-typescript'], function() {
           .pipe(gulp.dest('./public/javascripts'));
 });
 
-gulp.task('server-typescript', function() {
-  gulp
-    .src('src/server/*.ts')
-    .pipe(typescript({ target: 'ES5', module: 'commonjs' }))
-    .js
-    .pipe(gulp.dest('server'));
+gulp.task('server-copy-source', function() {
+  return gulp
+          .src('src/common/*.ts', { base: 'src/common' })
+          .pipe(gulp.dest('src/server/ts/_common'));
+});
 
-  gulp
-    .src('src/common/*.ts')
-    .pipe(typescript({ target: 'ES5', module: 'commonjs' }))
-    .js
-    .pipe(gulp.dest('server/_common'));
+gulp.task('server-typescript', ['server-copy-source'], function() {
+  return gulp
+          .src('src/server/ts/**/*.ts')
+          .pipe(typescript({ target: 'ES5', module: 'commonjs' }))
+          .js
+          .pipe(gulp.dest('server'));
 });
 
 gulp.task('default', ['build-browser', 'server-typescript']);
