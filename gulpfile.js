@@ -52,7 +52,7 @@ gulp.task('server-typescript', function() {
     .src('src/common/*.ts')
     .pipe(typescript({ target: 'ES5', module: 'commonjs' }))
     .js
-    .pipe(gulp.dest('server/common'));
+    .pipe(gulp.dest('server/_common'));
 });
 
 gulp.task('default', ['build-browser', 'server-typescript']);
