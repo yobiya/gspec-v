@@ -1,4 +1,5 @@
 /// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/mongoose/mongoose.d.ts" />
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -8,15 +9,14 @@ var MongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
 var multer = require('multer');
 // MongoDBへの接続
-var mongoose = (function () {
-    var mongoose = require('mongoose');
+var mongoose = require('mongoose');
+(function () {
     mongoose.connect('mongodb://localhost/gspecv');
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function () {
         console.log('Connect to mongodb.');
     });
-    return mongoose;
 })();
 var mongoModels = require('./models/mongo_model')(mongoose);
 var constants = require('./models/constants.js');

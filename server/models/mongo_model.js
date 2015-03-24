@@ -1,14 +1,16 @@
+/// <reference path="../../../typings/mongoose/mongoose.d.ts" />
+var MG = require('mongoose');
 /**
  * @brief Mongooseのモデルへのアクセッサ
  */
 module.exports = function (mongoose) {
     var commitVersionSchema = { file_name: String, version: Number };
     var schemas = {
-        userSchema: mongoose.Schema({ name: String, password: String }),
-        sessionSchema: mongoose.Schema({ session: String, userObjectId: mongoose.Schema.Types.ObjectId }),
-        commitInfo: mongoose.Schema({ name: String, path: String, comment: String, tag_names: [String], version: Number, commit_time: Date, user_name: String }),
-        latestCommitId: mongoose.Schema({ commit_doc_id: mongoose.Schema.Types.ObjectId }),
-        userLastViewCommitVersion: mongoose.Schema({ user_name: String, last_views: [commitVersionSchema] })
+        userSchema: new MG.Schema({ name: String, password: String }),
+        sessionSchema: new MG.Schema({ session: String, userObjectId: MG.Schema.Types.ObjectId }),
+        commitInfo: new MG.Schema({ name: String, path: String, comment: String, tag_names: [String], version: Number, commit_time: Date, user_name: String }),
+        latestCommitId: new MG.Schema({ commit_doc_id: MG.Schema.Types.ObjectId }),
+        userLastViewCommitVersion: new MG.Schema({ user_name: String, last_views: [commitVersionSchema] })
     };
     var users = mongoose.model('users', schemas.userSchema);
     var sessions = mongoose.model('sessions', schemas.sessionSchema);
