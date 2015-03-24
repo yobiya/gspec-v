@@ -3,10 +3,10 @@ var cookie = require('cookie');
 var express = require('express');
 var router = express.Router();
 var tag = require('../models/tag');
-var commit;
+var commit = require('../models/commit');
 var History_g;
 router.setup = function (mongoModels) {
-    commit = require('../models/commit')(mongoModels);
+    commit.setup(mongoModels);
     tag.setup(mongoModels);
     History_g = require('../models/history')(mongoModels);
     return this;

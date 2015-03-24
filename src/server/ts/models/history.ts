@@ -1,3 +1,6 @@
+/// <reference path="../../../typings/lodash/lodash.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+
 /**
  * @brief 履歴
  */

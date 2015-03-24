@@ -5,7 +5,7 @@
  * @brief コミット
  */
 import _ = require('lodash');
-import $ = require('jquery-deferred');
+var $ = require('jquery-deferred');
 
 import commonConstant = require('../_common/constant');
 

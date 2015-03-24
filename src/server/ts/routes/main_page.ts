@@ -6,12 +6,12 @@ var express = require('express');
 var router = express.Router();
 
 import tag = require('../models/tag');
+import commit = require('../models/commit');
 
-var commit;
 var History_g;
 
 router.setup = function(mongoModels) {
-  commit = require('../models/commit')(mongoModels);
+  commit.setup(mongoModels);
   tag.setup(mongoModels);
   History_g = require('../models/history')(mongoModels);
 
