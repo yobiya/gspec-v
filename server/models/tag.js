@@ -4,7 +4,7 @@
  * @brief コミット
  */
 var _ = require('lodash');
-var $ = require('jquery');
+var $ = require('jquery-deferred');
 var commonConstant = require('../_common/constant');
 var _mongoModels;
 function setup(mongoModels) {
