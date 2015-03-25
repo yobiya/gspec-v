@@ -18,7 +18,7 @@ exports.setup = setup;
  * @param resultCallback 結果を渡すコールバック
  */
 function getTagEditInfo(userName, fileName, resultCallback) {
-    _mongoModels.util.findLatestFileVersion(fileName, function (lastVersion, lastDocumentId) {
+    _mongoModels.findLatestFileVersion(fileName, function (lastVersion, lastDocumentId) {
         if (lastVersion === 0) {
             resultCallback({ errorMessage: '対象のファイルは見つかりませんでした' });
             return;
@@ -47,7 +47,7 @@ exports.getTagEditInfo = getTagEditInfo;
  * @param resultCallback 結果を渡すコールバック
  */
 function applyTagEditInfo(fileName, tagNames, resultCallback) {
-    _mongoModels.util.findLatestFileVersion(fileName, function (lastVersion, lastDocumentId) {
+    _mongoModels.findLatestFileVersion(fileName, function (lastVersion, lastDocumentId) {
         if (lastVersion === 0) {
             resultCallback({ errorMessage: '対象のファイルは見つかりませんでした' });
             return;

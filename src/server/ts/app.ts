@@ -21,7 +21,8 @@ import mongoose = require('mongoose');
   });
 })();
 
-var mongoModels = require('./models/mongo_model')(mongoose);
+import MM = require('./models/mongo_model');
+var mongoModels = new MM.MongoModel(mongoose);
 
 var constants = require('./models/constants.js');
 var main_page = require('./routes/main_page').setup(mongoModels);

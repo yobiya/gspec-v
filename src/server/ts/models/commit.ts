@@ -13,10 +13,11 @@ var $ = require('jquery-deferred');
 require('date-utils');
 
 import commonConstant = require('../_common/constant');
+import MM = require('../models/mongo_model');
 
-var _mongoModels: any;
+var _mongoModels: MM.MongoModel;
 
-export function setup(mongoModels: any): void {
+export function setup(mongoModels: MM.MongoModel): void {
   _mongoModels = mongoModels;
 }
 
@@ -30,7 +31,7 @@ export function checkSafety(fileNames, userName): any {
   function latestFileEditUser(fileName) {
     var d = new $.Deferred();
     
-    _mongoModels.util.findLatestFileCommitInfo(fileName, function(lastCommitInfo) {
+    _mongoModels.findLatestFileCommitInfo(fileName, function(lastCommitInfo) {
       if(!lastCommitInfo) {
         // ドキュメント情報がなければ、新規ファイルなのでコミットは可能
         d.resolve();
@@ -75,7 +76,7 @@ export function checkSafety(fileNames, userName): any {
 export function commit(uploadFiles, comment, userName): any {
   uploadFiles.forEach(function(uploadFile) {
     // コミットされている同名のファイルの最新のコミット情報を取得する
-    _mongoModels.util.findLatestFileCommitInfo(uploadFile.originalname, function(lastCommitInfo) {
+    _mongoModels.findLatestFileCommitInfo(uploadFile.originalname, function(lastCommitInfo) {
       lastCommitInfo = lastCommitInfo || { _id: null, version: 0, tag_names: [] };
 
       // ディレクトリが無ければ作成する
@@ -103,7 +104,7 @@ export function commit(uploadFiles, comment, userName): any {
       };
 
       // ドキュメントを保存する
-      var commitInfoDoc = _mongoModels.commitInfo(commitInfo);
+      var commitInfoDoc = new _mongoModels.commitInfo(commitInfo);
       commitInfoDoc.save(function(error) {
         if(error) {
           throw error;
@@ -319,7 +320,7 @@ export function usersView(fileName): any {
   })()
   .then(function(userNames) {
     var d = new $.Deferred();
-    _mongoModels.util.findLatestFileCommitInfo(fileName, function(doc) {
+    _mongoModels.findLatestFileCommitInfo(fileName, function(doc) {
       d.resolve(doc.version, userNames);
     });
 

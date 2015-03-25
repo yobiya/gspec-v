@@ -5,7 +5,9 @@ var router = express.Router();
 
 var auth;
 
-router.setup = function(mongoModels) {
+import MM = require('../models/mongo_model');
+
+router.setup = function(mongoModels: MM.MongoModel) {
   auth = require('../models/auth')(mongoModels);
 
   return this;

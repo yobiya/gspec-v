@@ -25,7 +25,7 @@ exports.setup = setup;
 function checkSafety(fileNames, userName) {
     function latestFileEditUser(fileName) {
         var d = new $.Deferred();
-        _mongoModels.util.findLatestFileCommitInfo(fileName, function (lastCommitInfo) {
+        _mongoModels.findLatestFileCommitInfo(fileName, function (lastCommitInfo) {
             if (!lastCommitInfo) {
                 // ドキュメント情報がなければ、新規ファイルなのでコミットは可能
                 d.resolve();
@@ -64,7 +64,7 @@ exports.checkSafety = checkSafety;
 function commit(uploadFiles, comment, userName) {
     uploadFiles.forEach(function (uploadFile) {
         // コミットされている同名のファイルの最新のコミット情報を取得する
-        _mongoModels.util.findLatestFileCommitInfo(uploadFile.originalname, function (lastCommitInfo) {
+        _mongoModels.findLatestFileCommitInfo(uploadFile.originalname, function (lastCommitInfo) {
             lastCommitInfo = lastCommitInfo || { _id: null, version: 0, tag_names: [] };
             // ディレクトリが無ければ作成する
             var directoryPath = _makeCommitDirectory(0); ///< @todo 適切なコミットディレクトリ名を計算する
@@ -87,7 +87,7 @@ function commit(uploadFiles, comment, userName) {
                 commit_time: Date.now(),
             };
             // ドキュメントを保存する
-            var commitInfoDoc = _mongoModels.commitInfo(commitInfo);
+            var commitInfoDoc = new _mongoModels.commitInfo(commitInfo);
             commitInfoDoc.save(function (error) {
                 if (error) {
                     throw error;
@@ -276,7 +276,7 @@ function usersView(fileName) {
         return d.promise();
     })().then(function (userNames) {
         var d = new $.Deferred();
-        _mongoModels.util.findLatestFileCommitInfo(fileName, function (doc) {
+        _mongoModels.findLatestFileCommitInfo(fileName, function (doc) {
             d.resolve(doc.version, userNames);
         });
         return d.promise();

@@ -8,10 +8,11 @@ import _ = require('lodash');
 var $ = require('jquery-deferred');
 
 import commonConstant = require('../_common/constant');
+import MM = require('../models/mongo_model');
 
-var _mongoModels: any;
+var _mongoModels: MM.MongoModel;
 
-export function setup(mongoModels: any): void {
+export function setup(mongoModels: MM.MongoModel): void {
   _mongoModels = mongoModels;
 }
 
@@ -22,7 +23,7 @@ export function setup(mongoModels: any): void {
  * @param resultCallback 結果を渡すコールバック
  */
 export function getTagEditInfo(userName, fileName, resultCallback): void {
-  _mongoModels.util.findLatestFileVersion(fileName, function(lastVersion, lastDocumentId) {
+  _mongoModels.findLatestFileVersion(fileName, function(lastVersion, lastDocumentId) {
     if(lastVersion === 0) {
       resultCallback({ errorMessage: '対象のファイルは見つかりませんでした' });
       return;
@@ -56,7 +57,7 @@ export function getTagEditInfo(userName, fileName, resultCallback): void {
  * @param resultCallback 結果を渡すコールバック
  */
 export function applyTagEditInfo(fileName, tagNames, resultCallback): void {
-  _mongoModels.util.findLatestFileVersion(fileName, function(lastVersion, lastDocumentId) {
+  _mongoModels.findLatestFileVersion(fileName, function(lastVersion, lastDocumentId) {
     if(lastVersion === 0) {
       resultCallback({ errorMessage: '対象のファイルは見つかりませんでした' });
       return;

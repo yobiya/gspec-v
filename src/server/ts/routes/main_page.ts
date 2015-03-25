@@ -7,10 +7,11 @@ var router = express.Router();
 
 import tag = require('../models/tag');
 import commit = require('../models/commit');
+import MM = require('../models/mongo_model');
 
 var History_g;
 
-router.setup = function(mongoModels) {
+router.setup = function(mongoModels: MM.MongoModel) {
   commit.setup(mongoModels);
   tag.setup(mongoModels);
   History_g = require('../models/history')(mongoModels);

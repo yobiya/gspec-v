@@ -1,7 +1,10 @@
 /**
  * @brief ユーザー認証
  */
-module.exports = function(mongoModels) {
+
+import MM = require('./mongo_model');
+
+module.exports = function(mongoModels: MM.MongoModel) {
 
   /**
    * @brief ログイン認証を行う
