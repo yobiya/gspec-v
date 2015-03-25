@@ -1,9 +1,10 @@
+/// <reference path="../../../typings/express/express.d.ts" />
 var util = require('util');
 var cookie = require('cookie');
 var express = require('express');
-var router = express.Router();
 var tag = require('../models/tag');
 var commit = require('../models/commit');
+var router = express.Router();
 var History_g;
 router.setup = function (mongoModels) {
     commit.setup(mongoModels);

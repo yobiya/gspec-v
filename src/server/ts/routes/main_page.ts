@@ -1,17 +1,17 @@
-
+/// <reference path="../../../typings/express/express.d.ts" />
 
 var util = require('util');
 var cookie = require('cookie');
-var express = require('express');
-var router = express.Router();
+import express = require('express');
 
 import tag = require('../models/tag');
 import commit = require('../models/commit');
 import MM = require('../models/mongo_model');
 
+var router = express.Router();
 var History_g;
 
-router.setup = function(mongoModels: MM.MongoModel) {
+(<any>router).setup = function(mongoModels: MM.MongoModel) {
   commit.setup(mongoModels);
   tag.setup(mongoModels);
   History_g = require('../models/history')(mongoModels);
@@ -20,12 +20,12 @@ router.setup = function(mongoModels: MM.MongoModel) {
 };
 
 // Main page
-router.get('/main_page', loginCheck, function(request, response) {
+router.get('/main_page', loginCheck, function(request: any, response) {
   response.render('main_page', { title: 'GSpec-V', user_name: request.session.user });
 });
 
 /// @brief ファイルを検索して、結果を返す
-router.post('/find', function(request, response) {
+router.post('/find', function(request: any, response) {
   var params = postParams(request);
   params.tags = params.tags || {};
   var findProvision = {
@@ -36,15 +36,15 @@ router.post('/find', function(request, response) {
     exclusionTagNames: toArray(params['exclusion_tag_names[]'])
   };
 
-  commit.find(findProvision, function(result) {
+  commit.find(findProvision, result => {
     response.send(result);
   });
 });
 
 /// @brief タグの編集情報を返す
-router.post('/edit_tag_info', function(request, response) {
+router.post('/edit_tag_info', function(request: any, response) {
   var params = postParams(request);
-  tag.getTagEditInfo(request.session.user, params.file_name, function(result) {
+  tag.getTagEditInfo(request.session.user, params.file_name, result => {
     response.send(result);
   });
 });
@@ -55,7 +55,7 @@ router.post('/apply_tag', function(request, response) {
   var fileName = params.file_name;
   var tagNames = toArray(params['tag_names[]']);
 
-  tag.applyTagEditInfo(fileName, tagNames, function(result) {
+  tag.applyTagEditInfo(fileName, tagNames, result => {
     response.send(result);
   });
 });
@@ -74,7 +74,7 @@ router.post('/add_tag', function(request, response) {
 });
 
 /// @brief コミットの安全性をチェックする
-router.post('/check_commit_safety', function(request, response) {
+router.post('/check_commit_safety', function(request: any, response) {
   var params = postParams(request);
   commit.checkSafety(toArray(params['file_names[]']), request.session.user)
     .done(function(docs) {
@@ -86,7 +86,7 @@ router.post('/check_commit_safety', function(request, response) {
 });
 
 /// @brief ファイルをコミットする
-router.post('/commit', function(request, response) {
+router.post('/commit', function(request: any, response) {
   var files = request.files.file;
   var comment = request.body.comment;
   if(!Array.isArray(files)) {
@@ -98,7 +98,7 @@ router.post('/commit', function(request, response) {
 });
 
 /// @brief 最新のファイルをダウンロードする
-router.get('/download/:document_id', function(request, response) {
+router.get('/download/:document_id', function(request: any, response) {
   commit.download(request.session.user, request.params.document_id, function(downloadPath, fileName) {
     response.download(downloadPath, fileName);
   });
@@ -180,7 +180,7 @@ function loginCheck(request, response, next) {
 }
 
 /// @brief リクエストの方式によってパラメーターの取得方法が変わるので、適切な変換を行う
-function postParams(request) {
+function postParams(request): any {
   if(Object.keys(request.query).length === 0) {
     return request.body;
   }
